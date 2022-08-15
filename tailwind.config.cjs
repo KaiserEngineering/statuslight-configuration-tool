@@ -1,11 +1,11 @@
-module.exports = {
-  purge: [],
-  darkMode: false, // or 'media' or 'class'
+const config = {
+  content: ["./src/**/*.{html,js,svelte,ts}"],
+
   theme: {
     extend: {},
   },
-  variants: {
-    extend: {},
-  },
+
   plugins: [],
-}
+};
+
+module.exports = config;
