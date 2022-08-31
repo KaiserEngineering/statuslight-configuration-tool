@@ -8,9 +8,7 @@ use uart::find_available_ports;
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![
-            find_available_ports
-        ])
+        .invoke_handler(tauri::generate_handler![find_available_ports])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

@@ -11,6 +11,17 @@
     "version": "0.1.0"
   },
   "tauri": {
+    "cli": {
+      "description": "",
+      "longDescription": "Tool for configuring KaiserEngineering ShiftLight",
+      "beforeHelp": "",
+      "afterHelp": "",
+      "args": [],
+      "subcommands": {
+        "subcommand-name": {
+        }
+      }
+    },
     "allowlist": {
       "all": true
     },
