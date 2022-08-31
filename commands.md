@@ -1,4 +1,4 @@
-### SHFT
+### SHIFT
 Sending the <code>SHIFT</code> command will return the current shift point of the Shift Light.
 ```
 SHFT
