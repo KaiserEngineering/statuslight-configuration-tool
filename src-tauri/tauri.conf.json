@@ -16,7 +16,13 @@
       "longDescription": "Tool for configuring KaiserEngineering ShiftLight",
       "beforeHelp": "",
       "afterHelp": "",
-      "args": [],
+      "args": [
+        {
+          "name": "shift",
+          "short": "s",
+          "takesValue": true
+        }
+      ],
       "subcommands": {
         "subcommand-name": {
         }

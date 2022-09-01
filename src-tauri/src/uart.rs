@@ -1,7 +1,6 @@
 use std::fmt;
 
 use serde::Serialize;
-use serialport::available_ports;
 
 #[derive(Debug, Serialize)]
 pub enum SerialError {
@@ -22,7 +21,7 @@ pub struct SerialPort {
 #[tauri::command]
 pub fn find_available_ports() -> Result<Vec<SerialPort>, SerialError> {
     // Return vec of all ports found on device
-    match available_ports() {
+    match serialport::available_ports() {
         Ok(ports) => {
             Ok(ports
                 .iter()
@@ -33,6 +32,22 @@ pub fn find_available_ports() -> Result<Vec<SerialPort>, SerialError> {
                     }
                 })
                 .collect())
+        }
+        Err(error) => Err(SerialError::Error(error.to_string())),
+    }
+}
+
+#[tauri::command]
+pub fn send_message(port_name: String, content: String) -> Result<String, SerialError> {
+    let port = serialport::new(port_name, 9600).open();
+    match port {
+        Ok(mut port) => {
+            // Opened our port successfully
+            let results = port.write(content.as_bytes());
+            match results {
+                Ok(bytes_written) => Ok(bytes_written.to_string()),
+                Err(error) => Err(SerialError::Error(error.to_string())),
+            }
         }
         Err(error) => Err(SerialError::Error(error.to_string())),
     }
