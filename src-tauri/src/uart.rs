@@ -1,16 +1,15 @@
-use std::fmt;
-
 use serde::Serialize;
 
 #[derive(Debug, Serialize)]
-pub enum SerialError {
-    Error(String),
+pub struct SerialError {
+    error_type: SerialErrors,
+    message: String,
 }
 
-impl fmt::Display for SerialError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "An Error Occurred, Please Try Again!") // user-facing output
-    }
+#[derive(Debug, Serialize)]
+pub enum SerialErrors {
+    WriteError,
+    PortError,
 }
 
 #[derive(Serialize, Debug)]
@@ -33,7 +32,10 @@ pub fn find_available_ports() -> Result<Vec<SerialPort>, SerialError> {
                 })
                 .collect())
         }
-        Err(error) => Err(SerialError::Error(error.to_string())),
+        Err(error) => Err(SerialError {
+            error_type: SerialErrors::WriteError,
+            message: error.to_string(),
+        }),
     }
 }
 
@@ -45,10 +47,16 @@ pub fn send_message(port_name: String, content: String) -> Result<String, Serial
             // Opened our port successfully
             let results = port.write(content.as_bytes());
             match results {
-                Ok(bytes_written) => Ok(bytes_written.to_string()),
-                Err(error) => Err(SerialError::Error(error.to_string())),
+                Ok(_bytes_written) => Ok("Successfully wrote to serial port".to_string()),
+                Err(error) => Err(SerialError {
+                    error_type: SerialErrors::WriteError,
+                    message: error.to_string(),
+                }),
             }
         }
-        Err(error) => Err(SerialError::Error(error.to_string())),
+        Err(error) => Err(SerialError {
+            error_type: SerialErrors::PortError,
+            message: error.to_string(),
+        }),
     }
 }
