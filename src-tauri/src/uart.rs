@@ -87,7 +87,7 @@ fn read_serial(serial_port: Box<dyn serialport::SerialPort>) -> Result<String, S
 }
 
 #[tauri::command]
-pub fn write_config(
+pub async fn write_config(
     port_name: String,
     config: Vec<String>,
 ) -> Result<Vec<Result<String, SerialError>>, SerialError> {
