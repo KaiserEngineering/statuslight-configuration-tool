@@ -4,23 +4,11 @@
 )]
 
 mod uart;
-use uart::{find_available_ports, send_message};
+use uart::{find_available_ports, write};
 
 fn main() {
     tauri::Builder::default()
-        .setup(|app| {
-            match app.get_cli_matches() {
-                // `matches` here is a Struct with { args, subcommand }.
-                // `args` is `HashMap<String, ArgData>` where `ArgData` is a struct with { value, occurances }.
-                // `subcommand` is `Option<Box<SubcommandMatches>>` where `SubcommandMatches` is a struct with { name, matches }.
-                Ok(matches) => {
-                    println!("{:?}", matches)
-                }
-                Err(_) => {}
-            }
-            Ok(())
-        })
-        .invoke_handler(tauri::generate_handler![find_available_ports, send_message])
+        .invoke_handler(tauri::generate_handler![find_available_ports, write])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

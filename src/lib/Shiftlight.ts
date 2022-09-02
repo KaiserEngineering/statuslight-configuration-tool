@@ -4,9 +4,10 @@ export class Port {
 
 export class ShiftLight {
   selected_port: Port;
-  ports: [Port];
+  ports: [Port] | [];
 
   constructor() {
     this.selected_port = new Port();
+    this.ports = [];
   }
 }
