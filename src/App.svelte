@@ -1,10 +1,8 @@
 <script lang="ts">
   import { SvelteToast, toast } from "@zerodevx/svelte-toast";
-
   import CurrentConfig from "./components/CurrentConfig.svelte";
-
   import { get_serial_ports } from "./lib/API";
-  import { shiftlight } from "./lib/Store";
+  import { session, shiftlight } from "./lib/Store";
 
   let toast_options = {};
 
@@ -19,6 +17,10 @@
 </script>
 
 <SvelteToast {toast_options} />
+
+{#if $session.loading}
+  loading...
+{/if}
 
 <div class="m-4">
   <div class="relative">

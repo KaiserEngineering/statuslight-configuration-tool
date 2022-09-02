@@ -43,60 +43,75 @@ pub fn find_available_ports() -> Result<Vec<SerialPort>, SerialError> {
     }
 }
 
-#[tauri::command]
-pub fn write(port_name: String, content: String) -> Result<String, SerialError> {
-    let port = serialport::new(port_name, 9600).open();
-    match port {
-        Err(error) => Err(SerialError {
-            error_type: SerialErrors::Port,
-            message: error.to_string(),
-        }),
-        Ok(mut port) => {
-            println!("Sleeping...");
-            let one_second = time::Duration::from_secs(2);
-            thread::sleep(one_second);
-            println!("awake...");
-
-            match port.write(content.as_bytes()) {
-                Ok(write) => {
-                    if write as u32 == content.len() as u32 {
-                        // Confirm our results look good
-                        match read_serial(port) {
-                            Ok(results) => {
-                                println!("Read from uart {}", results);
-                                Ok(results)
-                            }
-                            Err(error) => Err(SerialError {
-                                error_type: SerialErrors::Read,
-                                message: error,
-                            }),
-                        }
-                    } else {
-                        Err(SerialError {
-                            error_type: SerialErrors::Write,
-                            message: format!(
-                                "Incomplete write only wrote {} bytes of {}",
-                                write,
-                                content.len()
-                            ),
-                        })
-                    }
+pub fn write(
+    mut serial_port: Box<dyn serialport::SerialPort>,
+    content: String,
+) -> Result<String, SerialError> {
+    match serial_port.write(content.as_bytes()) {
+        Ok(write) => {
+            if write as u32 == content.len() as u32 {
+                // Confirm our results look good
+                match read_serial(serial_port) {
+                    Ok(results) => Ok(results),
+                    Err(error) => Err(SerialError {
+                        error_type: SerialErrors::Read,
+                        message: error,
+                    }),
                 }
-                Err(error) => Err(SerialError {
+            } else {
+                Err(SerialError {
                     error_type: SerialErrors::Write,
-                    message: error.to_string(),
-                }),
+                    message: format!(
+                        "Incomplete write only wrote {} bytes of {}",
+                        write,
+                        content.len()
+                    ),
+                })
             }
         }
+        Err(error) => Err(SerialError {
+            error_type: SerialErrors::Write,
+            message: error.to_string(),
+        }),
     }
 }
 
 fn read_serial(serial_port: Box<dyn serialport::SerialPort>) -> Result<String, String> {
     let mut reader = BufReader::new(serial_port);
-    let mut my_str = String::new();
+    let mut my_str = vec![]; //String::new();
 
-    match reader.read_line(&mut my_str) {
-        Ok(_) => Ok(my_str.to_string()),
+    match reader.read_until(b'\n', &mut my_str) {
+        Ok(_) => Ok(std::str::from_utf8(&my_str).unwrap().to_string()),
         Err(error) => Err(error.to_string()),
+    }
+}
+
+#[tauri::command]
+pub fn write_config(
+    port_name: String,
+    config: Vec<String>,
+) -> Result<Vec<Result<String, SerialError>>, SerialError> {
+    let serial_port = serialport::new(port_name, 9600)
+        .timeout(time::Duration::from_millis(500))
+        .open();
+
+    let mut results: Vec<Result<String, SerialError>> = vec![];
+    match serial_port {
+        Err(error) => Err(SerialError {
+            error_type: SerialErrors::Port,
+            message: error.to_string(),
+        }),
+        Ok(port) => {
+            // Sleep while the device reboots
+            let two_seconds = time::Duration::from_secs(2);
+            thread::sleep(two_seconds);
+
+            for option in config {
+                // Can break during clone here
+                results.push(write(port.try_clone().unwrap(), option));
+            }
+
+            Ok(results)
+        }
     }
 }

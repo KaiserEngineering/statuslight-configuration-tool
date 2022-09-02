@@ -14,34 +14,16 @@ export async function get_serial_ports() {
     });
 }
 
-export async function write_serial(content: string) {
-  return await invoke("write", {
+export async function submit_config() {
+  // Write each of the values of our current form store to Serial.
+  return await invoke("write_config", {
     portName: get(shiftlight).selected_port.port_name,
-    content: "SHIFT\n",
+    config: ["SHIFT 1200\n", "SHIFT\n", "Dog\n"],
   })
-  .then((response: any) => {
-    return response;
+  .then((responses: any) => {
+    return responses;
   })
   .catch((error) => {
     throw error.message;
   });
-}
-
-export async function submit_config() {
-  // Write each of the values of our current form store to Serial.
-  let resp = {
-    error: [],
-    success: []
-  };
-
-  for await (const entry of Object.entries(get(form_content)) ) {
-    await write_serial(entry[0] + " " + entry[1])
-    .then((res: any) => {
-      resp.success.push(res);
-    })
-    .catch((error) => {
-      resp.error.push(error);
-    });
-  }
-  return resp;
 }
