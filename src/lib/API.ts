@@ -15,15 +15,21 @@ export async function get_serial_ports() {
 }
 
 export async function submit_config() {
+  let current_config = get(form_content);
+  let config = [];
+  for (const key in current_config) {
+    config.push(key + " " + current_config[key] + "\n");
+  }
+
   // Write each of the values of our current form store to Serial.
   return await invoke("write_config", {
     portName: get(shiftlight).selected_port.port_name,
-    config: ["SHIFT 1200\n", "SHIFT\n", "Dog\n"],
+    config: config,
   })
-  .then((responses: any) => {
-    return responses;
-  })
-  .catch((error) => {
-    throw error.message;
-  });
+    .then((responses: any) => {
+      return responses;
+    })
+    .catch((error) => {
+      throw error.message;
+    });
 }
