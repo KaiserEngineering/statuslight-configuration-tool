@@ -7,7 +7,7 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "keshift_light_configuration",
+    "productName": "KE ShiftLight",
     "version": "0.1.0"
   },
   "tauri": {
