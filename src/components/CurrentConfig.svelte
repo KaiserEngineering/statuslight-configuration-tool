@@ -5,7 +5,7 @@
   import RPM from "./RPM.svelte";
 
   async function update() {
-    $session.loading =true;
+    $session.loading = true;
     submit_config()
       .then((response: any) => {
         for (const message of response) {
@@ -23,7 +23,7 @@
       })
       .finally(() => {
         $session.loading = false;
-      })
+      });
   }
   let config_type = RPM;
 </script>

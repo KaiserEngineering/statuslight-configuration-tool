@@ -8,8 +8,9 @@ export const success = m => toast.push(m, {
   }
 });
 
-export const error = m => toast.push(m, { theme: {
-  "--toastBackground": "#F56565",
-  "--toastBarBackground": "#C53030",
-}});
-
+export const error = m => toast.push(m, {
+  theme: {
+    "--toastBackground": "#F56565",
+    "--toastBarBackground": "#C53030",
+  }
+});
