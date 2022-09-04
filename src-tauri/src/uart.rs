@@ -43,7 +43,7 @@ pub fn find_available_ports() -> Result<Vec<SerialPort>, SerialError> {
     }
 }
 
-pub fn write(
+fn write(
     mut serial_port: Box<dyn serialport::SerialPort>,
     content: String,
 ) -> Result<String, SerialError> {
@@ -78,7 +78,7 @@ pub fn write(
 
 fn read_serial(serial_port: Box<dyn serialport::SerialPort>) -> Result<String, String> {
     let mut reader = BufReader::new(serial_port);
-    let mut my_str = vec![]; //String::new();
+    let mut my_str = vec![];
 
     match reader.read_until(b'\n', &mut my_str) {
         Ok(_) => Ok(std::str::from_utf8(&my_str).unwrap().to_string()),

@@ -23,7 +23,7 @@ export async function submit_config() {
 
   // Write each of the values of our current form store to Serial.
   return await invoke("write_config", {
-    portName: get(shiftlight).selected_port.port_name,
+    portName: get(shiftlight).port.port_name,
     config: config,
   })
     .then((responses: any) => {

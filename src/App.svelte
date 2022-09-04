@@ -1,22 +1,32 @@
 <script lang="ts">
-  import { SvelteToast, toast } from "@zerodevx/svelte-toast";
+  import { SvelteToast } from "@zerodevx/svelte-toast";
   import CurrentConfig from "./components/CurrentConfig.svelte";
   import { get_serial_ports } from "./lib/API";
-  import { session, shiftlight } from "./lib/Store";
+  import { form_content, session, shiftlight } from "./lib/Store";
+  import { error } from "./lib/Toasts";
 
-  let toast_options = {};
-
+  let ports = [];
   async function get_ports() {
     return await get_serial_ports()
-      .then((ports_found: any) => ($shiftlight.ports = ports_found))
-      .catch((error: any) => {
-        toast.push(error);
+      .then((ports_found: any) => (ports = ports_found))
+      .catch((err: any) => {
+        error(err);
       });
+  }
+
+  async function set_initial_config() {
+  //   await $shiftlight.load_current_config().then((_resp) => {
+  //     console.log($shiftlight.loaded_config);
+      // Object.assign($form_content, $shiftlight.loaded_config);
+  //   })
+  //   .catch((err) => {
+  //     error(err);
+  //   });
   }
   let ports_promise = get_ports();
 </script>
 
-<SvelteToast {toast_options} />
+<SvelteToast />
 
 {#if $session.loading}
   <div
@@ -49,11 +59,12 @@
     <select
       id="shiftlight-port"
       class="select bg-white max-w-xs"
-      bind:value={$shiftlight.selected_port.port_name}
+      bind:value={$shiftlight.port}
+      on:change="{set_initial_config}"
     >
-      <option disabled selected>Select UART Port</option>
-      {#each $shiftlight.ports as port}
-        <option>{port.port_name}</option>
+      <option value="" disabled selected> Select UART Port</option>
+      {#each ports as port}
+        <option value={port}>{port.port_name}</option>
       {/each}
     </select>
   </div>
@@ -68,8 +79,10 @@
       class="shadow-inner shadow border w-full m-5 rounded px-8 pt-6 pb-8"
     >
       <!-- Only show port selection until a port is chosen -->
-      {#if $shiftlight.selected_port}
+      {#if $shiftlight.port.port_name}
         <CurrentConfig />
+      {:else}
+        <p>Choose a serial port to get started!</p>
       {/if}
     </form>
   </div>
