@@ -1,7 +1,7 @@
 <script lang="ts">
   import { submit_config } from "../lib/API";
   import { session } from "../lib/Store";
-  import { toast } from "@zerodevx/svelte-toast";
+  import { success, error } from "../lib/Toasts";
   import RPM from "./RPM.svelte";
 
   async function update() {
@@ -10,36 +10,16 @@
       .then((response: any) => {
         for (const message of response) {
           if (message.Err) {
-            toast.push(message.Err.message, {
-              theme: {
-                "--toastBackground": "#F56565",
-                "--toastBarBackground": "#C53030",
-              },
-            });
+            error(message.Err.message);
           } else if (message.Ok) {
-            toast.push(message.Ok, {
-              theme: {
-                "--toastBackground": "#48BB78",
-                "--toastBarBackground": "#2F855A",
-              },
-            });
+            success(message.Ok);
           } else {
-            toast.push(message, {
-              theme: {
-                "--toastBackground": "#F56565",
-                "--toastBarBackground": "#C53030",
-              },
-            });
+            success(message);
           }
         }
       })
-      .catch((error: any) => {
-        toast.push(error, {
-          theme: {
-            "--toastBackground": "#F56565",
-            "--toastBarBackground": "#C53030",
-          },
-        });
+      .catch((err: any) => {
+        error(err);
       })
       .finally(() => {
         $session.loading = false;
