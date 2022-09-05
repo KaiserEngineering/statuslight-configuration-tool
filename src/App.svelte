@@ -15,7 +15,11 @@
   }
 
   async function set_initial_config() {
-    $shiftlight.load_current_config().catch((err) => {
+    $session.loading = true;
+    $shiftlight.load_current_config()
+    .then(() => $session.loading = false)
+    .catch((err) => {
+      $session.loading = false;
       error(err);
     });
   }

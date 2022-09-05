@@ -90,7 +90,7 @@ pub fn find_available_ports() -> Result<Vec<SerialPort>, SerialError> {
 }
 
 #[tauri::command]
-pub fn write(content: String, port_name: &str) -> Result<String, SerialError> {
+pub async fn write(content: String, port_name: &str) -> Result<String, SerialError> {
     match check_active_port(port_name) {
         Err(error) => Err(SerialError {
             error_type: SerialErrors::Port,
