@@ -14,7 +14,12 @@ export class ShiftLight {
   }
 
   async load_current_config() {
-    this.loaded_config = {};
+    await invoke("close_active_port", {})
+      .catch((err) => {
+        throw new err;
+      });
+
+    this.loaded_config = null;
 
     return await invoke("write", {
       portName: this.port.port_name,

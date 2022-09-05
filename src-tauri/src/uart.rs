@@ -146,3 +146,22 @@ fn read_serial(port_name: &str) -> Result<String, String> {
         }
     }
 }
+
+#[tauri::command]
+pub async fn close_active_port() -> Result<String, SerialError> {
+    match ACTIVE_CONNECTION.lock() {
+        Ok(mut connection) => match &*connection {
+            ActiveConnection::Active(_active_port) => {
+                println!("Closing serial port");
+                *connection = ActiveConnection::Inactive;
+                drop(connection);
+                Ok("Serial Port closed".to_string())
+            }
+            ActiveConnection::Inactive => Ok("Serial Port already inactive".to_string()),
+        },
+        Err(error) => Err(SerialError {
+            error_type: SerialErrors::Port,
+            message: error.to_string(),
+        }),
+    }
+}
