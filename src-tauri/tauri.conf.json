@@ -51,7 +51,12 @@
       "csp": null
     },
     "updater": {
-      "active": false
+      "active": true,
+      "endpoints": [
+          "https://github.com/KaiserEngineering/shift-light-configuration-tool/archive/refs/tags/app-{{current_version}}.tar.gz"
+      ],
+      "dialog": true,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEI0NzZBNDE4N0UwQTVGOTIKUldTU1h3cCtHS1IydE5IQWFwbjJpOUJSSm1EaGtyRll4VE1DOG4wZVF5TWtRL2RjWTlvTnpoZDcK"
     },
     "windows": [
       {
