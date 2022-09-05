@@ -7,34 +7,38 @@ export class Port {
 
 export class ShiftLight {
   port: Port;
-  variant: String;
+  config_type: string;
   loaded_config: {};
 
   constructor() {
   }
 
-  // async load_current_config() {
-  //   await invoke("write_from_new_handle", {
-  //     portName: this.port.port_name,
-  //     config: "VER\n",
-  //   })
-  //   .then((variant: any) => {
-  //     let keys = ShiftLightConfigs["RPM"];
+  async load_current_config() {
+    this.loaded_config = {};
 
-  //     await invoke("submit_config", {
-  //       portName: this.port.port_name,
-  //       config: "VER\n",
-  //     })
+    return await invoke("write", {
+      portName: this.port.port_name,
+      content: "VER\n",
+    })
+      .then(async (version: string) => {
+        let keys = ShiftLightConfigs[version.replace("\n", "")];
 
-  //     let new_config = {};
-  //     for (let key in keys) {
-  //       new_config[key] = 
-  //     }
-
-  //     this.loaded_config = "response";
-  //   })
-  //   .catch((error) => {
-  //     throw error.message;
-  //   });
-  // }
+        let new_config = {};
+        for (let key in keys) {
+          await invoke("write", {
+            portName: this.port.port_name,
+            content: key + "\n",
+          }).then((res: string) => {
+            new_config[key] = res.replace("\n", "");
+          })
+            .catch((error) => {
+              throw error.message;
+            });
+        }
+        this.loaded_config = new_config;
+      })
+      .catch((error) => {
+        throw error.message;
+      });
+  }
 }

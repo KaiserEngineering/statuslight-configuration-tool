@@ -3,11 +3,11 @@
   import { session, shiftlight } from "../lib/Store";
   import { success, error } from "../lib/Toasts";
   import { ShiftLightConfigs } from "../lib/Config";
-  import { form_content } from "../lib/Store";
 
-  async function update() {
+  let config = $shiftlight.loaded_config;
+  async function update(): Promise<void> {
     $session.loading = true;
-    submit_config()
+    submit_config(config)
       .then((response: any) => {
         let errors = [];
         for (const message of response) {
@@ -15,10 +15,9 @@
             errors.push(message.Err.message);
           }
         }
-        if (errors.length > 0 ) {
+        if (errors.length > 0) {
           error(JSON.stringify(errors));
-        }
-        else {
+        } else {
           success("Config updated");
         }
       })
@@ -30,21 +29,17 @@
       });
   }
 
-  let variant = $shiftlight.variant;
-  $: input_options = ShiftLightConfigs[variant] || {};
+  let config_type = $shiftlight.config_type;
+  $: input_options = ShiftLightConfigs[config_type] || {};
 </script>
 
 <div class="p-4 w-full">
   <div class="form-control max-w-xs">
-    <label for="variant">
-      <span>ShiftLight Variant:</span>
+    <label for="config_type">
+      <span>Config Type:</span>
     </label>
 
-    <select
-      class="select select-sm"
-      id="variant"
-      bind:value={variant}
-    >
+    <select class="select select-sm" id="config_type" bind:value={config_type}>
       {#each Object.keys(ShiftLightConfigs) as type}
         <option>{type}</option>
       {/each}
@@ -57,18 +52,10 @@
       <label for={input}>
         <span>{input}:</span>
       </label>
-      {#if typeof variant[input] == "string"}
-        <input
-          bind:value={$form_content[input]}
-          class="input input-sm"
-          id={input}
-        />
+      {#if typeof input_options[input] == "string"}
+        <input bind:value={config[input]} class="input input-sm" id={input} />
       {:else}
-        <select
-          class="select select-sm"
-          id={input}
-          bind:value={$form_content[input]}
-        >
+        <select class="select select-sm" id={input} bind:value={config[input]}>
           {#each Object.keys(input_options[input]) as option}
             <option>{option}</option>
           {/each}

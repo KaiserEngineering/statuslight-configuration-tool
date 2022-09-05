@@ -2,8 +2,8 @@
   import { SvelteToast } from "@zerodevx/svelte-toast";
   import CurrentConfig from "./components/CurrentConfig.svelte";
   import { get_serial_ports } from "./lib/API";
-  import { form_content, session, shiftlight } from "./lib/Store";
-  import { error } from "./lib/Toasts";
+  import { session, shiftlight } from "./lib/Store";
+  import { error, success } from "./lib/Toasts";
 
   let ports = [];
   async function get_ports() {
@@ -15,13 +15,9 @@
   }
 
   async function set_initial_config() {
-  //   await $shiftlight.load_current_config().then((_resp) => {
-  //     console.log($shiftlight.loaded_config);
-      // Object.assign($form_content, $shiftlight.loaded_config);
-  //   })
-  //   .catch((err) => {
-  //     error(err);
-  //   });
+    $shiftlight.load_current_config().catch((err) => {
+      error(err);
+    });
   }
   let ports_promise = get_ports();
 </script>
@@ -60,7 +56,7 @@
       id="shiftlight-port"
       class="select bg-white max-w-xs"
       bind:value={$shiftlight.port}
-      on:change="{set_initial_config}"
+      on:change={set_initial_config}
     >
       <option value="" disabled selected> Select UART Port</option>
       {#each ports as port}
@@ -79,7 +75,7 @@
       class="shadow-inner shadow border w-full m-5 rounded px-8 pt-6 pb-8"
     >
       <!-- Only show port selection until a port is chosen -->
-      {#if $shiftlight.port.port_name}
+      {#if $shiftlight.loaded_config}
         <CurrentConfig />
       {:else}
         <p>Choose a serial port to get started!</p>
