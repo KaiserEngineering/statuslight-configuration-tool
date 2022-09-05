@@ -68,7 +68,7 @@ fn check_active_port(port_name: &str) -> Result<Box<dyn serialport::SerialPort>,
 }
 
 #[tauri::command]
-pub fn find_available_ports() -> Result<Vec<SerialPort>, SerialError> {
+pub async fn find_available_ports() -> Result<Vec<SerialPort>, SerialError> {
     // Return vec of all ports found on device
     match serialport::available_ports() {
         Ok(ports) => {
