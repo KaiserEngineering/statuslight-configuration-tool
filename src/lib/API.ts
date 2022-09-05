@@ -1,7 +1,7 @@
 // Handle sending to ourbackend
 import { invoke } from "@tauri-apps/api";
 import { get } from 'svelte/store';
-import { shiftlight, form_content } from "./Store";
+import { shiftlight } from "./Store";
 
 export async function get_serial_ports() {
   return await invoke("find_available_ports")
@@ -14,22 +14,21 @@ export async function get_serial_ports() {
     });
 }
 
-export async function submit_config() {
-  let current_config = get(form_content);
-  let config = [];
-  for (const key in current_config) {
-    config.push(key + " " + current_config[key] + "\n");
-  }
+export async function submit_config(config: Object) {
 
-  // Write each of the values of our current form store to Serial.
-  return await invoke("write_config", {
-    portName: get(shiftlight).selected_port.port_name,
-    config: config,
-  })
-    .then((responses: any) => {
-      return responses;
+  let results = [];
+  for (const key in config) {
+    await invoke("write", {
+      portName: get(shiftlight).port.port_name,
+      content: key + " " + config[key] + "\n",
     })
-    .catch((error) => {
-      throw error.message;
-    });
+      .then((res) => {
+        results.push(res);
+      })
+      .catch((err) => {
+        results.push(err);
+      });
+  }
+  return results;
 }
+

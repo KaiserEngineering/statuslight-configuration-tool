@@ -1,56 +1,67 @@
 <script lang="ts">
   import { submit_config } from "../lib/API";
-  import { session } from "../lib/Store";
-  import { toast } from "@zerodevx/svelte-toast";
-  import RPM from "./RPM.svelte";
+  import { session, shiftlight } from "../lib/Store";
+  import { success, error } from "../lib/Toasts";
+  import { ShiftLightConfigs } from "../lib/Config";
 
-  async function update() {
-    $session.loading =true;
-    submit_config()
+  let config = $shiftlight.loaded_config;
+  async function update(): Promise<void> {
+    $session.loading = true;
+    submit_config(config)
       .then((response: any) => {
+        let errors = [];
         for (const message of response) {
           if (message.Err) {
-            toast.push(message.Err.message, {
-              theme: {
-                "--toastBackground": "#F56565",
-                "--toastBarBackground": "#C53030",
-              },
-            });
-          } else if (message.Ok) {
-            toast.push(message.Ok, {
-              theme: {
-                "--toastBackground": "#48BB78",
-                "--toastBarBackground": "#2F855A",
-              },
-            });
-          } else {
-            toast.push(message, {
-              theme: {
-                "--toastBackground": "#F56565",
-                "--toastBarBackground": "#C53030",
-              },
-            });
+            errors.push(message.Err.message);
           }
         }
+        if (errors.length > 0) {
+          error(JSON.stringify(errors));
+        } else {
+          success("Config updated");
+        }
       })
-      .catch((error: any) => {
-        toast.push(error, {
-          theme: {
-            "--toastBackground": "#F56565",
-            "--toastBarBackground": "#C53030",
-          },
-        });
+      .catch((err: any) => {
+        error(err);
       })
       .finally(() => {
         $session.loading = false;
-      })
+      });
   }
-  let config_type = RPM;
+
+  let config_type = $shiftlight.config_type;
+  $: input_options = ShiftLightConfigs[config_type] || {};
 </script>
 
 <div class="p-4 w-full">
-  <div>
-    <svelte:component this={config_type} />
+  <div class="form-control max-w-xs">
+    <label for="config_type">
+      <span>Config Type:</span>
+    </label>
+
+    <select class="select select-sm" id="config_type" bind:value={config_type}>
+      {#each Object.keys(ShiftLightConfigs) as type}
+        <option>{type}</option>
+      {/each}
+    </select>
+  </div>
+
+  <!-- Our form for out version the shiftlight is configured for -->
+  <div class="form-control max-w-xs">
+    {#each Object.keys(input_options) as input}
+      <label for={input}>
+        <span>{input}:</span>
+      </label>
+      {#if typeof input_options[input] == "string"}
+        <input bind:value={config[input]} class="input input-sm" id={input} />
+      {:else}
+        <select class="select select-sm" id={input} bind:value={config[input]}>
+          {#each Object.keys(input_options[input]) as option}
+            <option>{option}</option>
+          {/each}
+        </select>
+      {/if}
+    {/each}
   </div>
 
   <div class="grid place-content-end">
