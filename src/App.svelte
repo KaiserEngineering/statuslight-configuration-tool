@@ -3,7 +3,7 @@
   import CurrentConfig from "./components/CurrentConfig.svelte";
   import { get_serial_ports } from "./lib/API";
   import { session, shiftlight } from "./lib/Store";
-  import { error, success } from "./lib/Toasts";
+  import { error } from "./lib/Toasts";
 
   let ports = [];
   async function get_ports() {
