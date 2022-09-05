@@ -66,7 +66,6 @@
       {#each ports as port}
         <option value={port}>{port.port_name}</option>
       {/each}
-      <option>dog</option>
     </select>
   </div>
 </div>
