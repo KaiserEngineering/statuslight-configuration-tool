@@ -14,19 +14,27 @@ export async function get_serial_ports() {
     });
 }
 
-export async function submit_config(config: Object) {
+/*
+Takes a configuration object and writes it to the serial
+port currently connected.
 
-  let results = [];
+Returns an object{ error: [], success: [] }
+*/
+export async function submit_config(config: Object) {
+  let results = {
+    "success": [],
+    "error": []
+  };
   for (const key in config) {
     await invoke("write", {
       portName: get(shiftlight).port.port_name,
       content: key + " " + config[key] + "\n",
     })
       .then((res) => {
-        results.push(res);
+        results["success"].push(res);
       })
       .catch((err) => {
-        results.push(err);
+        results["error"].push(err.message);
       });
   }
   return results;

@@ -2,13 +2,22 @@
   import { SvelteToast } from "@zerodevx/svelte-toast";
   import CurrentConfig from "./components/CurrentConfig.svelte";
   import { get_serial_ports } from "./lib/API";
+  import type { Port } from "./lib/Shiftlight";
   import { session, shiftlight } from "./lib/Store";
   import { error } from "./lib/Toasts";
 
   let ports = [];
   async function get_ports() {
     return await get_serial_ports()
-      .then((ports_found: any) => (ports = ports_found))
+      .then((ports_found: [Port]) => {
+        ports = ports_found;
+        for ( let port of ports_found ) {
+          if ( port.info.includes("Arduino") ) {
+            $shiftlight.port = port;
+            set_initial_config();
+          }
+        }
+      })
       .catch((err: any) => {
         error(err);
       });

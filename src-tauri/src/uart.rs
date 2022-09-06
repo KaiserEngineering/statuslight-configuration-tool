@@ -1,6 +1,7 @@
 use serde::Serialize;
 use std::io::BufRead;
 use std::io::BufReader;
+use std::mem::drop;
 use std::sync::Mutex;
 use std::{thread, time};
 
@@ -29,6 +30,7 @@ pub enum SerialErrors {
 #[derive(Serialize, Debug)]
 pub struct SerialPort {
     port_name: String,
+    info: String,
 }
 
 /*
@@ -40,7 +42,33 @@ fn check_active_port(port_name: &str) -> Result<Box<dyn serialport::SerialPort>,
             match &*connection {
                 ActiveConnection::Active(active_port) => {
                     println!("Found an active connection..!");
-                    Ok(active_port.try_clone().unwrap())
+
+                    // Check if our connection is still alive
+                    match active_port.try_clone().unwrap().read_carrier_detect() {
+                        Ok(_) => Ok(active_port.try_clone().unwrap()),
+                        Err(error) => {
+                            eprintln!(
+                                "Connection invalid {}, attempting to re-open",
+                                error.to_string()
+                            );
+                            let serial_port = serialport::new(port_name, 9600)
+                                .timeout(time::Duration::from_millis(500))
+                                .open();
+
+                            match serial_port {
+                                Err(error) => Err(error.to_string()),
+                                Ok(active_port) => {
+                                    // Sleep while the device reboots
+                                    let two_seconds = time::Duration::from_secs(2);
+                                    thread::sleep(two_seconds);
+
+                                    *connection =
+                                        ActiveConnection::Active(active_port.try_clone().unwrap());
+                                    Ok(active_port)
+                                }
+                            }
+                        }
+                    }
                 }
                 ActiveConnection::Inactive => {
                     println!("Found an Inactive connection..!");
@@ -78,6 +106,12 @@ pub async fn find_available_ports() -> Result<Vec<SerialPort>, SerialError> {
                     // Right now we only grab Port name
                     SerialPort {
                         port_name: p.port_name.clone(),
+                        info: match &p.port_type {
+                            serialport::SerialPortType::UsbPort(info) => {
+                                info.manufacturer.clone().unwrap()
+                            }
+                            _ => "".to_string(),
+                        },
                     }
                 })
                 .collect())
