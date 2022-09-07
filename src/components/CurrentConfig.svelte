@@ -8,15 +8,9 @@
   async function update(): Promise<void> {
     $session.loading = true;
     submit_config(config)
-      .then((response: any) => {
-        let errors = [];
-        for (const message of response) {
-          if (message.Err) {
-            errors.push(message.Err.message);
-          }
-        }
-        if (errors.length > 0) {
-          error(JSON.stringify(errors));
+      .then((results: any) => {
+        if (results.error.length > 0) {
+          error(JSON.stringify(results.error));
         } else {
           success("Config updated");
         }

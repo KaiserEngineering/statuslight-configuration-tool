@@ -3,6 +3,7 @@ import { ShiftLightConfigs } from "./Config";
 
 export class Port {
   port_name: string;
+  port_info: string;
 }
 
 export class ShiftLight {
