@@ -12,7 +12,7 @@
       .then((ports_found: [Port]) => {
         ports = ports_found;
         for ( let port of ports_found ) {
-          if ( port.info.includes("Arduino") ) {
+          if ( port.port_info.includes("Arduino") ) {
             $shiftlight.port = port;
             set_initial_config();
           }

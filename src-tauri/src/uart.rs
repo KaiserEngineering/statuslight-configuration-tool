@@ -30,7 +30,7 @@ pub enum SerialErrors {
 #[derive(Serialize, Debug)]
 pub struct SerialPort {
     port_name: String,
-    info: String,
+    port_info: String,
 }
 
 /*
@@ -106,7 +106,7 @@ pub async fn find_available_ports() -> Result<Vec<SerialPort>, SerialError> {
                     // Right now we only grab Port name
                     SerialPort {
                         port_name: p.port_name.clone(),
-                        info: match &p.port_type {
+                        port_info: match &p.port_type {
                             serialport::SerialPortType::UsbPort(info) => {
                                 info.manufacturer.clone().unwrap()
                             }
