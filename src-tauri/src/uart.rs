@@ -105,7 +105,7 @@ pub async fn find_available_ports() -> Result<Vec<SerialPort>, SerialError> {
                         port_name: p.port_name.clone(),
                         port_info: match &p.port_type {
                             serialport::SerialPortType::UsbPort(info) => {
-                                info.manufacturer.clone().unwrap()
+                                info.product.clone().unwrap()
                             }
                             _ => "".to_string(),
                         },

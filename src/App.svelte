@@ -12,7 +12,7 @@
       .then((ports_found: [Port]) => {
         ports = ports_found;
         for ( let port of ports_found ) {
-          if ( port.port_info.includes("Arduino") ) {
+          if ( port.port_info.includes("SHIFTLIGHT") ) {
             $shiftlight.port = port;
             set_initial_config();
           }
@@ -73,7 +73,7 @@
     >
       <option value="" disabled selected> Select UART Port</option>
       {#each ports as port}
-        <option value={port}>{port.port_name}</option>
+        <option value={port}>{port.port_name} - {port.port_info}</option>
       {/each}
     </select>
   </div>
