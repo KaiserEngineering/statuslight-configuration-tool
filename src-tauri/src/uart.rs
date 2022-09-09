@@ -1,8 +1,45 @@
+use mockall::*;
 use serde::Serialize;
+use serialport::SerialPortInfo;
+use serialport::UsbPortInfo;
 use std::io::BufRead;
 use std::io::BufReader;
 use std::sync::Mutex;
 use std::{thread, time};
+
+/// A trait that abstracts over the function(s) you want to mock out in tests
+trait SerialManager {
+    fn available_ports(&self) -> Result<Vec<SerialPortInfo>, serialport::Error>;
+}
+
+
+/// A struct which implements the trait to call the real function.
+struct RealSerialManager;
+
+impl SerialManager for RealSerialManager {
+    fn available_ports(&self) -> Result<Vec<SerialPortInfo>, serialport::Error> {
+        serialport::available_ports()
+    }
+}
+
+/// A struct which implements the trait to return mock data without calling the "actual" implementation.
+struct MockSerialManager;
+
+impl SerialManager for MockSerialManager {
+    fn available_ports(&self) -> Result<Vec<SerialPortInfo>, serialport::Error> {
+        // Return mock data.
+        Ok(vec![serialport::SerialPortInfo {
+            port_type: serialport::SerialPortType::UsbPort(UsbPortInfo {
+                vid: 1,
+                pid: 2,
+                serial_number: Some("serial_number".into()),
+                manufacturer: Some("kaiserengineering".into()),
+                product: Some("SHIFTLIGHT".into()),
+            }),
+            port_name: "Dog".to_string(),
+        }])
+    }
+}
 
 enum ActiveConnection {
     Active(Box<dyn serialport::SerialPort>),
@@ -26,15 +63,14 @@ pub enum SerialErrors {
     Port,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Clone)]
 pub struct SerialPort {
     port_name: String,
     port_info: String,
 }
 
-/*
-Check if a port is valid and active, if not open a new one.
-*/
+
+// Check if a port is valid and active, if not open a new one.
 fn check_active_port(port_name: &str) -> Result<Box<dyn serialport::SerialPort>, String> {
     match ACTIVE_CONNECTION.lock() {
         Ok(mut connection) => {
@@ -92,10 +128,13 @@ fn check_active_port(port_name: &str) -> Result<Box<dyn serialport::SerialPort>,
     }
 }
 
-#[tauri::command]
-pub async fn find_available_ports() -> Result<Vec<SerialPort>, SerialError> {
+
+/// The function that is generic over the manager. Can be private if desired.
+async fn find_available_manager_ports<M: SerialManager>(
+    manager: M,
+) -> Result<Vec<SerialPort>, SerialError> {
     // Return vec of all ports found on device
-    match serialport::available_ports() {
+    match manager.available_ports() {
         Ok(ports) => {
             Ok(ports
                 .iter()
@@ -118,6 +157,12 @@ pub async fn find_available_ports() -> Result<Vec<SerialPort>, SerialError> {
             message: error.to_string(),
         }),
     }
+}
+
+#[tauri::command]
+pub async fn find_available_ports() -> Result<Vec<SerialPort>, SerialError> {
+    // Return vec of all ports found on device
+    find_available_manager_ports(RealSerialManager).await
 }
 
 #[tauri::command]
@@ -194,5 +239,19 @@ pub async fn close_active_port() -> Result<String, SerialError> {
             error_type: SerialErrors::Port,
             message: error.to_string(),
         }),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_find_ports() {
+        tauri::async_runtime::block_on(async move {
+            let ports_found = find_available_manager_ports(MockSerialManager).await;
+
+            assert_eq!(1, ports_found.unwrap().len());
+        });
     }
 }
