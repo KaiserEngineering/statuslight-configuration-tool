@@ -152,25 +152,34 @@ pub async fn write(content: String, port_name: &str) -> Result<String, SerialErr
         Ok(mut connection) => {
             match connection.write(content.as_bytes()) {
                 Ok(write) => {
-                    if write as u32 == content.len() as u32 {
-                        println!("Successfully wrote to serial");
-                        // Confirm our results look good
-                        match read_serial(port_name) {
-                            Ok(results) => Ok(results),
-                            Err(error) => Err(SerialError {
-                                error_type: SerialErrors::Read,
-                                message: error,
-                            }),
+                    // HANDLE FLUSH
+                    match connection.flush() {
+                        Ok(_) => {
+                            if write as u32 == content.len() as u32 {
+                                println!("Successfully wrote to serial");
+                                // Confirm our results look good
+                                match read_serial(port_name) {
+                                    Ok(results) => Ok(results),
+                                    Err(error) => Err(SerialError {
+                                        error_type: SerialErrors::Read,
+                                        message: error,
+                                    }),
+                                }
+                            } else {
+                                Err(SerialError {
+                                    error_type: SerialErrors::Write,
+                                    message: format!(
+                                        "Incomplete write only wrote {} bytes of {}",
+                                        write,
+                                        content.len()
+                                    ),
+                                })
+                            }
                         }
-                    } else {
-                        Err(SerialError {
+                        Err(error) => Err(SerialError {
                             error_type: SerialErrors::Write,
-                            message: format!(
-                                "Incomplete write only wrote {} bytes of {}",
-                                write,
-                                content.len()
-                            ),
-                        })
+                            message: error.to_string(),
+                        }),
                     }
                 }
                 Err(error) => Err(SerialError {
