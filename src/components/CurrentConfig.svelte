@@ -46,12 +46,12 @@
       <label for={input}>
         <span>{input}:</span>
       </label>
-      {#if typeof input_options[input] == "string"}
-        <input bind:value={config[input]} class="input input-sm" id={input} />
+      {#if typeof input_options[input]["type"] == "string"}
+        <input bind:value={config[input_options[input]["code"]]} class="input input-sm" id={input_options[input]["code"]} />
       {:else}
-        <select class="select select-sm" id={input} bind:value={config[input]}>
-          {#each Object.keys(input_options[input]) as option}
-            <option>{option}</option>
+        <select class="select select-sm" id={input["code"]} bind:value={config[input["code"]]}>
+          {#each Object.keys(input_options[input]["type"]) as option}
+            <option value="{option["value"]}">{option["label"]}</option>
           {/each}
         </select>
       {/if}

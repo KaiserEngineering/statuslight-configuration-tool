@@ -33,9 +33,9 @@ export class ShiftLight {
         for (let key in keys) {
           await invoke("write", {
             portName: this.port.port_name,
-            content: key + "\n",
+            content: keys[key]["code"] + "\n",
           }).then((res: string) => {
-            new_config[key] = res.replace("\n", "");
+            new_config[keys[key]["code"]] = res.replace("\n", "");
           })
             .catch((error) => {
               throw error.message;
