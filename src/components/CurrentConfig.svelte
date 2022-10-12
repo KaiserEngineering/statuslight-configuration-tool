@@ -49,7 +49,7 @@
       {#if typeof input_options[input]["type"] == "string"}
         <input bind:value={config[input_options[input]["code"]]} class="input input-sm" id={input_options[input]["code"]} />
       {:else}
-        <select class="select select-sm" id={input["code"]} bind:value={config[input["code"]]}>
+        <select class="select select-sm" id={input_options[input]["code"]} bind:value={config[input_options[input]["code"]]}>
           {#each input_options[input]["type"] as option}
             <option value="{option["value"]}">{option["label"]}</option>
           {/each}
