@@ -12,26 +12,30 @@ export const ShiftLightConfigs: any = {
         { "label": "Tachometer", "value": "Tachometer" }
       ]
     },
-    "ecu_timeout": {
-      "code": "ecu_timeout",
+    "Actiation Point": {
+      "code": "activation_point",
       "type": "number"
     },
-    "ecu_tx_id": {
-      "code": "ecu_tx_id",
-      "type": "number"
-    },
-    "ecu_rx_id": {
-      "code": "ecu_rx_id",
-      "type": "number"
-    },
-    "uint32_t": {
-      "code": "uint32_t",
+    "Illum": {
+      "code": "illum",
       "type": "number"
     },
     "Animation Direction": {
       "code": "ANIMATION_DIRECTION",
       "type": [
-        { "label": "ANIMATION_DIR_OUT_TO_IN", "value": "ANIMATION_DIR_OUT_TO_IN" }
+        { "label": "Left to Right", "value": "Left to Right" },
+        { "label": "Right to left", "value": "Right to Left" },
+        { "label": "Out to In", "value": "Out to In" },
+        { "label": "In to Out", "value": "In to Out" }
+      ]
+    },
+    "Color": {
+      "code": "color",
+      "type": [
+        { "label": "Blue Green Red", "value": 0 },
+        { "label": "Green Red Blue", "value": 1 },
+        { "label": "Green Red", "value": 2 },
+        { "label": "Aura", "value": 3 }
       ]
     }
   },
