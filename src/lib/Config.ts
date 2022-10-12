@@ -12,7 +12,7 @@ export const ShiftLightConfigs: any = {
         { "label": "Tachometer", "value": "Tachometer" }
       ]
     },
-    "Actiation Point": {
+    "Activation Point": {
       "code": "activation_point",
       "type": "number"
     },
