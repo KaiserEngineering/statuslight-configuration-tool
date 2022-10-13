@@ -1,4 +1,6 @@
 import { invoke } from '@tauri-apps/api';
+
+import { shiftlight } from './Store';
 import { ShiftLightConfigs } from './Config';
 
 export class Port {
@@ -41,8 +43,9 @@ export class ShiftLight {
 								throw error.message;
 							});
 					}
-					this.config_type = 'Shift Point';
+					this.config_type = 'RPM';
 					this.loaded_config = new_config;
+					shiftlight.set(this);
 				})
 				.catch((error) => {
 					throw error.message;
