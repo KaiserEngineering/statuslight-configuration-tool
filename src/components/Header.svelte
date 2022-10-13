@@ -51,21 +51,23 @@
   };
 </script>
 
-<div class="m-4 flex">
-	<select
-		id="shiftlight-port"
-		class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 max-w-xs"
-		bind:value={$shiftlight.port}
-		on:change={set_initial_config}
-	>
-		<option value="" disabled selected> Select UART Port</option>
-		{#each ports as port}
-			<option value={port}>{port.port_name} - {port.port_info}</option>
-		{/each}
-	</select>
+<div class="flex m-4">
+	<div class="w-1/2">
+		<select
+			id="shiftlight-port"
+			class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 max-w-xs"
+			bind:value={$shiftlight.port}
+			on:change={set_initial_config}
+		>
+			<option value="" disabled selected> Select UART Port</option>
+			{#each ports as port}
+				<option value={port}>{port.port_name} - {port.port_info}</option>
+			{/each}
+		</select>
+	</div>
 
-	<div class="flex justify-end items-end space-x-2 mx-auto relative">
-		<button on:click={toggleDark}>
+	<div class="w-1/2 flex justify-end">
+		<button class="" on:click={toggleDark}>
 			<Fa icon={icon} size="sm" color="{$darkTheme ? "white": "black"}" />
 		</button>
 	</div>
