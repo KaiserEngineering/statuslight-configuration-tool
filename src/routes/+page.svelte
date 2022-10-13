@@ -29,7 +29,7 @@
 		<Header />
 
 		{#if $shiftlight.port}
-			<div class="flex justify-center bg-white">
+			<div class="flex justify-center bg-white dark:bg-slate-600 ">
 				<form
 					on:submit|preventDefault
 					class="shadow-inner shadow border w-full m-5 rounded px-8 pt-6 pb-8"

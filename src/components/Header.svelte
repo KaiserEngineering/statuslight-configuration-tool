@@ -49,13 +49,17 @@
       icon = faMoon;
     }
   };
+
+	// So we can use class:dark
+	$: dark = $darkTheme;
 </script>
 
-<div class="flex m-4">
+<div class="flex m-4" class:dark>
 	<div class="w-1/2">
 		<select
 			id="shiftlight-port"
-			class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 max-w-xs"
+			class="rounded-lg block w-full
+				p-2 dark:text-slate-700"
 			bind:value={$shiftlight.port}
 			on:change={set_initial_config}
 		>
@@ -66,9 +70,9 @@
 		</select>
 	</div>
 
-	<div class="w-1/2 flex justify-end">
-		<button class="" on:click={toggleDark}>
-			<Fa icon={icon} size="sm" color="{$darkTheme ? "white": "black"}" />
+	<div class="w-1/2 mr-4 flex justify-end content-center">
+		<button on:click={toggleDark}>
+			<Fa icon={icon} size="25" color="{$darkTheme ? "white": "black"}" />
 		</button>
 	</div>
 </div>
