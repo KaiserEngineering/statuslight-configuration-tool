@@ -23,7 +23,7 @@
       });
   }
 
-  let config_type: string = $shiftlight.config_type || "";
+  let config_type = $shiftlight.config_type || "";
   $: input_options = ShiftLightConfigs[config_type] || {};
 </script>
 

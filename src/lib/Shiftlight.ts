@@ -20,6 +20,7 @@ export class ShiftLight {
 
 		if (this.port) {
 			const port_name = this.port.port_name;
+
 			return await invoke('write', {
 				portName: port_name,
 				content: 'VER\n'
@@ -40,6 +41,7 @@ export class ShiftLight {
 								throw error.message;
 							});
 					}
+					this.config_type = 'Shift Point';
 					this.loaded_config = new_config;
 				})
 				.catch((error) => {

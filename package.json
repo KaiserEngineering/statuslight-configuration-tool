@@ -19,7 +19,6 @@
 		"@typescript-eslint/parser": "^5.27.0",
 		"@zerodevx/svelte-toast": "^0.8.0",
 		"autoprefixer": "^10.4.12",
-		"daisyui": "^2.31.0",
 		"eslint": "^8.16.0",
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-svelte3": "^4.0.0",
@@ -36,6 +35,9 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@tauri-apps/api": "^1.1.0"
+		"@fortawesome/fontawesome-svg-core": "^6.2.0",
+		"@fortawesome/free-solid-svg-icons": "^6.2.0",
+		"@tauri-apps/api": "^1.1.0",
+		"sveltejs-fontawesome": "^0.1.3"
 	}
 }

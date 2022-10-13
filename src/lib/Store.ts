@@ -6,3 +6,5 @@ export const shiftlight = writable(new ShiftLight());
 export const session = writable({
 	loading: false
 });
+
+export const darkTheme = writable(false);
