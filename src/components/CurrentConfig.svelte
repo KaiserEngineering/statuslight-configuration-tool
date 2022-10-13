@@ -4,18 +4,18 @@
   import { success, error } from "../lib/Toasts";
   import { ShiftLightConfigs } from "../lib/Config";
 
-  let config = $shiftlight.loaded_config;
+  let config = $shiftlight.loaded_config || {};
   async function update(): Promise<void> {
     $session.loading = true;
     submit_config(config)
-      .then((results: any) => {
+      .then((results) => {
         if (results.error.length > 0) {
           error(JSON.stringify(results.error));
         } else {
           success("Config updated");
         }
       })
-      .catch((err: any) => {
+      .catch((err) => {
         error(err);
       })
       .finally(() => {
@@ -23,7 +23,7 @@
       });
   }
 
-  let config_type = $shiftlight.config_type;
+  let config_type: string = $shiftlight.config_type || "";
   $: input_options = ShiftLightConfigs[config_type] || {};
 </script>
 

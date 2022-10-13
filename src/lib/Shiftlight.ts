@@ -1,50 +1,52 @@
-import { invoke } from "@tauri-apps/api";
-import { ShiftLightConfigs } from "./Config";
+import { invoke } from '@tauri-apps/api';
+import { ShiftLightConfigs } from './Config';
 
 export class Port {
-  port_name: string;
-  port_info: string;
+	port_name: string | undefined;
+	port_info: string | undefined;
 }
 
 export class ShiftLight {
-  port: Port;
-  config_type: string;
-  loaded_config: {};
+	port: Port | undefined;
+	config_type: string | undefined;
+	loaded_config: Record<string, unknown> | undefined;
 
-  constructor() {
-  }
+	async load_current_config() {
+		await invoke('close_active_port', {}).catch((err) => {
+			throw new err();
+		});
 
-  async load_current_config() {
-    await invoke("close_active_port", {})
-      .catch((err) => {
-        throw new err;
-      });
+		this.loaded_config;
 
-    this.loaded_config = null;
+		if (this.port) {
+			const port_name = this.port.port_name;
+			return await invoke('write', {
+				portName: port_name,
+				content: 'VER\n'
+			})
+				.then(async (version) => {
+					const keys = ShiftLightConfigs[version.replace('\n', '')];
 
-    return await invoke("write", {
-      portName: this.port.port_name,
-      content: "VER\n",
-    })
-      .then(async (version: string) => {
-        let keys = ShiftLightConfigs[version.replace("\n", "")];
-
-        let new_config = {};
-        for (let key in keys) {
-          await invoke("write", {
-            portName: this.port.port_name,
-            content: keys[key]["code"] + "\n",
-          }).then((res: string) => {
-            new_config[keys[key]["code"]] = res.replace("\n", "");
-          })
-            .catch((error) => {
-              throw error.message;
-            });
-        }
-        this.loaded_config = new_config;
-      })
-      .catch((error) => {
-        throw error.message;
-      });
-  }
+					const new_config = {};
+					for (const key in keys) {
+						await invoke('write', {
+							portName: port_name,
+							content: keys[key]['code'] + '\n'
+						})
+							.then((res) => {
+								new_config[keys[key]['code']] = res.replace('\n', '');
+							})
+							.catch((error) => {
+								throw error.message;
+							});
+					}
+					this.loaded_config = new_config;
+				})
+				.catch((error) => {
+					throw error.message;
+				});
+		} else {
+			throw 'No port found for ShiftLight session';
+		}
+	}
 }
