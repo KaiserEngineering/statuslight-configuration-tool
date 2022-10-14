@@ -52,7 +52,7 @@
 	<!-- Our form for out version the shiftlight is configured for -->
 	<div class="grid grid-cols-3 gap-4 max-w-xl m-auto">
 		{#each Object.keys(inputOptions) as input}
-			<div class="col-span-1">
+			<div class="col-span-1 flex items-center justify-start">
 				<label for={input}>
 					<span>{input}:</span>
 				</label>
