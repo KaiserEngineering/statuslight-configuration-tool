@@ -112,7 +112,7 @@
 		{/each}
 
 		<div class="col-span-full flex place-content-end">
-			<button class="rounded dark:bg-white dark:text-slate-700 p-1">Update</button>
+			<button class="rounded border dark:bg-white dark:text-slate-700 p-1">Update</button>
 		</div>
 	</form>
 </div>
