@@ -34,7 +34,7 @@ export async function load_current_config(port_name: string) {
 					})
 					// Errors get pushed into the resulting config?
 					.catch((error) => {
-						new_config[keys[key]['code']] = error;
+						new_config[keys[key]['code']] = error.message;
 					});
 			}
 			new_config['configType'] = 'RPM';
