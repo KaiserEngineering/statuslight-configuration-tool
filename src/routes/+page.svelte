@@ -9,7 +9,7 @@
 	import '../app.css';
 
 	// So we can use class:dark
-	$: dark = $shiftlight_store.ui_data.darkTheme;
+	$: dark = $shiftlight_store.darkTheme;
 </script>
 
 <Stylesheet />
@@ -28,7 +28,7 @@
 
 		<Header />
 		<!-- Only show port selection until a port is chosen -->
-		{#if $shiftlight_store.ui_data.config_type}
+		{#if $shiftlight_store.configType}
 			<div class="flex justify-center bg-white dark:bg-slate-600 ">
 				<form
 					on:submit|preventDefault

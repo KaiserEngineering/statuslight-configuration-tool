@@ -5,13 +5,13 @@
 	import { ShiftLightConfigs } from '../lib/Config';
 
 	async function update(): Promise<void> {
-		$shiftlight_store.ui_data.loading = true;
+		$shiftlight_store.loading = true;
 		submit_config($shiftlight_store)
 			.then((results) => {
 				if (results.error.length > 0) {
 					error(JSON.stringify(results.error));
 				} else {
-					$shiftlight_store.ui_data.config = results;
+					$shiftlight_store.config = results;
 					success('Config updated');
 				}
 			})
@@ -19,29 +19,27 @@
 				error(err);
 			})
 			.finally(() => {
-				$shiftlight_store.ui_data.loading = false;
+				$shiftlight_store.loading = false;
 			});
 	}
 
-	let config_copy = $shiftlight_store.ui_data.config;
-	let config_type = $shiftlight_store.ui_data.config_type || '';
-	$: input_options = ShiftLightConfigs[config_type] || {};
+	let configCopy = $shiftlight_store.config;
+	let configType = $shiftlight_store.configType || '';
+	$: inputOptions = ShiftLightConfigs[configType] || {};
 
-	$: dark = $shiftlight_store.ui_data.darkTheme;
-
-	$: console.log($shiftlight_store);
+	$: dark = $shiftlight_store.darkTheme;
 </script>
 
 <div class="m-auto w-full" class:dark>
 	<div class="mb-2">
-		<label for="config_type">
+		<label for="configType">
 			<span>Config Type:</span>
 		</label>
 
 		<select
 			class="select select-sm rounded dark:text-slate-700"
-			id="config_type"
-			bind:value={config_type}
+			id="configType"
+			bind:value={configType}
 		>
 			{#each Object.keys(ShiftLightConfigs) as type}
 				<option>{type}</option>
@@ -53,7 +51,7 @@
 
 	<!-- Our form for out version the shiftlight is configured for -->
 	<div class="grid grid-cols-3 gap-4 max-w-xl m-auto">
-		{#each Object.keys(input_options) as input}
+		{#each Object.keys(inputOptions) as input}
 			<div class="col-span-1">
 				<label for={input}>
 					<span>{input}:</span>
@@ -61,19 +59,19 @@
 			</div>
 
 			<div class="col-span-2">
-				{#if typeof input_options[input]['type'] == 'string'}
+				{#if typeof inputOptions[input]['type'] == 'string'}
 					<input
-						bind:value={config_copy[input_options[input]['code']]}
-						class="dark:text-slate-700 rounded p-2 w-1/2"
-						id={input_options[input]['code']}
+						bind:value={configCopy[inputOptions[input]['code']]}
+						class="dark:text-slate-700 rounded p-2 w-1/2 border"
+						id={inputOptions[input]['code']}
 					/>
 				{:else}
 					<select
 						class="dark:text-slate-700 rounded w-1/2"
-						id={input_options[input]['code']}
-						bind:value={config_copy[input_options[input]['code']]}
+						id={inputOptions[input]['code']}
+						bind:value={configCopy[inputOptions[input]['code']]}
 					>
-						{#each input_options[input]['type'] as option}
+						{#each inputOptions[input]['type'] as option}
 							<option value={option['value']}>{option['label']}</option>
 						{/each}
 					</select>

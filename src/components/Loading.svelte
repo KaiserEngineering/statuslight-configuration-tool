@@ -2,7 +2,7 @@
 	import { shiftlight_store } from '../lib/Store';
 </script>
 
-{#if $shiftlight_store.ui_data.loading}
+{#if $shiftlight_store.loading}
 	<div class="fixed h-full w-full flex justify-center bg-opacity-50 bg-gray-700">
 		<div role="status" class="top-40 absolute">
 			<svg
