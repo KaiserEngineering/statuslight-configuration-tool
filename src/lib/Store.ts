@@ -11,4 +11,4 @@ export class Session {
 }
 
 const session = new Session();
-export const shiftlight_store = writable<Session["ui_data"]>(session.ui_data);
+export const shiftlight_store = writable<Session['ui_data']>(session.ui_data);
