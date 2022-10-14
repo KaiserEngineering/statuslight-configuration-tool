@@ -1,56 +1,61 @@
 <script lang="ts">
 	import { get_serial_ports } from '../lib/API';
-	import { shiftlight_store } from '../lib/Store';
+	import { session, config } from '../lib/Store';
 	import { error } from '../lib/Toasts';
-	import { load_current_config, type Port } from '$lib/ShiftLight';
+	import { load_current_config, type Port } from '$lib/API';
 
 	import Fa from 'sveltejs-fontawesome';
 	import { faSun, faMoon, faRefresh } from '@fortawesome/free-solid-svg-icons';
 
 	async function set_initial_config() {
-		$shiftlight_store.loading = true;
+		if (!$session.port) {
+			error("No port selected");
+			return;
+		}
 
-		$shiftlight_store.configType = undefined;
-		$shiftlight_store.config = {};
+		$session.loading = true;
 
-		load_current_config()
+		$session.configType = undefined;
+		$config = {};
+
+		load_current_config($session.port.port_name)
 			.then((res) => {
-				$shiftlight_store.loading = false;
-				$shiftlight_store.config = res;
-				$shiftlight_store.configType = res["configType"];
+				$session.loading = false;
+				$config = res;
+				$session.configType = res["configType"];
 			})
 			.catch((err) => {
-				$shiftlight_store.loading = false;
+				$session.loading = false;
 				error(err);
 			});
 	}
 
 	let ports: [Port] | [] = [];
 	async function get_ports() {
-		$shiftlight_store.loading = true;
+		$session.loading = true;
 
 		return await get_serial_ports()
 			.then((ports_found) => {
 				ports = ports_found;
 				for (let port of ports_found) {
 					if (port.port_info.includes('SHIFTLIGHT')) {
-						$shiftlight_store.port = port;
+						$session.port = port;
 						set_initial_config();
 					}
 				}
-				$shiftlight_store.loading = false;
+				$session.loading = false;
 			})
 			.catch((err) => {
 				error(err);
-				$shiftlight_store.loading = false;
+				$session.loading = false;
 			});
 	}
 	get_ports();
 
 	let icon = faMoon;
 	const toggleDark = () => {
-		$shiftlight_store.darkTheme = !$shiftlight_store.darkTheme;
-		if ($shiftlight_store.darkTheme) {
+		$session.darkTheme = !$session.darkTheme;
+		if ($session.darkTheme) {
 			icon = faSun;
 		} else {
 			icon = faMoon;
@@ -58,7 +63,7 @@
 	};
 
 	// So we can use class:dark
-	$: dark = $shiftlight_store.darkTheme;
+	$: dark = $session.darkTheme;
 </script>
 
 <div class="flex m-4" class:dark>
@@ -67,7 +72,7 @@
 			id="shiftlight-port"
 			class="rounded-lg block w-full
 				p-2 dark:text-slate-700"
-			bind:value={$shiftlight_store.port}
+			bind:value={$session.port}
 			on:change={set_initial_config}
 		>
 			<option value="" disabled selected> Select UART Port</option>

@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { shiftlight_store } from '../lib/Store';
+	import { session } from '../lib/Store';
 </script>
 
-{#if $shiftlight_store.loading}
+{#if $session.loading}
 	<div class="fixed h-full w-full flex justify-center bg-opacity-50 bg-gray-700">
 		<div role="status" class="top-40 absolute">
 			<svg

@@ -1,17 +1,17 @@
 <script lang="ts">
 	import { submit_config } from '../lib/API';
-	import { shiftlight_store } from '../lib/Store';
+	import { session, config } from '../lib/Store';
 	import { success, error } from '../lib/Toasts';
 	import { ShiftLightConfigs } from '../lib/Config';
 
 	async function update(): Promise<void> {
-		$shiftlight_store.loading = true;
-		submit_config($shiftlight_store)
+		$session.loading = true;
+		submit_config($config, $session.port.port_name)
 			.then((results) => {
 				if (results.error.length > 0) {
-					error(JSON.stringify(results.error));
+					error(JSON.stringify("An error occurred while setting some values"));
 				} else {
-					$shiftlight_store.config = results;
+					$config = results;
 					success('Config updated');
 				}
 			})
@@ -19,15 +19,15 @@
 				error(err);
 			})
 			.finally(() => {
-				$shiftlight_store.loading = false;
+				$session.loading = false;
 			});
 	}
 
-	let configCopy = $shiftlight_store.config;
-	let configType = $shiftlight_store.configType || '';
+	let configCopy = $config;
+	let configType = $session.configType || '';
 	$: inputOptions = ShiftLightConfigs[configType] || {};
 
-	$: dark = $shiftlight_store.darkTheme;
+	$: dark = $session.darkTheme;
 </script>
 
 <div class="m-auto w-full" class:dark>
