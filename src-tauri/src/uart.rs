@@ -201,7 +201,20 @@ fn read_serial(port_name: &str) -> Result<String, String> {
             match reader.read_until(b'\n', &mut my_str) {
                 Ok(_) => {
                     println!("Successfully read from serial {:?}", my_str);
-                    Ok(std::str::from_utf8(&my_str).unwrap().to_string())
+
+                    let mut output = std::str::from_utf8(&my_str).unwrap().to_string();
+                    // Strip new line endings
+                    if output.ends_with('\n') {
+                        output.pop();
+                        if output.ends_with('\r') {
+                            output.pop();
+                        }
+                    }
+
+                    if output == "ERROR" {
+                        return Err(output);
+                    }
+                    Ok(output)
                 }
                 Err(error) => Err(error.to_string()),
             }
