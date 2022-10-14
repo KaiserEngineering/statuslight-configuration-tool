@@ -1,7 +1,6 @@
 // Handle sending to ourbackend
 import { invoke } from '@tauri-apps/api';
-import { get } from 'svelte/store';
-import { shiftlight } from './Store';
+import type { ShiftLight } from './Store';
 
 export async function get_serial_ports() {
 	return await invoke('find_available_ports')
@@ -20,15 +19,15 @@ port currently connected.
 
 Returns an object{ error: [], success: [] }
 */
-export async function submit_config(config: Record<string, unknown>) {
+export async function submit_config(shift_light: ShiftLight) {
 	const results = {
 		success: [],
 		error: []
 	};
-	for (const key in config) {
+	for (const key in shift_light.ui_data.config) {
 		await invoke('write', {
-			portName: get(shiftlight).port.port_name,
-			content: key + ' ' + config[key] + '\n'
+			portName: shift_light.ui_data.port.port_name,
+			content: key + ' ' + shift_light.ui_data.config[key] + '\n'
 		})
 			.then((res) => {
 				results['success'].push(res);

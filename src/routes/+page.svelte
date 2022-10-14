@@ -5,11 +5,11 @@
 	import CurrentConfig from '../components/CurrentConfig.svelte';
 	import Header from '../components/Header.svelte';
 	import Loading from '../components/Loading.svelte';
-	import { shiftlight, darkTheme } from '../lib/Store';
+	import { shiftlight_store } from '../lib/Store';
 	import '../app.css';
 
 	// So we can use class:dark
-	$: dark = $darkTheme;
+	$: dark = $shiftlight_store.ui_data.darkTheme;
 </script>
 
 <Stylesheet />
@@ -27,17 +27,14 @@
 		<SvelteToast />
 
 		<Header />
-
-		{#if $shiftlight.port}
+		<!-- Only show port selection until a port is chosen -->
+		{#if $shiftlight_store.ui_data.config_type}
 			<div class="flex justify-center bg-white dark:bg-slate-600 ">
 				<form
 					on:submit|preventDefault
 					class="shadow-inner shadow border w-full m-5 rounded px-8 pt-6 pb-8"
 				>
-					<!-- Only show port selection until a port is chosen -->
-					{#if $shiftlight.config_type}
-						<CurrentConfig />
-					{/if}
+					<CurrentConfig />
 				</form>
 			</div>
 		{/if}
