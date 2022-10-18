@@ -10,6 +10,14 @@ use super::{
 };
 
 #[tauri::command]
+pub fn get_connection(serial_connection: State<SerialConnection>) -> Result<String, String> {
+    match serial_connection.port.lock().unwrap().as_ref() {
+        Some(port) => Ok(port.name().unwrap()),
+        None => Err("No port".to_string()),
+    }
+}
+
+#[tauri::command]
 pub fn connect(
     port_name: &str,
     serial_connection: State<SerialConnection>,

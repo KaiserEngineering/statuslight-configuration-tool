@@ -51,10 +51,10 @@ pub fn read_serial(
         Err(error) => {
             println!("Failed to read: {:?}", error.to_string());
 
-            return Err(SerialError {
+            Err(SerialError {
                 error_type: SerialErrors::Read,
                 message: error.to_string(),
-            });
+            })
         }
     }
 }

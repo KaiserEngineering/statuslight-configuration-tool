@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { connect_to_serial_port, get_serial_ports } from '../lib/API';
+	import { connect_to_serial_port, get_current_connection, get_serial_ports } from '../lib/API';
 	import { session, config } from '../lib/Store';
 	import { error } from '../lib/Toasts';
 	import { load_current_config, type Port } from '$lib/API';
@@ -9,7 +9,7 @@
 
 	async function set_initial_config() {
 		if (!$session.port) {
-			error("No port selected");
+			error('No port selected');
 			return;
 		}
 
@@ -18,18 +18,17 @@
 		$session.configType = undefined;
 		$config = {};
 
-		await connect_to_serial_port($session.port.port_name)
-			.catch((err) => {
-				$session.loading = false;
-				error(err);
-				return;
-			});
+		await connect_to_serial_port($session.port.port_name).catch((err) => {
+			$session.loading = false;
+			error(err);
+			return;
+		});
 
 		load_current_config()
 			.then((res) => {
 				$session.loading = false;
 				$config = res;
-				$session.configType = res["configType"];
+				$session.configType = res['configType'];
 			})
 			.catch((err) => {
 				$session.loading = false;
@@ -41,11 +40,20 @@
 	async function get_ports() {
 		$session.loading = true;
 
+		let open_conn = "";
+		await get_current_connection()
+			.then((res) => open_conn = res)
+			.catch((err) => console.error(err));
+
 		return await get_serial_ports()
 			.then((ports_found) => {
 				ports = ports_found;
+
 				for (let port of ports_found) {
-					if (port.port_info.includes('SHIFTLIGHT')) {
+					if (!open_conn && port.port_info.includes('SHIFTLIGHT')) {
+						$session.port = port;
+						set_initial_config();
+					} else if (open_conn == port.port_name) {
 						$session.port = port;
 						set_initial_config();
 					}

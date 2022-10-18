@@ -3,6 +3,7 @@
     windows_subsystem = "windows"
 )]
 #![feature(error_in_core)]
+#![feature(try_trait_v2)]
 
 use std::sync::Mutex;
 
@@ -12,7 +13,7 @@ mod model;
 mod prelude;
 mod store;
 
-use model::controller::{connect, write};
+use model::controller::{connect, get_connection, write};
 use model::system::find_available_ports;
 use store::SerialConnection;
 
@@ -33,7 +34,8 @@ async fn main() -> MyResult<()> {
         .invoke_handler(tauri::generate_handler![
             find_available_ports,
             write,
-            connect
+            connect,
+            get_connection
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

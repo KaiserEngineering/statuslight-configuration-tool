@@ -6,7 +6,11 @@ export type Port = {
 	port_info: string;
 };
 
-export async function connect_to_serial_port(portName: String) {
+export async function get_current_connection() {
+	return await invoke('get_connection', {});
+}
+
+export async function connect_to_serial_port(portName: string) {
 	return await invoke('connect', {
 		portName
 	});

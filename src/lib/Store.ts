@@ -1,7 +1,6 @@
 import { writable } from 'svelte/store';
-import { appWindow } from '@tauri-apps/api/window'
+import { appWindow } from '@tauri-apps/api/window';
 import type { ShiftLightConfigs } from '../lib/Config';
-
 
 export class Session {
 	public ui_data = {
@@ -10,7 +9,7 @@ export class Session {
 		loading: false,
 		port: undefined,
 		darkTheme: appWindow.theme().then((value) => {
-			if (value == "dark") {
+			if (value == 'dark') {
 				return true;
 			}
 			return false;
