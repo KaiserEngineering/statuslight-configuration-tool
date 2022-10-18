@@ -39,6 +39,8 @@ pub fn read_serial(
             }
 
             if output == "ERROR" {
+                println!("Failed to read: {:?}", output);
+
                 return Err(SerialError {
                     error_type: SerialErrors::Read,
                     message: output,
@@ -46,10 +48,14 @@ pub fn read_serial(
             }
             Ok(output)
         }
-        Err(error) => Err(SerialError {
-            error_type: SerialErrors::Read,
-            message: error.to_string(),
-        }),
+        Err(error) => {
+            println!("Failed to read: {:?}", error);
+
+            return Err(SerialError {
+                error_type: SerialErrors::Read,
+                message: error.to_string(),
+            });
+        }
     }
 }
 
@@ -64,7 +70,7 @@ pub fn write_serial(
             match connection.flush() {
                 Ok(_) => {
                     if write as u32 == content.len() as u32 {
-                        println!("Successfully wrote to serial");
+                        println!("Successfully wrote to serial: {}", content);
 
                         match read_serial(connection) {
                             Err(e) => Err(e),
