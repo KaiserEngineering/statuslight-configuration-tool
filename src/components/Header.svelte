@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { get_serial_ports } from '../lib/API';
+	import { connect_to_serial_port, get_serial_ports } from '../lib/API';
 	import { session, config } from '../lib/Store';
 	import { error } from '../lib/Toasts';
 	import { load_current_config, type Port } from '$lib/API';
@@ -18,7 +18,14 @@
 		$session.configType = undefined;
 		$config = {};
 
-		load_current_config($session.port.port_name)
+		await connect_to_serial_port($session.port.port_name)
+			.catch((err) => {
+				$session.loading = false;
+				error(err);
+				return;
+			});
+
+		load_current_config()
 			.then((res) => {
 				$session.loading = false;
 				$config = res;

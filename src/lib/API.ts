@@ -6,18 +6,19 @@ export type Port = {
 	port_info: string;
 };
 
+export async function connect_to_serial_port(portName: String) {
+	return await invoke('connect', {
+		portName
+	});
+}
+
 /*
 Load the config for the provided config type.
 
 Return the new config object.
 */
-export async function load_current_config(port_name: string) {
-	await invoke('close_active_port', {}).catch((err) => {
-		throw new err();
-	});
-
+export async function load_current_config() {
 	return await invoke('write', {
-		portName: port_name,
 		content: 'VER\n'
 	})
 		.then(async (version) => {
@@ -26,7 +27,6 @@ export async function load_current_config(port_name: string) {
 			const new_config = {};
 			for (const key in keys) {
 				await invoke('write', {
-					portName: port_name,
 					content: keys[key]['code'] + '\n'
 				})
 					.then((res) => {

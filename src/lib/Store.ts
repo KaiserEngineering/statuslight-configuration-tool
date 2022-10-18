@@ -1,5 +1,7 @@
 import { writable } from 'svelte/store';
+import { appWindow } from '@tauri-apps/api/window'
 import type { ShiftLightConfigs } from '../lib/Config';
+
 
 export class Session {
 	public ui_data = {
@@ -7,7 +9,12 @@ export class Session {
 		config: {},
 		loading: false,
 		port: undefined,
-		darkTheme: false
+		darkTheme: appWindow.theme().then((value) => {
+			if (value == "dark") {
+				return true;
+			}
+			return false;
+		})
 	};
 
 	public config: typeof ShiftLightConfigs['RPM'] | typeof ShiftLightConfigs['Boost'] = {};

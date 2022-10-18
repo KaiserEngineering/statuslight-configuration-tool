@@ -2,19 +2,40 @@
     all(not(debug_assertions), target_os = "windows"),
     windows_subsystem = "windows"
 )]
+#![feature(error_in_core)]
 
-extern crate lazy_static;
+use std::sync::Mutex;
 
-mod uart;
-use uart::{close_active_port, find_available_ports, write};
+use crate::prelude::*;
 
-fn main() {
+mod model;
+mod prelude;
+mod store;
+
+use model::controller::{connect, write};
+use model::system::find_available_ports;
+use store::SerialConnection;
+
+pub struct Session {
+    pub port_name: Mutex<String>,
+}
+
+#[tokio::main]
+async fn main() -> MyResult<()> {
     tauri::Builder::default()
+        // Manage our connection and create our session
+        .manage(SerialConnection {
+            port: Default::default(),
+        })
+        .manage(Session {
+            port_name: Mutex::new("".to_string()),
+        })
         .invoke_handler(tauri::generate_handler![
             find_available_ports,
             write,
-            close_active_port
+            connect
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+    Ok(())
 }
