@@ -27,7 +27,6 @@ export async function load_current_config() {
 			const new_config = {};
 			for (const key in keys) {
 				await invoke('write', {
-					portName: port_name,
 					content: keys[key]['code'] + '\n'
 				})
 					.then((res) => {

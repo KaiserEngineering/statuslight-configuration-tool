@@ -4,7 +4,7 @@ use tauri::State;
 use crate::{store::SerialConnection, Session};
 
 use super::{
-    uart::{self, read_serial, write_serial},
+    uart::{self, write_serial},
     SerialErrors,
 };
 
@@ -14,7 +14,7 @@ pub fn connect(
     serial_connection: State<SerialConnection>,
     session: State<Session>,
 ) -> Result<String, String> {
-    println!("Attempting to connect to port {}", port_name);
+    println!("Model::Controller::connect called for {}", port_name);
 
     let serial_port = serialport::new(port_name, 9600)
         .timeout(time::Duration::from_millis(500))
@@ -24,37 +24,16 @@ pub fn connect(
         Err(err) => {
             println!("Could not open port '{}': {}", port_name, err);
 
-            drop(serial_connection);
-            Err(format!("Couldn't open serial port: {}", err.to_string()))
+            Err(format!("Couldn't open serial port: {}", err))
         }
         Ok(active_port) => {
-            *serial_connection.port.lock().unwrap() = Some(active_port);
-            *session.port_name.lock().unwrap() = port_name.to_string();
+            println!("New port connection opened");
 
-            drop(serial_connection);
+            *session.port_name.lock().unwrap() = port_name.to_string();
+            *serial_connection.port.lock().unwrap() = Some(active_port);
 
             Ok("New connectoin established".to_string())
         }
-    }
-}
-
-#[tauri::command]
-pub fn read(
-    session: State<Session>,
-    conn: State<SerialConnection>,
-) -> Result<String, uart::SerialError> {
-    let conn_clone = conn.clone();
-
-    if let Err(e) = SerialConnection::validate_connection(session, conn_clone) {
-        Err(super::SerialError {
-            error_type: SerialErrors::Write,
-            message: e,
-        })
-    } else {
-        let port_binding = conn.clone();
-        let mut port_conn = port_binding.port.lock().unwrap();
-
-        read_serial(&mut port_conn.as_mut().unwrap())
     }
 }
 
@@ -76,5 +55,5 @@ pub fn write(
     let port_binding = conn.clone();
     let mut port_conn = port_binding.port.lock().unwrap();
 
-    write_serial(&mut port_conn.as_mut().unwrap(), content)
+    write_serial(port_conn.as_mut().unwrap(), content)
 }

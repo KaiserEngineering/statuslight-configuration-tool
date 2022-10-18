@@ -10,6 +10,15 @@ pub struct SerialConnection {
 }
 
 impl SerialConnection {
+    /// .
+    ///
+    /// # Panics
+    ///
+    /// Panics if .
+    ///
+    /// # Errors
+    ///
+    /// This function will return an error if .
     pub fn validate_connection(
         session: State<Session>,
         port: State<SerialConnection>,
@@ -19,13 +28,10 @@ impl SerialConnection {
         if port_guard.is_none() {
             let session_copy = session.clone();
             let port_name = session_copy.port_name.lock().unwrap();
+
             drop(port_guard);
 
-            if let Err(error) = connect(&port_name, port, session) {
-                return Err(error.to_string());
-            } else {
-                return Ok("Connection looks good".to_string());
-            }
+            connect(&port_name, port, session)?;
         }
 
         Ok("Session is good".to_string())

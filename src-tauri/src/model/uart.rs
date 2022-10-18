@@ -64,7 +64,12 @@ pub fn write_serial(
             match connection.flush() {
                 Ok(_) => {
                     if write as u32 == content.len() as u32 {
-                        return Ok("Successfully wrote to serial".to_string());
+                        println!("Successfully wrote to serial");
+
+                        match read_serial(connection) {
+                            Err(e) => Err(e),
+                            Ok(res) => Ok(res),
+                        }
                     } else {
                         Err(SerialError {
                             error_type: SerialErrors::Write,

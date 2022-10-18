@@ -7,4 +7,4 @@ pub mod system;
 pub use system::*;
 
 pub mod controller;
-pub use controller::{read, write};
+pub use controller::write;

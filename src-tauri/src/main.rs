@@ -28,7 +28,7 @@ async fn main() -> MyResult<()> {
             port: Default::default(),
         })
         .manage(Session {
-            port_name: Default::default(),
+            port_name: Mutex::new("".to_string()),
         })
         .invoke_handler(tauri::generate_handler![
             find_available_ports,
