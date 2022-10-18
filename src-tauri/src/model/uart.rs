@@ -49,7 +49,7 @@ pub fn read_serial(
             Ok(output)
         }
         Err(error) => {
-            println!("Failed to read: {:?}", error);
+            println!("Failed to read: {:?}", error.to_string());
 
             return Err(SerialError {
                 error_type: SerialErrors::Read,

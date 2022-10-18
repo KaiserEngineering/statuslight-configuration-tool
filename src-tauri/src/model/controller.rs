@@ -1,4 +1,5 @@
 use core::time;
+use std::thread;
 use tauri::State;
 
 use crate::{store::SerialConnection, Session};
@@ -16,6 +17,16 @@ pub fn connect(
 ) -> Result<String, String> {
     println!("Model::Controller::connect called for {}", port_name);
 
+    let port_binding = serial_connection.clone();
+    let mut port_binding = port_binding.port.lock().unwrap();
+
+    // If we have a valid connection for the port we are trying to connect to,
+    // there is nothing to do.
+    if !port_binding.is_none() && port_binding.as_ref().unwrap().name().unwrap() == port_name {
+        println!("Found existing connection");
+        return Ok("Found existing connection".to_string());
+    }
+
     let serial_port = serialport::new(port_name, 9600)
         .timeout(time::Duration::from_millis(500))
         .open();
@@ -30,9 +41,22 @@ pub fn connect(
             println!("New port connection opened");
 
             *session.port_name.lock().unwrap() = port_name.to_string();
-            *serial_connection.port.lock().unwrap() = Some(active_port);
+            *port_binding = Some(active_port);
 
-            Ok("New connectoin established".to_string())
+            if let Err(e) = port_binding
+                .as_mut()
+                .unwrap()
+                .write_data_terminal_ready(true)
+            {
+                return Err(e.to_string());
+            }
+            println!("DTR signal written");
+
+            // Sleep while the device reboots
+            let two_seconds = time::Duration::from_secs(2);
+            thread::sleep(two_seconds);
+
+            Ok("New connection established".to_string())
         }
     }
 }
