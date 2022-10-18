@@ -8,7 +8,7 @@ export type Port = {
 
 export async function connect_to_serial_port(portName: String) {
 	return await invoke('connect', {
-		port: portName
+		portName
 	});
 }
 

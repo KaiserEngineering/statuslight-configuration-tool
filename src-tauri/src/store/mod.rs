@@ -14,17 +14,20 @@ impl SerialConnection {
         session: State<Session>,
         port: State<SerialConnection>,
     ) -> Result<String, String> {
-        let binding = session.clone();
-        let binding = binding.port_name.lock().unwrap();
-        let port_name = binding.as_str();
+        let port_guard = port.port.try_lock().unwrap();
 
-        let port_binding = port.clone();
-        let port_conn = port_binding.port.lock().unwrap();
+        if port_guard.is_none() {
+            let session_copy = session.clone();
+            let port_name = session_copy.port_name.lock().unwrap();
+            drop(port_guard);
 
-        if port_conn.is_none() {
-            return connect(&port_name, session.to_owned(), port);
+            if let Err(error) = connect(&port_name, port, session) {
+                return Err(error.to_string());
+            } else {
+                return Ok("Connection looks good".to_string());
+            }
         }
 
-        Ok("Existing connection found".to_owned())
+        Ok("Session is good".to_string())
     }
 }
