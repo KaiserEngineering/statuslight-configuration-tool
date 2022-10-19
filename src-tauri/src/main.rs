@@ -13,8 +13,7 @@ mod model;
 mod prelude;
 mod store;
 
-use model::controller::{connect, get_connection, write};
-use model::system::find_available_ports;
+use model::controller::{connect, find_available_ports, get_connection, write};
 use store::SerialConnection;
 
 pub struct Session {

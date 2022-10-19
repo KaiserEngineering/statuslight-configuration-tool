@@ -1,16 +1,28 @@
+//! Controller entry point for our frontend to access, this is where
+//! our tauri::command's should be located!
+
 use core::time;
 use std::thread;
-use tauri::{AppHandle, Manager, State, Wry};
+use tauri::State;
 
 use crate::{store::SerialConnection, Session};
 
 use super::{
+    find_available_manager_ports,
     uart::{self, write_serial},
-    SerialErrors,
+    RealSerialManager, SerialError, SerialErrors, SerialPort,
 };
 
 #[tauri::command]
+pub async fn find_available_ports() -> Result<Vec<SerialPort>, SerialError> {
+    //! Wrapper that calls find_available_manager_ports which will then call the
+    //! code to find the available serial ports on the machine.
+    find_available_manager_ports(RealSerialManager).await
+}
+
+#[tauri::command]
 pub fn get_connection(serial_connection: State<SerialConnection>) -> Result<String, String> {
+    //! Returns the current connecion for our Tauri state
     match serial_connection.port.lock().unwrap().as_ref() {
         Some(port) => Ok(port.name().unwrap()),
         None => Err("No port".to_string()),
@@ -23,6 +35,7 @@ pub fn connect(
     serial_connection: State<SerialConnection>,
     session: State<Session>,
 ) -> Result<String, String> {
+    //! Connect to selected serial port based on port name
     println!("Model::Controller::connect called for {}", port_name);
 
     let port_binding = serial_connection.clone();
@@ -75,6 +88,7 @@ pub fn write(
     conn: State<SerialConnection>,
     content: String,
 ) -> Result<String, uart::SerialError> {
+    //! Write string content to connected serial port.
     let conn_clone = conn.clone();
 
     if let Err(e) = SerialConnection::validate_connection(session, conn_clone) {

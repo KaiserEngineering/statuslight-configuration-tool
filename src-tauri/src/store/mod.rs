@@ -10,15 +10,6 @@ pub struct SerialConnection {
 }
 
 impl SerialConnection {
-    /// .
-    ///
-    /// # Panics
-    ///
-    /// Panics if .
-    ///
-    /// # Errors
-    ///
-    /// This function will return an error if .
     pub fn validate_connection(
         session: State<Session>,
         port: State<SerialConnection>,
