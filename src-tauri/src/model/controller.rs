@@ -1,6 +1,6 @@
 use core::time;
 use std::thread;
-use tauri::State;
+use tauri::{AppHandle, Manager, State, Wry};
 
 use crate::{store::SerialConnection, Session};
 
