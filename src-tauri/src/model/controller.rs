@@ -48,7 +48,7 @@ pub fn connect(
         return Ok("Found existing connection".to_string());
     }
 
-    let serial_port = serialport::new(port_name, 9600)
+    let serial_port = serialport::new(port_name, 115200)
         .timeout(time::Duration::from_millis(500))
         .open();
 
