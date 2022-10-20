@@ -4,7 +4,7 @@ export const ShiftLightConfigs = {
 			code: 'SHIFT',
 			type: 'number',
 			min: 0,
-			max: 1600,
+			max: 16000,
 			info: 'RPM value to flash shift light at.'
 		},
 		'Acquisition Mode': {
@@ -16,10 +16,10 @@ export const ShiftLightConfigs = {
 			]
 		},
 		'Activation Point': {
-			code: 'activation_point',
+			code: 'ACT',
 			type: 'number',
 			min: 0,
-			max: 1600
+			max: 16000
 		},
 		Illum: {
 			code: 'illum',
