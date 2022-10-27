@@ -1,18 +1,10 @@
 <script lang="ts">
-	import { SvelteToast } from '@zerodevx/svelte-toast';
-
-	import Stylesheet from '../components/Stylesheet.svelte';
 	import CurrentConfig from '../components/CurrentConfig.svelte';
-	import Header from '../components/Header.svelte';
-	import Loading from '../components/Loading.svelte';
 	import { session } from '../lib/Store';
-	import '../app.css';
 
 	// So we can use class:dark
 	$: dark = $session.darkTheme;
 </script>
-
-<Stylesheet />
 
 <div class:dark>
 	<div
@@ -22,11 +14,6 @@
 			bg-gray-100 text-gray-800
 			dark:bg-gray-900 dark:text-white"
 	>
-		<Loading />
-
-		<SvelteToast />
-
-		<Header />
 		<!-- Only show port selection until a port is chosen -->
 		{#if $session.configType}
 			<div class="flex justify-center bg-white dark:bg-slate-600 ">

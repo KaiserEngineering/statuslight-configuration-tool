@@ -1,8 +1,7 @@
 import { writable } from 'svelte/store';
-import { appWindow } from '@tauri-apps/api/window'
+import { appWindow } from '@tauri-apps/api/window';
 import type { ShiftLightConfigs } from '../lib/Config';
-import { listen } from '@tauri-apps/api/event'
-
+import { listen } from '@tauri-apps/api/event';
 
 // listen to the `click` event and get a function to remove the event listener
 // there's also a `once` function that subscribes to an event and automatically unsubscribes the listener on the first event
@@ -11,8 +10,8 @@ async function setup_listeners() {
 	unlisten = await listen('MySuperEvent', (event) => {
 		// event.event is the event name (useful if you want to use a single callback fn for multiple event types)
 		// event.payload is the payload object
-		console.log("Custom event found! "+JSON.stringify(event));
-	});		
+		console.log('Custom event found! ' + JSON.stringify(event));
+	});
 }
 setup_listeners();
 
@@ -23,7 +22,7 @@ export class Session {
 		loading: false,
 		port: undefined,
 		darkTheme: appWindow.theme().then((value) => {
-			if (value == "dark") {
+			if (value == 'dark') {
 				return true;
 			}
 			return false;

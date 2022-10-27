@@ -3,6 +3,7 @@
 	import { session, config } from '../lib/Store';
 	import { error } from '../lib/Toasts';
 	import { load_current_config, type Port } from '$lib/API';
+	import logo from '$lib/assets/logo.png';
 
 	import Fa from 'sveltejs-fontawesome';
 	import { faSun, faMoon, faRefresh } from '@fortawesome/free-solid-svg-icons';
@@ -40,9 +41,9 @@
 	async function get_ports() {
 		$session.loading = true;
 
-		let open_conn = "";
+		let open_conn = '';
 		await get_current_connection()
-			.then((res) => open_conn = res)
+			.then((res) => (open_conn = res))
 			.catch((err) => console.error(err));
 
 		return await get_serial_ports()
@@ -81,29 +82,59 @@
 	$: dark = $session.darkTheme;
 </script>
 
-<div class="flex m-4" class:dark>
-	<div class="w-1/2">
-		<select
-			id="shiftlight-port"
-			class="rounded-lg block w-full
+<div class:dark>
+	<nav class="bg-rose-100 dark:bg-gray-800">
+		<div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+			<div class="relative flex h-16 items-center justify-between">
+				<div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+					<div class="flex flex-shrink-0 items-center">
+						<img class="block h-8 w-auto lg:hidden" src={logo} alt="KaiserEngineering" />
+					</div>
+
+					<div class="flex m-2">
+						<select
+							id="shiftlight-port"
+							class="rounded-lg block w-full
 				p-2 dark:text-slate-700"
-			bind:value={$session.port}
-			on:change={set_initial_config}
-		>
-			<option value="" disabled selected> Select UART Port</option>
-			{#each ports as port}
-				<option value={port}>{port.port_name} - {port.port_info}</option>
-			{/each}
-		</select>
-	</div>
+							bind:value={$session.port}
+							on:change={set_initial_config}
+						>
+							<option value="" disabled selected> Select UART Port</option>
+							{#each ports as port}
+								<option value={port}>{port.port_name} - {port.port_info}</option>
+							{/each}
+						</select>
 
-	<button class="m-2" on:click={get_ports}>
-		<Fa icon={faRefresh} size="20" color={dark ? 'white' : 'black'} />
-	</button>
+						<button class="m-2" on:click={get_ports}>
+							<Fa icon={faRefresh} size="20" color={dark ? 'white' : 'black'} />
+						</button>
+					</div>
 
-	<div class="w-1/2 mr-4 flex justify-end content-center">
-		<button on:click={toggleDark}>
-			<Fa {icon} size="25" color={dark ? 'white' : 'black'} />
-		</button>
-	</div>
+					<div class="flex items-center justify-center">
+						<div class="flex space-x-4">
+							<!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+							<a
+								href="/"
+								class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
+								aria-current="page">Edit</a
+							>
+
+							<a
+								href="/update"
+								class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
+								aria-current="page">Version</a
+							>
+						</div>
+					</div>
+				</div>
+				<div
+					class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
+				>
+					<button on:click={toggleDark}>
+						<Fa {icon} size="25" color={dark ? 'white' : 'black'} />
+					</button>
+				</div>
+			</div>
+		</div>
+	</nav>
 </div>
