@@ -28,16 +28,10 @@ pub fn read_serial(
 
     match reader.read_until(b'\n', &mut my_str) {
         Ok(_) => {
-            println!("Successfully read from serial {:?}", my_str);
-
             let mut output = std::str::from_utf8(&my_str).unwrap().to_string();
+
             // Strip new line endings
-            if output.ends_with('\n') {
-                output.pop();
-                if output.ends_with('\r') {
-                    output.pop();
-                }
-            }
+            output = output.replace('\n', "");
 
             if output == "ERROR" {
                 println!("Failed to read: {:?}", output);
@@ -47,6 +41,7 @@ pub fn read_serial(
                     message: output,
                 });
             }
+            println!("Successfully read from serial {:?}", output);
             Ok(output)
         }
         Err(error) => {
@@ -69,6 +64,7 @@ pub async fn write_serial(
         Ok(write) => match connection.flush() {
             Ok(_) => {
                 if write as u32 == content.len() as u32 {
+                    let content = content.replace('\n', "");
                     println!("Successfully wrote to serial: {}", content);
 
                     match read_serial(connection) {
