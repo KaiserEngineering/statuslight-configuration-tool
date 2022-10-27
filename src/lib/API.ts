@@ -26,7 +26,7 @@ export async function load_current_config() {
 		content: 'VER\n'
 	})
 		.then(async (version) => {
-			const keys = ShiftLightConfigs['RPM'];
+			const keys = ShiftLightConfigs[version];
 
 			const new_config = {};
 			for (const key in keys) {
@@ -41,7 +41,8 @@ export async function load_current_config() {
 						new_config[keys[key]['code']] = error.message;
 					});
 			}
-			new_config['configType'] = 'RPM';
+			new_config['configType'] = version;
+			console.log(new_config)
 			return new_config;
 		})
 		.catch((error) => {

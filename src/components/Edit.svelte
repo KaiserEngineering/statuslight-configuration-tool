@@ -8,6 +8,8 @@
 	import Fa from 'sveltejs-fontawesome';
 	import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 
+	console.log($session.ui_data);
+
 	async function update(): Promise<void> {
 		let res = validate_config(configCopy);
 		if (!res.is_valid) {
@@ -62,11 +64,7 @@
 	<hr class="mb-2" />
 
 	<!-- Our form for out version the shiftlight is configured for -->
-	<form 
-		on:submit|preventDefault={update}
-		class="grid grid-cols-3 gap-4 max-w-xl m-auto"
-	>
-
+	<form on:submit|preventDefault={update} class="grid grid-cols-3 gap-4 max-w-xl m-auto">
 		{#each Object.keys(inputOptions) as input}
 			<div class="col-span-1 flex items-center justify-start">
 				<label for={input}>

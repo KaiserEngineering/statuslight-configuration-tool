@@ -1,5 +1,5 @@
 <script lang="ts">
-	import CurrentConfig from '../components/CurrentConfig.svelte';
+	import Edit from '../components/Edit.svelte';
 	import { session } from '../lib/Store';
 </script>
 
@@ -14,7 +14,7 @@
 				on:submit|preventDefault
 				class="shadow-inner shadow border w-full m-5 rounded px-8 pt-6 pb-8"
 			>
-				<CurrentConfig />
+				<Edit />
 			</div>
 		</div>
 	{/if}
