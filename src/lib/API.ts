@@ -42,7 +42,6 @@ export async function load_current_config() {
 					});
 			}
 			new_config['configType'] = version;
-			console.log(new_config)
 			return new_config;
 		})
 		.catch((error) => {
