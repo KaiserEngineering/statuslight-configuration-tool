@@ -1,6 +1,12 @@
 <!-- The fixed stylesheet -->
 <svelte:head>
 	<style>
+		:root {
+			--toastContainerTop: 1rem;
+			--toastContainerRight: auto;
+			--toastContainerBottom: auto;
+			--toastContainerLeft: calc(50vw - 8rem);
+		}
 		* {
 			box-sizing: border-box;
 		}
