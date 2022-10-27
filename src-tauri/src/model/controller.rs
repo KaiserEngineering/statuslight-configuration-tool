@@ -2,13 +2,13 @@
 //! our tauri::command's should be located!
 
 use core::time;
-use std::thread;
+use std::{collections::HashMap, thread};
 use tauri::State;
 
 use crate::{store::SerialConnection, Session};
 
 use super::{
-    find_available_manager_ports,
+    find_available_manager_ports, get,
     uart::{self, write_serial},
     RealSerialManager, SerialError, SerialErrors, SerialPort,
 };
@@ -105,4 +105,20 @@ pub async fn write(
     let mut port_conn = port_binding.port.lock().await;
 
     write_serial(port_conn.as_mut().unwrap(), content).await
+}
+
+#[tauri::command]
+pub async fn get_latest_firmware() -> Result<HashMap<String, String>, String> {
+    let mut content = HashMap::new();
+
+    content.insert(
+        "hex".into(),
+        get("https://raw.githubusercontent.com/KaiserEngineering/shiftlight-versioning/main/shiftlight.hex".to_string()).await?
+    );
+    content.insert(
+        "changelog".into(),
+        get("https://raw.githubusercontent.com/KaiserEngineering/shiftlight-versioning/main/changelog.md".to_string()).await?
+    );
+
+    Ok(content)
 }

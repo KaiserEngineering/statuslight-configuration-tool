@@ -10,7 +10,9 @@ use tokio::sync::Mutex;
 mod model;
 mod store;
 
-use model::controller::{connect, find_available_ports, get_connection, write};
+use model::controller::{
+    connect, find_available_ports, get_connection, get_latest_firmware, write,
+};
 use store::SerialConnection;
 
 pub struct Session {
@@ -30,7 +32,8 @@ fn main() {
             find_available_ports,
             write,
             connect,
-            get_connection
+            get_connection,
+            get_latest_firmware
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

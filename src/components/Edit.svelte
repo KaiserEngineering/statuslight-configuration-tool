@@ -1,14 +1,12 @@
 <script lang="ts">
-	import { submit_config } from '../lib/API';
-	import { session, config } from '../lib/Store';
-	import { success, error } from '../lib/Toasts';
-	import { ShiftLightConfigs } from '../lib/Config';
+	import { submit_config } from '$lib/API';
+	import { session, config } from '$lib/Store';
+	import { success, error } from '$lib/Toasts';
+	import { ShiftLightConfigs } from '$lib/Config';
 	import { validate_config } from '$lib/Validator';
 
 	import Fa from 'sveltejs-fontawesome';
 	import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
-
-	console.log($session.ui_data);
 
 	async function update(): Promise<void> {
 		let res = validate_config(configCopy);
