@@ -1,5 +1,5 @@
 //! Handle our state
-use std::sync::Mutex;
+use tokio::sync::Mutex;
 
 use tauri::State;
 
@@ -10,21 +10,20 @@ pub struct SerialConnection {
 }
 
 impl SerialConnection {
-    pub fn validate_connection(
-        session: State<Session>,
-        port: State<SerialConnection>,
+    pub async fn validate_connection(
+        session: State<'_, Session>,
+        port: State<'_, SerialConnection>,
     ) -> Result<String, String> {
-        let port_guard = port.port.try_lock().unwrap();
+        match port.port.try_lock() {
+            Ok(_) => Ok("Old session is good".to_string()),
+            _ => {
+                let session_copy = session.clone();
+                let port_name = session_copy.port_name.lock().await;
 
-        if port_guard.is_none() {
-            let session_copy = session.clone();
-            let port_name = session_copy.port_name.lock().unwrap();
+                connect(port_name.to_string(), port.clone(), session).await?;
 
-            drop(port_guard);
-
-            connect(&port_name, port, session)?;
+                Ok("New session is good".to_string())
+            }
         }
-
-        Ok("Session is good".to_string())
     }
 }

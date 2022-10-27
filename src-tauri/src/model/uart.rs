@@ -61,39 +61,36 @@ pub fn read_serial(
 }
 
 // Write our data via Serial
-pub fn write_serial(
+pub async fn write_serial(
     connection: &mut Box<dyn serialport::SerialPort>,
     content: String,
 ) -> Result<String, SerialError> {
     match connection.write(content.as_bytes()) {
-        Ok(write) => {
-            // HANDLE FLUSH
-            match connection.flush() {
-                Ok(_) => {
-                    if write as u32 == content.len() as u32 {
-                        println!("Successfully wrote to serial: {}", content);
+        Ok(write) => match connection.flush() {
+            Ok(_) => {
+                if write as u32 == content.len() as u32 {
+                    println!("Successfully wrote to serial: {}", content);
 
-                        match read_serial(connection) {
-                            Err(e) => Err(e),
-                            Ok(res) => Ok(res),
-                        }
-                    } else {
-                        Err(SerialError {
-                            error_type: SerialErrors::Write,
-                            message: format!(
-                                "Incomplete write only wrote {} bytes of {}",
-                                write,
-                                content.len()
-                            ),
-                        })
+                    match read_serial(connection) {
+                        Err(e) => Err(e),
+                        Ok(res) => Ok(res),
                     }
+                } else {
+                    Err(SerialError {
+                        error_type: SerialErrors::Write,
+                        message: format!(
+                            "Incomplete write only wrote {} bytes of {}",
+                            write,
+                            content.len()
+                        ),
+                    })
                 }
-                Err(error) => Err(SerialError {
-                    error_type: SerialErrors::Write,
-                    message: error.to_string(),
-                }),
             }
-        }
+            Err(error) => Err(SerialError {
+                error_type: SerialErrors::Write,
+                message: error.to_string(),
+            }),
+        },
         Err(error) => Err(SerialError {
             error_type: SerialErrors::Write,
             message: error.to_string(),

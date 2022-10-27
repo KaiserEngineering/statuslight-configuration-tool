@@ -21,25 +21,28 @@ pub async fn find_available_ports() -> Result<Vec<SerialPort>, SerialError> {
 }
 
 #[tauri::command]
-pub fn get_connection(serial_connection: State<SerialConnection>) -> Result<String, String> {
+pub async fn get_connection(
+    serial_connection: State<'_, SerialConnection>,
+) -> Result<String, String> {
     //! Returns the current connecion for our Tauri state
-    match serial_connection.port.lock().unwrap().as_ref() {
+    let lock = serial_connection.port.lock().await;
+    match &*lock {
         Some(port) => Ok(port.name().unwrap()),
         None => Err("No port".to_string()),
     }
 }
 
 #[tauri::command]
-pub fn connect(
-    port_name: &str,
-    serial_connection: State<SerialConnection>,
-    session: State<Session>,
+pub async fn connect(
+    port_name: String,
+    serial_connection: State<'_, SerialConnection>,
+    session: State<'_, Session>,
 ) -> Result<String, String> {
     //! Connect to selected serial port based on port name
     println!("Model::Controller::connect called for {}", port_name);
 
     let port_binding = serial_connection.clone();
-    let mut port_binding = port_binding.port.lock().unwrap();
+    let mut port_binding = port_binding.port.lock().await;
 
     // If we have a valid connection for the port we are trying to connect to,
     // there is nothing to do.
@@ -48,7 +51,7 @@ pub fn connect(
         return Ok("Found existing connection".to_string());
     }
 
-    let serial_port = serialport::new(port_name, 115200)
+    let serial_port = serialport::new(&port_name, 115200)
         .timeout(time::Duration::from_millis(500))
         .open();
 
@@ -61,7 +64,7 @@ pub fn connect(
         Ok(active_port) => {
             println!("New port connection opened");
 
-            *session.port_name.lock().unwrap() = port_name.to_string();
+            *session.port_name.lock().await = port_name.to_string();
             *port_binding = Some(active_port);
 
             if let Err(e) = port_binding
@@ -83,15 +86,15 @@ pub fn connect(
 }
 
 #[tauri::command]
-pub fn write(
-    session: State<Session>,
-    conn: State<SerialConnection>,
+pub async fn write(
+    session: State<'_, Session>,
+    conn: State<'_, SerialConnection>,
     content: String,
 ) -> Result<String, uart::SerialError> {
     //! Write string content to connected serial port.
     let conn_clone = conn.clone();
 
-    if let Err(e) = SerialConnection::validate_connection(session, conn_clone) {
+    if let Err(e) = SerialConnection::validate_connection(session, conn_clone).await {
         return Err(super::SerialError {
             error_type: SerialErrors::Write,
             message: e,
@@ -99,7 +102,7 @@ pub fn write(
     }
 
     let port_binding = conn.clone();
-    let mut port_conn = port_binding.port.lock().unwrap();
+    let mut port_conn = port_binding.port.lock().await;
 
-    write_serial(port_conn.as_mut().unwrap(), content)
+    write_serial(port_conn.as_mut().unwrap(), content).await
 }

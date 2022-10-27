@@ -5,7 +5,7 @@
 #![feature(error_in_core)]
 #![feature(try_trait_v2)]
 
-use std::sync::Mutex;
+use tokio::sync::Mutex;
 
 mod model;
 mod store;
