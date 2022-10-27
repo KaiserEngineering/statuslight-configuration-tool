@@ -7,10 +7,7 @@
 
 use std::sync::Mutex;
 
-use crate::prelude::*;
-
 mod model;
-mod prelude;
 mod store;
 
 use model::controller::{connect, find_available_ports, get_connection, write};
@@ -20,8 +17,7 @@ pub struct Session {
     pub port_name: Mutex<String>,
 }
 
-#[tokio::main]
-async fn main() -> MyResult<()> {
+fn main() {
     tauri::Builder::default()
         // Manage our connection and create our session
         .manage(SerialConnection {
@@ -38,5 +34,4 @@ async fn main() -> MyResult<()> {
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
-    Ok(())
 }
