@@ -21,18 +21,23 @@ export class Session {
 		config: {},
 		loading: false,
 		port: undefined,
-		darkTheme: appWindow.theme().then((value) => {
+		darkTheme: false
+	};
+
+	public config: typeof ShiftLightConfigs['RPM'] | typeof ShiftLightConfigs['Boost'] = {};
+
+	async setDarkThemeFromSystem() {
+		this.ui_data.darkTheme = await appWindow.theme().then((value) => {
 			if (value == 'dark') {
 				return true;
 			}
 			return false;
-		})
-	};
-
-	public config: typeof ShiftLightConfigs['RPM'] | typeof ShiftLightConfigs['Boost'] = {};
+		});
+	}
 }
 
 const sessionObj = new Session();
+sessionObj.setDarkThemeFromSystem();
 
 export const session = writable<Session['ui_data']>(sessionObj.ui_data);
 export const config = writable<Session['config']>(sessionObj.config);
