@@ -14,6 +14,18 @@
 }
 
 @layer components {
+	.welcome {
+		@apply m-2;
+	}
+
+	.ke-button {
+		@apply dark:bg-slate-200 bg-gray-300 p-2 rounded m-2;
+	}
+
+	.input {
+		@apply text-gray-800 border-solid border rounded border-gray-600;
+	}
+
 	.sidebar-icon {
 		@apply relative flex items-center justify-center 
     h-12 w-12 mt-2 mb-2 mx-auto  
@@ -88,103 +100,6 @@
     h-full w-full 
     mt-0 ml-0 mx-auto px-0 pb-12 
     overflow-y-scroll;
-	}
-
-	.post {
-		@apply w-full
-    flex flex-row items-center justify-evenly
-    py-4 px-8 m-0
-    cursor-pointer;
-	}
-
-	.post-selected {
-		@apply bg-green-400 dark:bg-gray-900
-    shadow-md;
-	}
-
-	.post-content {
-		@apply w-4/5 
-    flex flex-col justify-start 
-    ml-auto;
-	}
-
-	.post-text {
-		@apply text-lg text-left text-gray-800 dark:text-white 
-    mr-auto whitespace-normal;
-	}
-
-	.post-owner {
-		@apply text-left font-semibold text-gray-800 dark:text-white mr-2 cursor-pointer;
-	}
-
-	.timestamp {
-		@apply text-xs text-left font-semibold text-gray-500 dark:text-gray-600 ml-2;
-	}
-
-	.bottom-bar {
-		@apply flex flex-row items-center justify-between 
-    fixed left-88 right-8 bottom-2 
-    rounded-lg shadow-lg 
-    bg-gray-400 dark:bg-gray-600 px-2
-    h-12;
-	}
-
-	.channel-bar {
-		@apply w-80 h-auto m-0 ml-16 bg-gray-200 dark:bg-gray-800
-     overflow-hidden;
-	}
-
-	.channel-container {
-		@apply flex flex-col items-center justify-start 
-    p-1 m-0;
-	}
-
-	.channel-block {
-		@apply flex items-center justify-center 
-    h-16 
-    m-0 p-0;
-	}
-
-	.channel-block-text {
-		@apply text-lg tracking-wider font-bold 
-    text-gray-600 dark:text-gray-400 
-    mr-auto ml-4 my-auto align-middle;
-	}
-
-	.dropdown {
-		@apply m-0 w-full px-2 pb-2
-    transition duration-300 ease-in-out;
-	}
-
-	.dropdown-header {
-		@apply flex flex-row items-center justify-evenly
-    mx-0 text-gray-500
-    cursor-pointer;
-	}
-
-	.dropdown-header-text {
-		@apply text-gray-500  text-opacity-90 
-    text-lg font-semibold
-    cursor-default;
-	}
-
-	.dropdown-header-text-selected {
-		@apply text-blue-500 text-opacity-90 text-lg font-bold;
-	}
-
-	.dropdown-selection {
-		@apply flex flex-row items-center justify-evenly
-    mt-1 mr-auto ml-2
-    transition duration-300 ease-in-out
-    cursor-pointer;
-	}
-
-	.dropdown-selection-text {
-		@apply text-gray-500 font-semibold tracking-wide
-    mr-auto 
-    transition duration-300 ease-in-out 
-    hover:text-pink-500 dark:hover:text-gray-500
-    cursor-pointer;
 	}
 }
 

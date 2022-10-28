@@ -38,19 +38,18 @@
 
 <div class="m-4">
 	<div class="row m-2">Firmware version: 1.x.x</div>
-	<div class="row m-2">Change log: {changelog}</div>
+	<div class="row m-2">
+		<h2>Change log:</h2>
+		<article class="dark:text-white prose lg:prose-xl">{changelog}</article>
+	</div>
 
-	<button
-		type="button"
-		class="dark:bg-slate-400 bg-gray-300 p-2 rounded m-2"
-		on:click={checkForNewVersion}
-	>
+	<button type="button" class="ke-button input" on:click={checkForNewVersion}>
 		Check for new version
 	</button>
 
 	<button
 		type="button"
-		class="dark:bg-slate-400 bg-gray-300 p-2 rounded m-2 disabled:opacity-50"
+		class="ke-button input disabled:opacity-50"
 		on:click={write_firmware}
 		disabled={!hex}
 	>

@@ -43,15 +43,10 @@
 
 <div class="m-2">
 	<label for="configType">
-		<span>Config Type:</span>
+		<span class="dark:text-white">Config Type:</span>
 	</label>
 
-	<select
-		class="select select-sm rounded dark:text-slate-700"
-		id="configType"
-		bind:value={configType}
-		required
-	>
+	<select class="input select select-sm" id="configType" bind:value={configType} required>
 		{#each Object.keys(ShiftLightConfigs) as type}
 			<option>{type}</option>
 		{/each}
@@ -67,7 +62,7 @@
 		{#each Object.keys(inputOptions) as input}
 			<div class="col-span-1 flex items-center justify-start">
 				<label for={input}>
-					<span>{input}:</span>
+					<span class="dark:text-white">{input}:</span>
 				</label>
 				<!-- svelte-ignore a11y-missing-attribute -->
 				{#if inputOptions[input]['info']}
@@ -89,13 +84,13 @@
 						min={inputOptions[input]['min']}
 						type="number"
 						bind:value={configCopy[inputOptions[input]['code']]}
-						class="dark:text-slate-700 rounded p-2 w-1/2 border"
+						class="input w-1/2 p-2"
 						id={inputOptions[input]['code']}
 						required
 					/>
 				{:else}
 					<select
-						class="dark:text-slate-700 rounded w-1/2"
+						class="input w-1/2"
 						id={inputOptions[input]['code']}
 						bind:value={configCopy[inputOptions[input]['code']]}
 						required
@@ -109,7 +104,7 @@
 		{/each}
 
 		<div class="col-span-full flex place-content-end">
-			<button class="rounded border dark:bg-white dark:text-slate-700 p-1">Update</button>
+			<button class="ke-button input">Update</button>
 		</div>
 	</form>
 {:else}

@@ -1,5 +1,13 @@
 <script lang="ts">
-	import { connectToSerialPort, getCurrentConfig, getSerialPorts, type Port } from '$lib/API';
+	import { error, success } from '$lib/Toasts';
+
+	import {
+		connectToSerialPort,
+		getCurrentConfig,
+		getCurrentConnection,
+		getSerialPorts,
+		type Port
+	} from '$lib/API';
 	import { faRefresh, faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
 	import { session, config } from '../lib/Store';
 	import Fa from 'sveltejs-fontawesome';
@@ -36,9 +44,9 @@
 		$session.loading = true;
 
 		let open_conn = '';
-		await getCurrentConfig()
-			.then((res) => (open_conn = res))
-			.catch((err) => console.error(err));
+		await getCurrentConnection().then((res) => {
+			open_conn = res;
+		});
 
 		return await getSerialPorts()
 			.then((ports_found) => {
@@ -47,17 +55,20 @@
 				for (let port of ports_found) {
 					if (!open_conn && port.port_info.includes('SHIFTLIGHT')) {
 						$session.port = port;
-						set_initial_config();
 					} else if (open_conn == port.port_name) {
 						$session.port = port;
-						set_initial_config();
+						break;
 					}
 				}
+				setInitialConfig().catch((err) => console.error(err));
 			})
 			.catch((err) => {
 				error(err);
 			})
-			.finally(() => ($session.loading = false));
+			.finally(() => {
+				$session.loading = false;
+				success('Serial connection established');
+			});
 	}
 	getPorts();
 
