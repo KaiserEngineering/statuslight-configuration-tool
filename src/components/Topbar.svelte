@@ -44,30 +44,34 @@
 		$session.loading = true;
 
 		let open_conn = '';
-		await getCurrentConnection().then((res) => {
-			open_conn = res;
-		});
+		getCurrentConnection()
+			.then((res) => {
+				open_conn = res;
 
-		return await getSerialPorts()
-			.then((ports_found) => {
-				ports = ports_found;
+				return getSerialPorts()
+					.then((ports_found) => {
+						ports = ports_found;
 
-				for (let port of ports_found) {
-					if (!open_conn && port.port_info.includes('SHIFTLIGHT')) {
-						$session.port = port;
-					} else if (open_conn == port.port_name) {
-						$session.port = port;
-						break;
-					}
-				}
-				setInitialConfig().catch((err) => console.error(err));
+						for (let port of ports_found) {
+							if (!open_conn && port.port_info.includes('SHIFTLIGHT')) {
+								$session.port = port;
+							} else if (open_conn == port.port_name) {
+								$session.port = port;
+								break;
+							}
+						}
+						setInitialConfig().catch((err) => console.error(err));
+					})
+					.catch((err) => {
+						error(err);
+					})
+					.finally(() => {
+						$session.loading = false;
+						success('Serial connection established');
+					});
 			})
-			.catch((err) => {
-				error(err);
-			})
-			.finally(() => {
+			.catch(() => {
 				$session.loading = false;
-				success('Serial connection established');
 			});
 	}
 	getPorts();
