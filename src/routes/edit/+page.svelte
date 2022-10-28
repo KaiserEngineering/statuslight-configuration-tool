@@ -56,7 +56,7 @@
 <hr class="mb-2" />
 
 <!-- Only show port selection until a port is chosen -->
-{#if $session.configType}
+{#if configType}
 	<!-- Our form for out version the shiftlight is configured for -->
 	<form on:submit|preventDefault={update} class="grid grid-cols-3 gap-4 max-w-xl m-auto">
 		{#each Object.keys(inputOptions) as input}
