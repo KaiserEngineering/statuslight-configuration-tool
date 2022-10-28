@@ -1,5 +1,6 @@
 <script lang="ts">
-	import Header from '../components/Header.svelte';
+	import Sidebar from '../components/Sidebar.svelte';
+	import Topbar from '../components/Topbar.svelte';
 	import Loading from '../components/Loading.svelte';
 	import { SvelteToast } from '@zerodevx/svelte-toast';
 	import Stylesheet from '../components/Stylesheet.svelte';
@@ -12,17 +13,20 @@
 </script>
 
 <div class:dark>
-	<div
-		class="bg-gray-100 text-gray-800
-	dark:bg-gray-900 dark:text-white h-screen"
-	>
+	<div class="dark:bg-gray-900 dark:text-white h-screen flex">
 		<Loading />
 
 		<SvelteToast />
 
-		<Header />
+		<Sidebar />
 
-		<slot />
+		<div class="content-container">
+			<Topbar />
+
+			<div class="content-list">
+				<slot />
+			</div>
+		</div>
 	</div>
 </div>
 

@@ -35,36 +35,6 @@
 			.finally(() => ($session.loading = false));
 	}
 
-	let ports: [Port] | [] = [];
-	async function get_ports() {
-		$session.loading = true;
-
-		let open_conn = '';
-		await get_current_connection()
-			.then((res) => (open_conn = res))
-			.catch((err) => console.error(err));
-
-		return await get_serial_ports()
-			.then((ports_found) => {
-				ports = ports_found;
-
-				for (let port of ports_found) {
-					if (!open_conn && port.port_info.includes('SHIFTLIGHT')) {
-						$session.port = port;
-						set_initial_config();
-					} else if (open_conn == port.port_name) {
-						$session.port = port;
-						set_initial_config();
-					}
-				}
-			})
-			.catch((err) => {
-				error(err);
-			})
-			.finally(() => ($session.loading = false));
-	}
-	get_ports();
-
 	let icon = faMoon;
 	const toggleDark = () => {
 		$session.darkTheme = !$session.darkTheme;

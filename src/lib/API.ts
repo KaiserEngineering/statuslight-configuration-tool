@@ -6,11 +6,11 @@ export type Port = {
 	port_info: string;
 };
 
-export async function get_current_connection() {
+export async function getCurrentConnection() {
 	return await invoke('get_connection', {});
 }
 
-export async function connect_to_serial_port(portName: string) {
+export async function connectToSerialPort(portName: string) {
 	return await invoke('connect', {
 		portName
 	});
@@ -21,7 +21,7 @@ Load the config for the provided config type.
 
 Return the new config object.
 */
-export async function load_current_config() {
+export async function getCurrentConfig() {
 	return await invoke('write', {
 		content: 'VER\n'
 	})
@@ -49,7 +49,7 @@ export async function load_current_config() {
 		});
 }
 
-export async function get_serial_ports() {
+export async function getSerialPorts() {
 	return await invoke('find_available_ports')
 		// `invoke` returns a Promise
 		.then((response) => {
@@ -66,7 +66,7 @@ port currently connected.
 
 Returns an object{ error: [], success: [] }
 */
-export async function submit_config(
+export async function submitConfig(
 	config: typeof ShiftLightConfigs['RPM'] | typeof ShiftLightConfigs['Boost'],
 	port_name: string
 ) {
