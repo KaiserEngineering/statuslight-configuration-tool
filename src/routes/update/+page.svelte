@@ -50,8 +50,9 @@
 
 	<button
 		type="button"
-		class="dark:bg-slate-400 bg-gray-300 p-2 rounded m-2"
+		class="dark:bg-slate-400 bg-gray-300 p-2 rounded m-2 disabled:opacity-50"
 		on:click={write_firmware}
+		disabled={!hex}
 	>
 		Update firmware
 	</button>
