@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getCurrentConfig, getSerialPorts, type Port } from '$lib/API';
+	import { connectToSerialPort, getCurrentConfig, getSerialPorts, type Port } from '$lib/API';
 	import { faRefresh, faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
 	import { session, config } from '../lib/Store';
 	import Fa from 'sveltejs-fontawesome';
@@ -14,13 +14,13 @@
 		$session.configType = undefined;
 		$config = {};
 
-		await connect_to_serial_port($session.port.port_name).catch((err) => {
+		await connectToSerialPort($session.port.port_name).catch((err) => {
 			$session.loading = false;
 			error(err);
 			return;
 		});
 
-		load_current_config()
+		getCurrentConfig()
 			.then((res) => {
 				$config = res;
 				$session.configType = res['configType'];

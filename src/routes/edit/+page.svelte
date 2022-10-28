@@ -41,7 +41,7 @@
 	$: dark = $session.darkTheme;
 </script>
 
-<div class="mb-2">
+<div class="m-2">
 	<label for="configType">
 		<span>Config Type:</span>
 	</label>
@@ -62,63 +62,56 @@
 
 <!-- Only show port selection until a port is chosen -->
 {#if $session.configType}
-	<div class="flex justify-center bg-white dark:bg-slate-600 ">
-		<div
-			on:submit|preventDefault
-			class="shadow-inner shadow border w-full m-5 rounded px-8 pt-6 pb-8"
-		>
-			<!-- Our form for out version the shiftlight is configured for -->
-			<form on:submit|preventDefault={update} class="grid grid-cols-3 gap-4 max-w-xl m-auto">
-				{#each Object.keys(inputOptions) as input}
-					<div class="col-span-1 flex items-center justify-start">
-						<label for={input}>
-							<span>{input}:</span>
-						</label>
-						<!-- svelte-ignore a11y-missing-attribute -->
-						{#if inputOptions[input]['info']}
-							<span
-								data-bs-toggle="tooltip"
-								data-bs-placement="top"
-								title={inputOptions[input]['info']}
-								class="m-1 cursor-pointer"
-							>
-								<Fa icon={faCircleInfo} size="12" color={dark ? 'white' : 'black'} />
-							</span>
-						{/if}
-					</div>
+	<!-- Our form for out version the shiftlight is configured for -->
+	<form on:submit|preventDefault={update} class="grid grid-cols-3 gap-4 max-w-xl m-auto">
+		{#each Object.keys(inputOptions) as input}
+			<div class="col-span-1 flex items-center justify-start">
+				<label for={input}>
+					<span>{input}:</span>
+				</label>
+				<!-- svelte-ignore a11y-missing-attribute -->
+				{#if inputOptions[input]['info']}
+					<span
+						data-bs-toggle="tooltip"
+						data-bs-placement="top"
+						title={inputOptions[input]['info']}
+						class="m-1 cursor-pointer"
+					>
+						<Fa icon={faCircleInfo} size="12" color={dark ? 'white' : 'black'} />
+					</span>
+				{/if}
+			</div>
 
-					<div class="col-span-2">
-						{#if typeof inputOptions[input]['type'] == 'string'}
-							<input
-								max={inputOptions[input]['max']}
-								min={inputOptions[input]['min']}
-								type="number"
-								bind:value={configCopy[inputOptions[input]['code']]}
-								class="dark:text-slate-700 rounded p-2 w-1/2 border"
-								id={inputOptions[input]['code']}
-								required
-							/>
-						{:else}
-							<select
-								class="dark:text-slate-700 rounded w-1/2"
-								id={inputOptions[input]['code']}
-								bind:value={configCopy[inputOptions[input]['code']]}
-								required
-							>
-								{#each inputOptions[input]['type'] as option}
-									<option value={option['value']}>{option['label']}</option>
-								{/each}
-							</select>
-						{/if}
-					</div>
-				{/each}
+			<div class="col-span-2">
+				{#if typeof inputOptions[input]['type'] == 'string'}
+					<input
+						max={inputOptions[input]['max']}
+						min={inputOptions[input]['min']}
+						type="number"
+						bind:value={configCopy[inputOptions[input]['code']]}
+						class="dark:text-slate-700 rounded p-2 w-1/2 border"
+						id={inputOptions[input]['code']}
+						required
+					/>
+				{:else}
+					<select
+						class="dark:text-slate-700 rounded w-1/2"
+						id={inputOptions[input]['code']}
+						bind:value={configCopy[inputOptions[input]['code']]}
+						required
+					>
+						{#each inputOptions[input]['type'] as option}
+							<option value={option['value']}>{option['label']}</option>
+						{/each}
+					</select>
+				{/if}
+			</div>
+		{/each}
 
-				<div class="col-span-full flex place-content-end">
-					<button class="rounded border dark:bg-white dark:text-slate-700 p-1">Update</button>
-				</div>
-			</form>
+		<div class="col-span-full flex place-content-end">
+			<button class="rounded border dark:bg-white dark:text-slate-700 p-1">Update</button>
 		</div>
-	</div>
+	</form>
 {:else}
 	<div class="flex justify-center">Nothing here yet, is the serial port connected?</div>
 {/if}
