@@ -31,6 +31,13 @@
     transition-all duration-100 scale-0 origin-left;
 	}
 
+	.sidebar-tooltip-left {
+		@apply absolute w-auto p-2 m-2 min-w-max right-14 rounded-md shadow-md
+    text-white bg-gray-900 
+    text-xs font-bold 
+    transition-all duration-100 scale-0 origin-left;
+	}
+
 	.sidebar-hr {
 		@apply bg-gray-200 dark:bg-gray-900 
     border border-gray-200 dark:border-gray-900 rounded-full

@@ -89,7 +89,7 @@
 			{/each}
 		</select>
 
-		<div class="sidebar-icon" on:click={getPorts} on:keydown={getPorts}>
+		<div class="sidebar-icon group" on:click={getPorts} on:keydown={getPorts}>
 			<Fa icon={faRefresh} color={dark ? 'white' : 'black'} />
 
 			<span class="sidebar-tooltip group-hover:scale-100">Refresh available ports</span>
@@ -97,10 +97,10 @@
 	</div>
 
 	<div class="fixed right-2">
-		<div class="justify-items-end sidebar-icon group" on:click={toggleDark} on:keydown={toggleDark}>
+		<div class="sidebar-icon group" on:click={toggleDark} on:keydown={toggleDark}>
 			<Fa icon={darkModeIcon} color={dark ? 'white' : 'black'} />
 
-			<span class="sidebar-tooltip group-hover:scale-100">Toggle dark mode</span>
+			<span class="sidebar-tooltip-left group-hover:scale-100">Toggle dark mode</span>
 		</div>
 	</div>
 </div>
