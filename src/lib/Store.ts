@@ -21,7 +21,7 @@ export class Session {
 		config: {},
 		loading: false,
 		port: undefined,
-		darkTheme: false
+		darkTheme: false,
 	};
 
 	public config: typeof ShiftLightConfigs['RPM'] | typeof ShiftLightConfigs['Boost'] = {};

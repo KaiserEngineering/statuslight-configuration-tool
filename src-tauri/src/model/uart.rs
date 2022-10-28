@@ -150,6 +150,7 @@ pub async fn flash_firmware(
             message: format!("Ran into issue sending DTR signal {:?}", e),
         });
     }
+    println!("Wrote DTR signal");
 
     match read_serial(conn) {
         Ok(content) => {

@@ -8,7 +8,7 @@
 
 	async function checkForNewVersion() {
 		$session.loading = true;
-		invoke('get_latest_firmware')
+		await invoke('get_latest_firmware')
 			.then((res) => {
 				changelog = res.changelog;
 				hex = res.hex;
@@ -24,9 +24,9 @@
 			$session.loading = false;
 			return;
 		}
-		await invoke('write', { content: hex })
-			.then((res) => {
-				success(res);
+		invoke('write_firmware', { hex: hex })
+			.then(() => {
+				success('Firmware written');
 			})
 			.catch((err) => {
 				// Backend sends back SerialError object
