@@ -6,6 +6,7 @@ use serialport::SerialPortInfo;
 pub enum SerialErrors {
     Write,
     Read,
+    Boot,
 }
 
 #[derive(Serialize, Debug, Clone)]
@@ -135,6 +136,33 @@ pub async fn find_available_manager_ports<M: SerialManager>(
             error_type: SerialErrors::Write,
             message: error.to_string(),
         }),
+    }
+}
+
+pub async fn flash_firmware(
+    conn: &mut Box<dyn serialport::SerialPort>,
+    hex: String,
+) -> Result<String, SerialError> {
+    // Sent DTR signal
+    if let Err(e) = conn.write_data_terminal_ready(true) {
+        return Err(SerialError {
+            error_type: SerialErrors::Boot,
+            message: format!("Ran into issue sending DTR signal {:?}", e),
+        });
+    }
+
+    match read_serial(conn) {
+        Ok(content) => {
+            if content == "hi\n" {
+                write_serial(conn, hex).await
+            } else {
+                Err(SerialError {
+                    error_type: SerialErrors::Boot,
+                    message: "Did not get 'hi' back from micro".into(),
+                })
+            }
+        }
+        Err(e) => Err(e),
     }
 }
 

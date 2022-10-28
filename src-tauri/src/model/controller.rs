@@ -8,7 +8,7 @@ use tauri::State;
 use crate::{store::SerialConnection, Session};
 
 use super::{
-    find_available_manager_ports, get,
+    find_available_manager_ports, flash_firmware, get,
     uart::{self, write_serial},
     RealSerialManager, SerialError, SerialErrors, SerialPort,
 };
@@ -104,7 +104,13 @@ pub async fn write(
     let port_binding = conn.clone();
     let mut port_conn = port_binding.port.lock().await;
 
-    write_serial(port_conn.as_mut().unwrap(), content).await
+    match port_conn.as_mut() {
+        Some(port) => write_serial(port, content).await,
+        None => Err(super::SerialError {
+            error_type: SerialErrors::Write,
+            message: "No connection found".into(),
+        }),
+    }
 }
 
 #[tauri::command]
@@ -121,4 +127,21 @@ pub async fn get_latest_firmware() -> Result<HashMap<String, String>, String> {
     );
 
     Ok(content)
+}
+
+#[tauri::command]
+pub async fn write_firmware(
+    conn: State<'_, SerialConnection>,
+    hex: String,
+) -> Result<String, SerialError> {
+    let port_binding = conn.clone();
+    let mut port_conn = port_binding.port.lock().await;
+
+    match port_conn.as_mut() {
+        Some(port) => flash_firmware(port, hex).await,
+        None => Err(SerialError {
+            error_type: SerialErrors::Boot,
+            message: "No active connection found".into(),
+        }),
+    }
 }
