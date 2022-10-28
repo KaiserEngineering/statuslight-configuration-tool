@@ -118,9 +118,15 @@ pub async fn get_latest_firmware() -> Result<HashMap<String, String>, String> {
     let mut content = HashMap::new();
 
     content.insert(
+        "version".into(),
+        get("https://raw.githubusercontent.com/KaiserEngineering/shiftlight-versioning/main/version.txt".to_string()).await?
+    );
+
+    content.insert(
         "hex".into(),
         get("https://raw.githubusercontent.com/KaiserEngineering/shiftlight-versioning/main/shiftlight.hex".to_string()).await?
     );
+
     content.insert(
         "changelog".into(),
         get("https://raw.githubusercontent.com/KaiserEngineering/shiftlight-versioning/main/changelog.md".to_string()).await?

@@ -5,6 +5,7 @@
 
 	let changelog = '';
 	let hex = '';
+	let version = '#';
 
 	async function checkForNewVersion() {
 		$session.loading = true;
@@ -12,6 +13,7 @@
 			.then((res) => {
 				changelog = res.changelog;
 				hex = res.hex;
+				version = res.version;
 			})
 			.catch((e) => error(e))
 			.finally(() => ($session.loading = false));
@@ -37,7 +39,7 @@
 </script>
 
 <div class="m-4">
-	<div class="row m-2">Firmware version: 1.x.x</div>
+	<div class="row m-2">Firmware version: {version}</div>
 	<div class="row m-2">
 		<h2>Change log:</h2>
 		<article class="dark:text-white prose lg:prose-xl">{changelog}</article>
