@@ -8,9 +8,9 @@ on:
 jobs:
   release:
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
-        platform: [macos-latest, windows-latest]
+        platform: [macos-latest, windows-latest, ubuntu-20.04]
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Checkout repository
