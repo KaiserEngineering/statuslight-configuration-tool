@@ -21,6 +21,7 @@
 		$session.loading = true;
 		if (hex == '') {
 			error('No firmware HEX content found, not doing anything');
+			$session.loading = false;
 			return;
 		}
 		await invoke('write', { content: hex })
