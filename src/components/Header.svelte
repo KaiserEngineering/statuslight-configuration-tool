@@ -10,7 +10,6 @@
 
 	async function set_initial_config() {
 		if (!$session.port) {
-			error('No port selected');
 			return;
 		}
 
@@ -27,14 +26,13 @@
 
 		load_current_config()
 			.then((res) => {
-				$session.loading = false;
 				$config = res;
 				$session.configType = res['configType'];
 			})
 			.catch((err) => {
-				$session.loading = false;
 				error(err);
-			});
+			})
+			.finally(() => ($session.loading = false));
 	}
 
 	let ports: [Port] | [] = [];
@@ -59,12 +57,11 @@
 						set_initial_config();
 					}
 				}
-				$session.loading = false;
 			})
 			.catch((err) => {
 				error(err);
-				$session.loading = false;
-			});
+			})
+			.finally(() => ($session.loading = false));
 	}
 	get_ports();
 

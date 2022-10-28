@@ -17,5 +17,7 @@
 				<Edit />
 			</div>
 		</div>
+	{:else}
+		<div class="flex justify-center">Nothing here yet, is the serial port connected?</div>
 	{/if}
 </div>
