@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { invoke } from '@tauri-apps/api/tauri';
+	import { open } from '@tauri-apps/api/dialog';
+	import { readTextFile } from '@tauri-apps/api/fs';
 	import { success, error } from '$lib/Toasts';
 	import { session } from '$lib/Store';
 	import Modal from '../../components/Modal.svelte';
-	import { faKiwiBird, faFolderOpen } from '@fortawesome/free-solid-svg-icons';
+	import { faKiwiBird } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'sveltejs-fontawesome';
 
 	let changelog = '';
@@ -47,6 +49,29 @@
 		showModal = !showModal;
 	};
 
+	let file = {
+		path: undefined
+	};
+
+	async function getFile() {
+		await open({
+			multiple: false,
+			filters: [
+				{
+					name: 'Hex File',
+					extensions: ['hex']
+				}
+			]
+		}).then(async (fileObj) => {
+			file.path = fileObj;
+
+			hex = await readTextFile(file.path);
+			changelog = 'Custom firmware';
+			version = 'custom';
+			showModal = true;
+		});
+	}
+
 	$: dark = $session.darkTheme;
 </script>
 
@@ -56,10 +81,8 @@
 	<span class="sidebar-tooltip group-hover:scale-100">Check for new version</span>
 </div>
 
-<div class="sidebar-icon group">
-	<Fa icon={faFolderOpen} color={dark ? 'white' : 'black'} />
-
-	<span class="sidebar-tooltip group-hover:scale-100">Select file for custom firmware version</span>
+<div>
+	<button class="ke-button input" on:click={getFile}>Select custom firmware hex file</button>
 </div>
 
 <Modal title="New Version Found: #{version}" open={showModal} on:close={() => handleToggleModal()}>
