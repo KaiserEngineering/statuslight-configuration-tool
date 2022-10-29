@@ -5,7 +5,7 @@
 	import { success, error } from '$lib/Toasts';
 	import { session } from '$lib/Store';
 	import Modal from '../../components/Modal.svelte';
-	import { faKiwiBird } from '@fortawesome/free-solid-svg-icons';
+	import { faArrowCircleUp, faFileArchive } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'sveltejs-fontawesome';
 
 	let changelog = '';
@@ -75,14 +75,18 @@
 	$: dark = $session.darkTheme;
 </script>
 
-<div class="sidebar-icon group" on:click={checkForNewVersion} on:keydown={checkForNewVersion}>
-	<Fa icon={faKiwiBird} color={dark ? 'white' : 'black'} />
-
-	<span class="sidebar-tooltip group-hover:scale-100">Check for new version</span>
+<div
+	class="m-2 cursor-pointer flex items-center"
+	on:click={checkForNewVersion}
+	on:keydown={checkForNewVersion}
+>
+	<span class="mr-2 content-center" for="newReleaseIcon">Select custom firmware hex file</span>
+	<Fa icon={faArrowCircleUp} size="28" color={dark ? 'white' : 'black'} />
 </div>
 
-<div>
-	<button class="ke-button input" on:click={getFile}>Select custom firmware hex file</button>
+<div class="m-2 cursor-pointer flex items-center" on:click={getFile} on:keydown={getFile}>
+	<label class="mr-2 content-center" for="newReleaseIcon">Check for new release</label>
+	<Fa icon={faFileArchive} size="28" color={dark ? 'white' : 'black'} />
 </div>
 
 <Modal title="New Version Found: #{version}" open={showModal} on:close={() => handleToggleModal()}>
