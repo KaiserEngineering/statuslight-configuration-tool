@@ -19,18 +19,21 @@
 	}
 
 	.ke-button {
-		@apply dark:bg-slate-200 bg-gray-300 p-2 rounded m-2;
+		@apply dark:bg-nord6 p-2 rounded m-2;
+	}
+
+	.select {
+		@apply text-nord12;
 	}
 
 	.input {
-		@apply text-gray-800 border-solid border rounded border-gray-600;
+		@apply border-solid border rounded border-nord1;
 	}
 
 	.sidebar-icon {
 		@apply relative flex items-center justify-center 
     h-12 w-12 mt-2 mb-2 mx-auto  
-  bg-gray-400 dark:hover:bg-red-50 hover:bg-red-50 dark:bg-gray-800 
-  text-red-500 hover:text-white
+		bg-nord2 hover:bg-nord11
     hover:rounded-xl rounded-3xl
     transition-all duration-300 ease-linear
     cursor-pointer shadow-lg;
@@ -38,14 +41,18 @@
 
 	.sidebar-tooltip {
 		@apply absolute w-auto p-2 m-2 min-w-max left-14 rounded-md shadow-md
-    text-white bg-gray-900 
+    dark:text-nord12
+		text-nord5
+		bg-nord2
     text-xs font-bold 
     transition-all duration-100 scale-0 origin-left;
 	}
 
 	.sidebar-tooltip-left {
 		@apply absolute w-auto p-2 m-2 min-w-max right-14 rounded-md shadow-md
-    text-white bg-gray-900 
+    dark:text-nord12
+		text-nord5
+		bg-nord2
     text-xs font-bold 
     transition-all duration-100 scale-0 origin-left;
 	}
@@ -56,9 +63,15 @@
     mx-2;
 	}
 
+	.sidebar {
+		@apply fixed top-0 left-0 h-screen w-16 flex flex-col
+		bg-nord6 dark:bg-nord9
+		shadow-lg;
+	}
+
 	.top-navigation {
 		@apply flex flex-row items-center
-    bg-gray-300 dark:bg-gray-700 bg-opacity-90
+    bg-nord4 dark:bg-nord10 bg-opacity-90
     w-full h-16
     ml-16
     shadow-lg;
@@ -99,7 +112,8 @@
 		@apply flex flex-col items-center 
     h-full w-full 
     mt-0 ml-0 mx-auto px-0 pb-12 
-    overflow-y-scroll;
+    overflow-y-scroll
+		dark:bg-nord3 bg-nord5 dark:text-nord12 text-nord1;
 	}
 }
 

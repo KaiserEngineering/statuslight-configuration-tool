@@ -93,8 +93,8 @@
 	<div class="flex justify-start">
 		<select
 			id="shiftlight-port"
-			class="rounded-lg block
-				p-2 dark:text-slate-700 m-2"
+			class="rounded-lg block input select
+				p-2 m-2"
 			bind:value={$session.port}
 			on:change={setInitialConfig}
 		>
@@ -105,7 +105,7 @@
 		</select>
 
 		<div class="sidebar-icon group" on:click={getPorts} on:keydown={getPorts}>
-			<Fa icon={faRefresh} color="red" />
+			<Fa icon={faRefresh} color="white" />
 
 			<span class="sidebar-tooltip group-hover:scale-100">Refresh available ports</span>
 		</div>
@@ -113,7 +113,7 @@
 
 	<div class="fixed right-2">
 		<div class="sidebar-icon group" on:click={toggleDark} on:keydown={toggleDark}>
-			<Fa icon={darkModeIcon} color="red" />
+			<Fa icon={darkModeIcon} color="white" />
 
 			<span class="sidebar-tooltip-left group-hover:scale-100">Toggle dark mode</span>
 		</div>
