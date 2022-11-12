@@ -17,12 +17,11 @@
 
 		$session.loading = true;
 
-		submitConfig($config, $session.port.port_name)
+		submitConfig(configCopy, $session.port.port_name)
 			.then((results) => {
 				if (results.error.length > 0) {
 					error(JSON.stringify('An error occurred while setting some values'));
 				} else {
-					$config = results;
 					success('Config updated');
 				}
 			})
@@ -44,7 +43,7 @@
 		<span class="dark:text-white">Config Type:</span>
 	</label>
 
-	<select class="input select select-sm" id="configType" value={$config.CONFIG} required>
+	<select class="input select select-sm" id="configType" bind:value={configCopy.CONFIG} required>
 		{#each Object.keys(ShiftLightConfigs) as type}
 			<option>{type}</option>
 		{/each}
@@ -81,7 +80,7 @@
 						max={inputOptions[input]['max']}
 						min={inputOptions[input]['min']}
 						type="number"
-						value={configCopy[inputOptions[input]['code']]}
+						bind:value={configCopy[inputOptions[input]['code']]}
 						class="input w-1/2 p-2"
 						id={inputOptions[input]['code']}
 						required
@@ -90,7 +89,7 @@
 					<select
 						class="input w-1/2"
 						id={inputOptions[input]['code']}
-						value={configCopy[inputOptions[input]['code']]}
+						bind:value={configCopy[inputOptions[input]['code']]}
 						required
 					>
 						{#each inputOptions[input]['type'] as option}
