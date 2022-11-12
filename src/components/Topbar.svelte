@@ -47,7 +47,12 @@
 		getCurrentConnection()
 			.then((res) => {
 				open_conn = res;
-
+			})
+			.catch((err) => {
+				error(err);
+				$session.loading = false;
+			})
+			.finally(() => {
 				return getSerialPorts()
 					.then((ports_found) => {
 						ports = ports_found;
@@ -69,9 +74,6 @@
 						$session.loading = false;
 						success('Serial connection established');
 					});
-			})
-			.catch(() => {
-				$session.loading = false;
 			});
 	}
 	getPorts();
