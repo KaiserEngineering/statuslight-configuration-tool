@@ -3,17 +3,14 @@
 	import { open } from '@tauri-apps/api/dialog';
 	import { readTextFile } from '@tauri-apps/api/fs';
 	import { success, error } from '$lib/Toasts';
-	import { session } from '$lib/Store';
+	import { session, config } from '$lib/Store';
 	import Modal from '../../components/Modal.svelte';
 	import { faArrowCircleUp, faFileArchive } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'sveltejs-fontawesome';
 
 	let changelog = '';
 	let hex = '';
-	let version = '#';
 	let showModal = false;
-
-	console.log($session.config);
 
 	async function checkForNewVersion() {
 		$session.loading = true;
@@ -21,7 +18,6 @@
 			.then((res) => {
 				changelog = res.changelog;
 				hex = res.hex;
-				version = res.version;
 
 				showModal = true;
 			})
@@ -65,17 +61,21 @@
 				}
 			]
 		}).then(async (fileObj) => {
+			if (fileObj == undefined) {
+				return;
+			}
 			file.path = fileObj;
 
 			hex = await readTextFile(file.path);
 			changelog = 'Custom firmware';
-			version = 'custom';
 			showModal = true;
 		});
 	}
 
 	$: dark = $session.darkTheme;
 </script>
+
+Current version: #{$config.VER}
 
 <div
 	class="m-2 cursor-pointer flex items-center"
@@ -91,7 +91,11 @@
 	<Fa icon={faFileArchive} size="28" color={dark ? 'white' : 'black'} />
 </div>
 
-<Modal title="New Version Found: #{version}" open={showModal} on:close={() => handleToggleModal()}>
+<Modal
+	title="New Version Found: #{$config.VER}"
+	open={showModal}
+	on:close={() => handleToggleModal()}
+>
 	<svelte:fragment slot="body">
 		<div class="row m-2">
 			<h2>Change log:</h2>
