@@ -17,7 +17,6 @@ setup_listeners();
 
 export class Session {
 	public ui_data = {
-		configType: undefined,
 		config: {},
 		loading: false,
 		port: undefined,

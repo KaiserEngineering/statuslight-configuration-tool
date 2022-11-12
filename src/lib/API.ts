@@ -23,10 +23,16 @@ Return the new config object.
 */
 export async function getCurrentConfig() {
 	return await invoke('write', {
-		content: 'VER\n'
+		content: 'CONFIG\n'
 	})
-		.then(async (version) => {
-			const keys = ShiftLightConfigs[version];
+		.then(async (configType) => {
+			configType = configType == 0 ? "RPM" : "Boost";
+			const keys = JSON.parse(JSON.stringify(ShiftLightConfigs[configType]));
+
+			// Stash current firmware version
+			keys.VERSION = {
+				code: 'VER'
+			};
 
 			const new_config = {};
 			for (const key in keys) {
@@ -41,7 +47,7 @@ export async function getCurrentConfig() {
 						new_config[keys[key]['code']] = error.message;
 					});
 			}
-			new_config['configType'] = version;
+			new_config.configType = configType;
 			return new_config;
 		})
 		.catch((error) => {

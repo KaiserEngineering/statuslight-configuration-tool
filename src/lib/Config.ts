@@ -10,9 +10,9 @@ export const ShiftLightConfigs = {
 		'Acquisition Mode': {
 			code: 'ACQ',
 			type: [
-				{ label: 'OBDII_MODE', value: 'OBDII_MODE' },
-				{ label: 'CAN Bus Listen Mode', value: 'CAN Bus Listen Mode' },
-				{ label: 'Tachometer', value: 'Tachometer' }
+				{ label: 'OBDII_MODE', value: '0' },
+				{ label: 'CAN Bus Listen Mode', value: '1' },
+				{ label: 'Tachometer', value: '2' }
 			]
 		},
 		'Activation Point': {
@@ -24,19 +24,19 @@ export const ShiftLightConfigs = {
 		'Animation Direction': {
 			code: 'ANIM',
 			type: [
-				{ label: 'Left to Right', value: 'Left to Right' },
-				{ label: 'Right to left', value: 'Right to Left' },
-				{ label: 'Out to In', value: 'Out to In' },
-				{ label: 'In to Out', value: 'In to Out' }
+				{ label: 'Left to Right', value: '0' },
+				{ label: 'Right to left', value: '1' },
+				{ label: 'Out to In', value: '2' },
+				{ label: 'In to Out', value: '3' }
 			]
 		},
 		Color: {
 			code: 'COLOR',
 			type: [
-				{ label: 'Blue Green Red', value: 0 },
-				{ label: 'Green Red Blue', value: 1 },
-				{ label: 'Green Red', value: 2 },
-				{ label: 'Aura', value: 3 }
+				{ label: 'Blue Green Red', value: '0' },
+				{ label: 'Green Red Blue', value: '1' },
+				{ label: 'Green Red', value: '2' },
+				{ label: 'Aura', value: '3' }
 			]
 		}
 	},

@@ -33,10 +33,8 @@
 				$session.loading = false;
 			});
 	}
-
 	let configCopy = $config;
-	let configType = $session.configType || '';
-	$: inputOptions = ShiftLightConfigs[configType] || {};
+	let inputOptions = ShiftLightConfigs[configCopy.configType] || {};
 
 	$: dark = $session.darkTheme;
 </script>
@@ -46,7 +44,7 @@
 		<span class="dark:text-white">Config Type:</span>
 	</label>
 
-	<select class="input select select-sm" id="configType" bind:value={configType} required>
+	<select class="input select select-sm" id="configType" value={$config.configType} required>
 		{#each Object.keys(ShiftLightConfigs) as type}
 			<option>{type}</option>
 		{/each}
@@ -56,7 +54,7 @@
 <hr class="mb-2" />
 
 <!-- Only show port selection until a port is chosen -->
-{#if configType}
+{#if inputOptions}
 	<!-- Our form for out version the shiftlight is configured for -->
 	<form on:submit|preventDefault={update} class="grid grid-cols-3 gap-4 max-w-xl m-auto">
 		{#each Object.keys(inputOptions) as input}
@@ -83,7 +81,7 @@
 						max={inputOptions[input]['max']}
 						min={inputOptions[input]['min']}
 						type="number"
-						bind:value={configCopy[inputOptions[input]['code']]}
+						value={configCopy[inputOptions[input]['code']]}
 						class="input w-1/2 p-2"
 						id={inputOptions[input]['code']}
 						required
@@ -92,7 +90,7 @@
 					<select
 						class="input w-1/2"
 						id={inputOptions[input]['code']}
-						bind:value={configCopy[inputOptions[input]['code']]}
+						value={configCopy[inputOptions[input]['code']]}
 						required
 					>
 						{#each inputOptions[input]['type'] as option}

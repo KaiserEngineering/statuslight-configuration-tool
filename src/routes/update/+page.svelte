@@ -13,6 +13,8 @@
 	let version = '#';
 	let showModal = false;
 
+	console.log($session.config);
+
 	async function checkForNewVersion() {
 		$session.loading = true;
 		await invoke('get_latest_firmware')
@@ -80,12 +82,12 @@
 	on:click={checkForNewVersion}
 	on:keydown={checkForNewVersion}
 >
-	<span class="mr-2 content-center" for="newReleaseIcon">Select custom firmware hex file</span>
+	<span class="mr-2 content-center" for="newReleaseIcon">Check for new release</span>
 	<Fa icon={faArrowCircleUp} size="28" color={dark ? 'white' : 'black'} />
 </div>
 
 <div class="m-2 cursor-pointer flex items-center" on:click={getFile} on:keydown={getFile}>
-	<label class="mr-2 content-center" for="newReleaseIcon">Check for new release</label>
+	<label class="mr-2 content-center" for="newReleaseIcon">Select custom firmware hex file</label>
 	<Fa icon={faFileArchive} size="28" color={dark ? 'white' : 'black'} />
 </div>
 

@@ -19,7 +19,6 @@
 
 		$session.loading = true;
 
-		$session.configType = undefined;
 		$config = {};
 
 		await connectToSerialPort($session.port.port_name).catch((err) => {
@@ -31,7 +30,6 @@
 		getCurrentConfig()
 			.then((res) => {
 				$config = res;
-				$session.configType = res['configType'];
 			})
 			.catch((err) => {
 				error(err);
