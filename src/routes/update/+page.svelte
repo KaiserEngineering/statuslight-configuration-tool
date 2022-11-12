@@ -25,6 +25,8 @@
 			.finally(() => ($session.loading = false));
 	}
 
+	let progress = 0;
+
 	async function writeFirmware() {
 		$session.loading = true;
 		if (hex == '') {
@@ -32,15 +34,21 @@
 			$session.loading = false;
 			return;
 		}
-		invoke('write_firmware', { hex: hex })
-			.then(() => {
-				success('Firmware written');
-			})
-			.catch((err) => {
-				// Backend sends back SerialError object
+		const lines = hex.split(/\r?\n|\r|\n/g);
+
+		progress = 0;
+
+		for (let line of lines) {
+			try {
+				await invoke('write', { content: line });
+				progress = progress + 1;
+			} catch (err) {
 				error(err.message);
-			})
-			.finally(() => ($session.loading = false));
+				$session.loading = false;
+				showModal = false;
+				break;
+			}
+		}
 	}
 
 	const handleToggleModal = () => {
@@ -101,6 +109,8 @@ Current version: #{$config.VER}
 			<h2>Change log:</h2>
 			<article class="dark:text-black prose lg:prose-xl">{changelog}</article>
 		</div>
+
+		{progress}
 
 		<button class="input ke-button" on:click={writeFirmware}>Write</button>
 	</svelte:fragment>

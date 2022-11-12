@@ -139,10 +139,7 @@ pub async fn find_available_manager_ports<M: SerialManager>(
     }
 }
 
-pub async fn flash_firmware(
-    conn: &mut Box<dyn serialport::SerialPort>,
-    hex: String,
-) -> Result<String, SerialError> {
+pub async fn send_dtr(conn: &mut Box<dyn serialport::SerialPort>) -> Result<String, SerialError> {
     // Sent DTR signal
     if let Err(e) = conn.write_data_terminal_ready(true) {
         return Err(SerialError {
@@ -151,20 +148,7 @@ pub async fn flash_firmware(
         });
     }
     println!("Wrote DTR signal");
-
-    match read_serial(conn) {
-        Ok(content) => {
-            if content == "hi\n" {
-                write_serial(conn, hex).await
-            } else {
-                Err(SerialError {
-                    error_type: SerialErrors::Boot,
-                    message: "Did not get 'hi' back from micro".into(),
-                })
-            }
-        }
-        Err(e) => Err(e),
-    }
+    Ok("DTR signal successfully sent".into())
 }
 
 #[cfg(test)]
