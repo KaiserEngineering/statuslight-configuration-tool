@@ -6,5 +6,5 @@ export function validate_config(config) {
 
 		return { is_valid: res, error: 'Shift Point must be greater than Activation Point' };
 	}
-	return 1;
+	return { is_valid: 1 };
 }
