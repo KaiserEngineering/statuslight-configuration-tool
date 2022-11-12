@@ -47,7 +47,7 @@ export async function getCurrentConfig() {
 						new_config[keys[key]['code']] = error.message;
 					});
 			}
-			new_config.configType = configType;
+			new_config.CONFIG = configType;
 			return new_config;
 		})
 		.catch((error) => {
@@ -76,11 +76,16 @@ export async function submitConfig(
 	config: typeof ShiftLightConfigs['RPM'] | typeof ShiftLightConfigs['Boost'],
 	port_name: string
 ) {
+
 	const results = {
 		success: [],
 		error: []
 	};
+
 	for (const key in config) {
+		if (key == "VER") {
+			continue;
+		}
 		await invoke('write', {
 			portName: port_name,
 			content: key + ' ' + config[key] + '\n'

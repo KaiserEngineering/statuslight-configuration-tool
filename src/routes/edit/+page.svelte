@@ -34,17 +34,17 @@
 			});
 	}
 	let configCopy = $config;
-	let inputOptions = ShiftLightConfigs[configCopy.configType] || {};
+	let inputOptions = ShiftLightConfigs[configCopy.CONFIG] || {};
 
 	$: dark = $session.darkTheme;
 </script>
 
 <div class="m-2">
-	<label for="configType">
+	<label for="CONFIG">
 		<span class="dark:text-white">Config Type:</span>
 	</label>
 
-	<select class="input select select-sm" id="configType" value={$config.configType} required>
+	<select class="input select select-sm" id="configType" value={$config.CONFIG} required>
 		{#each Object.keys(ShiftLightConfigs) as type}
 			<option>{type}</option>
 		{/each}
