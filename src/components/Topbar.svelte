@@ -34,7 +34,10 @@
 			.catch((err) => {
 				error(err);
 			})
-			.finally(() => ($session.loading = false));
+			.finally(() => {
+				$session.loading = false;
+				success('Connection established');
+			});
 	}
 
 	let ports: [Port] | [] = [];
@@ -46,10 +49,7 @@
 			.then((res) => {
 				open_conn = res;
 			})
-			.catch((err) => {
-				error(err);
-				$session.loading = false;
-			})
+			.catch((_err) => {})
 			.finally(() => {
 				return getSerialPorts()
 					.then((ports_found) => {
@@ -70,7 +70,6 @@
 					})
 					.finally(() => {
 						$session.loading = false;
-						success('Serial connection established');
 					});
 			});
 	}

@@ -33,7 +33,7 @@
 			});
 	}
 	let configCopy = $config;
-	let inputOptions = ShiftLightConfigs[configCopy.CONFIG] || {};
+	$: inputOptions = ShiftLightConfigs[configCopy.CONFIG] || {};
 
 	$: dark = $session.darkTheme;
 </script>
