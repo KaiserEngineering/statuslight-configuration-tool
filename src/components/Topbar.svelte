@@ -30,13 +30,13 @@
 		getCurrentConfig()
 			.then((res) => {
 				$config = res;
+				success('Connection established');
 			})
 			.catch((err) => {
 				error(err);
 			})
 			.finally(() => {
 				$session.loading = false;
-				success('Connection established');
 			});
 	}
 
