@@ -32,8 +32,8 @@
 
 	.sidebar-icon {
 		@apply relative flex items-center justify-center 
-    h-12 w-12 mt-2 mb-2 mx-auto  
-		bg-nord2 hover:bg-nord11
+    h-10 w-10 mt-2 mb-2 mx-auto  
+		bg-nord2 hover:bg-red-600
     hover:rounded-xl rounded-3xl
     transition-all duration-300 ease-linear
     cursor-pointer shadow-lg;
@@ -41,7 +41,6 @@
 
 	.sidebar-tooltip {
 		@apply absolute w-auto p-2 m-2 min-w-max left-14 rounded-md shadow-md
-    dark:text-nord12
 		text-nord5
 		bg-nord2
     text-xs font-bold 
@@ -50,7 +49,6 @@
 
 	.sidebar-tooltip-left {
 		@apply absolute w-auto p-2 m-2 min-w-max right-14 rounded-md shadow-md
-    dark:text-nord12
 		text-nord5
 		bg-nord2
     text-xs font-bold 
@@ -65,13 +63,13 @@
 
 	.sidebar {
 		@apply fixed top-0 left-0 h-screen w-16 flex flex-col
-		bg-nord6 dark:bg-nord9
+		bg-nord6 dark:bg-zinc-800
 		shadow-lg;
 	}
 
 	.top-navigation {
 		@apply flex flex-row items-center
-    bg-nord4 dark:bg-nord10 bg-opacity-90
+    bg-nord4 dark:bg-zinc-700 bg-opacity-90
     w-full h-16
     ml-16
     shadow-lg;
@@ -113,7 +111,7 @@
     h-full w-full 
     mt-0 ml-0 mx-auto px-0 pb-12 
     overflow-y-scroll
-		dark:bg-nord3 bg-nord5 dark:text-nord12 text-nord1;
+		dark:bg-zinc-900 bg-nord5 dark:text-zinc-300 text-nord1;
 	}
 }
 
