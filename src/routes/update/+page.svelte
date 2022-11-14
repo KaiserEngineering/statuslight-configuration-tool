@@ -38,9 +38,20 @@
 
 		progress = 0;
 
+		let res = await invoke('dtr', {});
+		// Wait for the ShiftLight to reboot
+		await new Promise((r) => setTimeout(r, 2000));
+		res = await invoke('write', { content: 'hi\n' }).catch((err) => {
+			error('Failed to write DTR signal: ' + err.message);
+		});
+
+		if (res == undefined) {
+			return;
+		}
+
 		for (let line of lines) {
 			try {
-				await invoke('write', { content: line });
+				let res = await invoke('write', { content: line });
 				progress = progress + 1;
 			} catch (err) {
 				error(err.message);
