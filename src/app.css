@@ -56,9 +56,8 @@
 	}
 
 	.sidebar-hr {
-		@apply bg-gray-200 dark:bg-gray-900 
-    border border-gray-200 dark:border-gray-900 rounded-full
-    mx-2;
+		@apply border border-nord2 dark:border-white rounded-full
+    mx-1;
 	}
 
 	.sidebar {
