@@ -94,14 +94,6 @@ export const ShiftLightConfigs = {
 			],
 			info: 'Configure the Shift Light to display to peak RPM value and decay after a given delay',
 		},
-		'Configuration': {
-			code: 'CONFIG',
-			type: [
-				{ label: 'TYPE_RPM', value: '0' },
-				{ label: 'TYPE_BOOST', value: '1' }
-			],
-			info: 'Configure the Shift Light to RPM or Boost mode',
-		},
 		'EEPROM Version': {
 			code: 'EEVER',
 			type: 'number',
