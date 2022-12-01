@@ -63,13 +63,6 @@ export const ShiftLightConfigs = {
 			max: 1,
 			info: 'Configure the USB to echo back the received data',
 		},
-		'Firmware Version': {
-			code: 'VER',
-			type: 'number',
-			min: 0,
-			max: 0,
-			info: 'Return the current version of the Shift Light firmware',
-		},
 		'Acquisition Mode': {
 			code: 'ACQ',
 			type: [
@@ -204,13 +197,6 @@ export const ShiftLightConfigs = {
 			max: 1,
 			info: 'Configure the USB to echo back the received data',
 		},
-		'Firmware Version': {
-			code: 'VER',
-			type: 'number',
-			min: 0,
-			max: 0,
-			info: 'Return the current version of the Shift Light firmware',
-		},
 		'Real-time Boost Value': {
 			code: 'BOOST',
 			type: 'number',
@@ -226,14 +212,6 @@ export const ShiftLightConfigs = {
 				{ label: 'TACH', value: '2' }
 			],
 			info: 'Configure the acquisition mode, for example OBDII or tachometer',
-		},
-		'Configuration': {
-			code: 'CONFIG',
-			type: [
-				{ label: 'RPM', value: '0' },
-				{ label: 'BOOST', value: '1' }
-			],
-			info: 'Configure the Shift Light to RPM or Boost mode',
 		},
 		'EEPROM Version': {
 			code: 'EEVER',
