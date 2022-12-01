@@ -21,13 +21,9 @@
 
 		$config = {};
 
-		await connectToSerialPort($session.port.port_name).catch((err) => {
-			$session.loading = false;
-			error(err);
-			return;
-		});
-
-		getCurrentConfig()
+		await connectToSerialPort($session.port.port_name)
+		.then(() => {
+			getCurrentConfig()
 			.then((res) => {
 				$config = res;
 				success('Connection established');
@@ -38,6 +34,13 @@
 			.finally(() => {
 				$session.loading = false;
 			});
+		})
+		.catch((err) => {
+			$session.loading = false;
+			error(err );
+			$session.port = undefined;
+			return;
+		})
 	}
 
 	let ports: [Port] | [] = [];
