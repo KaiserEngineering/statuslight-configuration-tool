@@ -1,21 +1,25 @@
 use std::io::{BufRead, BufReader};
+use ts_rs::TS;
 
 use serde::Serialize;
 use serialport::SerialPortInfo;
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, TS)]
+#[ts(export)]
 pub enum SerialErrors {
     Write,
     Read,
     Boot,
 }
 
-#[derive(Serialize, Debug, Clone)]
+#[derive(Serialize, Debug, Clone, TS)]
+#[ts(export)]
 pub struct SerialPort {
     port_name: String,
     port_info: String,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, TS)]
+#[ts(export)]
 pub struct SerialError {
     pub error_type: SerialErrors,
     pub message: String,
