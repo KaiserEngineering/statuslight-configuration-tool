@@ -134,7 +134,7 @@ export const ShiftLightConfigs = {
 			type: 'number',
 			min: 500,
 			max: 16000,
-			fieldType: 'Basics',
+			fieldType: 'Advanced',
 			info: 'Set the current RPM value. This is typically used for simulating vehicle data.',
 		},
 		'Peak Hold': {
