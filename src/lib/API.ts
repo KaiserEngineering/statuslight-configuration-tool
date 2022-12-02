@@ -27,7 +27,10 @@ export async function getCurrentConfig() {
 	})
 		.then(async (configType) => {
 			configType = configType == 0 ? "RPM" : "Boost";
-			const keys = JSON.parse(JSON.stringify(ShiftLightConfigs[configType]));
+			const keys = JSON.parse(JSON.stringify({
+				...ShiftLightConfigs["All"],
+				...ShiftLightConfigs[configType]
+			}));
 
 			// Stash current firmware version
 			keys.VERSION = {
