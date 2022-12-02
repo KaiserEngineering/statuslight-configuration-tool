@@ -27,7 +27,7 @@ pub fn read_serial(
     let mut reader = BufReader::new(connection);
     let mut my_str = vec![];
 
-    match reader.read_until(b'\n', &mut my_str) {
+    match reader.read_until(0xA, &mut my_str) {
         Ok(_) => {
             let mut output = std::str::from_utf8(&my_str).unwrap().to_string();
 
