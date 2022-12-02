@@ -17,7 +17,15 @@
 
 		$session.loading = true;
 
-		submitConfig(configCopy, $session.port.port_name)
+		// Only grab the fields that were changed from the current value
+		let updatedFields = {};
+		Object.keys(configCopy).forEach((key) => {
+			if (configCopy[key] !== $config[key]) {
+				updatedFields[key] = configCopy[key];
+			}
+		});
+
+		submitConfig(updatedFields, $session.port.port_name)
 			.then((results) => {
 				if (results.error.length > 0) {
 					error(JSON.stringify('An error occurred while setting some values'));
@@ -32,7 +40,7 @@
 				$session.loading = false;
 			});
 	}
-	let configCopy = $config;
+	let configCopy = Object.assign({}, $config);
 	let inputOptions = {};
 	$: inputOptions = { ...ShiftLightConfigs['All'], ...ShiftLightConfigs[configCopy.CONFIG] };
 	$: dark = $session.darkTheme;
