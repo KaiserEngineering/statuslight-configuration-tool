@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { faHome, faGear, faMicrochip } from '@fortawesome/free-solid-svg-icons';
+	import { faHome, faGear, faMicrochip, faExclamation } from '@fortawesome/free-solid-svg-icons';
 
 	import Fa from 'sveltejs-fontawesome';
 </script>
@@ -13,10 +13,16 @@
 
 	<hr class="sidebar-hr" />
 
-	<a href="/edit" class="sidebar-icon group">
+	<a href="/edit/basics" class="sidebar-icon group">
 		<Fa icon={faGear} color="white" />
 
-		<span class="sidebar-tooltip group-hover:scale-100">Edit configuration</span>
+		<span class="sidebar-tooltip group-hover:scale-100">Basic Config</span>
+	</a>
+
+	<a href="/edit/advanced" class="sidebar-icon group">
+		<Fa icon={faExclamation} color="white" />
+
+		<span class="sidebar-tooltip group-hover:scale-100">Advanced Config</span>
 	</a>
 
 	<hr class="sidebar-hr" />
