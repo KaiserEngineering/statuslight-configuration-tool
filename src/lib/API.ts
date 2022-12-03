@@ -1,5 +1,6 @@
 import { invoke } from '@tauri-apps/api';
 import { ShiftLightConfigs } from './Config';
+import type { SerialError, SLConfig } from 'src/app';
 
 export type Port = {
 	port_name: string;
@@ -25,7 +26,7 @@ export async function getCurrentConfig() {
 	return await invoke('write', {
 		content: 'CONFIG\n'
 	})
-		.then(async (configType) => {
+		.then(async (configType: any) => {
 			configType = configType == 0 ? "RPM" : "Boost";
 			const keys = JSON.parse(JSON.stringify({
 				...ShiftLightConfigs["All"],
@@ -37,16 +38,16 @@ export async function getCurrentConfig() {
 				code: 'VER'
 			};
 
-			const new_config = {};
+			const new_config: SLConfig = {};
 			for (const key in keys) {
 				await invoke('write', {
 					content: keys[key]['code'] + '\n'
 				})
-					.then((res) => {
+					.then((res: any) => {
 						new_config[keys[key]['code']] = res;
 					})
 					// Errors get pushed into the resulting config?
-					.catch((error) => {
+					.catch((error: SerialError) => {
 						new_config[keys[key]['code']] = error.message;
 					});
 			}
@@ -93,10 +94,10 @@ export async function submitConfig(
 			portName: port_name,
 			content: key + ' ' + config[key] + '\n'
 		})
-			.then((res) => {
+			.then((res: any) => {
 				results['success'].push(res);
 			})
-			.catch((err) => {
+			.catch((err: SerialError) => {
 				results['error'].push(err.message);
 			});
 	}

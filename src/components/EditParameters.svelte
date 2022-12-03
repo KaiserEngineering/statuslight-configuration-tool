@@ -2,15 +2,26 @@
 	import { config } from '$lib/Store';
 	import Fa from 'sveltejs-fontawesome';
 	import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
+	import { ShiftLightConfigs } from '$lib/Config';
+	import type { SLConfig } from '$lib/types';
 
 	// Handle rendering UI for editing components based on
 	// the field Type value.
 	export let fieldType: string;
 	export let dark: boolean;
-	export let inputOptions;
+	export let configType: string;
+	import { onMount } from 'svelte';
 
-	let groupings = {};
-	Object.keys(inputOptions).forEach((input: any) => {
+	let inputOptions: SLConfig = {
+		...ShiftLightConfigs['All'],
+		...ShiftLightConfigs[configType]
+	};
+	onMount(async () => {
+		inputOptions = { ...ShiftLightConfigs['All'], ...ShiftLightConfigs[configType] };
+	});
+
+	let groupings: { [key: string]: any } = {};
+	Object.keys(inputOptions).forEach((input: string) => {
 		let inputOption = inputOptions[input];
 
 		if (

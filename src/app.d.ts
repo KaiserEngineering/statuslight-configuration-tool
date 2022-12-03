@@ -7,3 +7,13 @@ declare namespace App {
 	// interface Error {}
 	// interface Platform {}
 }
+
+export type SLConfig = {
+	[key: string]: any
+}
+
+export type SerialErrors = "Write" | "Read" | "Boot";
+
+export interface SerialError { error_type: SerialErrors, message: string, }
+
+export interface SerialPort { port_name: string, port_info: string, }

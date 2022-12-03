@@ -18,31 +18,35 @@
 		$session.loading = true;
 
 		// Only grab the fields that were changed from the current value
-		let updatedFields = {};
+		let updatedFields: { [key: string]: any } = {};
 		Object.keys(configCopy).forEach((key) => {
 			if (configCopy[key] !== $config[key]) {
 				updatedFields[key] = configCopy[key];
 			}
 		});
 
-		submitConfig(updatedFields, $session.port.port_name)
-			.then((results) => {
-				if (results.error.length > 0) {
-					error(JSON.stringify('An error occurred while setting some values'));
-				} else {
-					success('Config updated');
-				}
-			})
-			.catch((err) => {
-				error(err);
-			})
-			.finally(() => {
-				$session.loading = false;
-			});
+		if ($config.CONFIG !== configCopy.CONFIG) {
+			updatedFields.CONFIG = configCopy.CONFIG;
+		}
+
+		if ($session.port !== null) {
+			submitConfig(updatedFields, $session.port.port_name)
+				.then((results) => {
+					if (results.error.length > 0) {
+						error(JSON.stringify('An error occurred while setting some values'));
+					} else {
+						success('Config updated');
+					}
+				})
+				.catch((err) => {
+					error(err);
+				})
+				.finally(() => {
+					$session.loading = false;
+				});
+		}
 	}
 	let configCopy = Object.assign({}, $config);
-	let inputOptions = {};
-	$: inputOptions = { ...ShiftLightConfigs['All'], ...ShiftLightConfigs[configCopy.CONFIG] };
 	$: dark = $session.darkTheme;
 </script>
 
@@ -65,13 +69,10 @@
 <!-- Only show port selection until a port is chosen -->
 <!-- Our form for out version the shiftlight is configured for -->
 <form on:submit|preventDefault={update} class="w-3/4">
-	{#if inputOptions}
-		<div class="">
-			<EditParameters {inputOptions} {fieldType} {dark} />
-		</div>
-
-		<div class="col-span-full flex place-content-end">
-			<button class="ke-button input">Update</button>
-		</div>
+	{#if configCopy.CONFIG}
+		<EditParameters configType={configCopy.CONFIG} {fieldType} {dark} />
 	{/if}
+	<div class="col-span-full flex place-content-end">
+		<button class="ke-button input">Update</button>
+	</div>
 </form>

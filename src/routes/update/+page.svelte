@@ -15,7 +15,7 @@
 	async function checkForNewVersion() {
 		$session.loading = true;
 		await invoke('get_latest_firmware')
-			.then((res) => {
+			.then((res: any) => {
 				changelog = res.changelog;
 				hex = res.hex;
 
@@ -53,7 +53,7 @@
 			try {
 				let res = await invoke('write', { content: line });
 				progress = progress + 1;
-			} catch (err) {
+			} catch (err: Promise<Error>) {
 				error(err.message);
 				$session.loading = false;
 				showModal = false;
