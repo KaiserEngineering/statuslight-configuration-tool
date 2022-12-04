@@ -68,6 +68,7 @@
 
 <!-- Only show port selection until a port is chosen -->
 <!-- Our form for out version the shiftlight is configured for -->
+{#if $session.port}
 <form on:submit|preventDefault={update} class="w-3/4">
 	{#if configCopy.CONFIG}
 		<EditParameters configType={configCopy.CONFIG} {fieldType} {dark} />
@@ -76,3 +77,6 @@
 		<button class="ke-button input">Update</button>
 	</div>
 </form>
+{:else}
+No serial port connected
+{/if}
