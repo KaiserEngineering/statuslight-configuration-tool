@@ -51,7 +51,7 @@ pub async fn connect(
         return Ok("Found existing connection".to_string());
     }
 
-    let serial_port = serialport::new(&port_name, 115200)
+    let serial_port = serialport::new(&port_name, 57600)
         .timeout(time::Duration::from_millis(500))
         .open();
 
@@ -77,8 +77,8 @@ pub async fn connect(
             println!("DTR signal written");
 
             // Sleep while the device reboots
-            let two_seconds = time::Duration::from_secs(2);
-            thread::sleep(two_seconds);
+            let sleep = time::Duration::from_millis(200);
+            thread::sleep(sleep);
 
             Ok("New connection established".to_string())
         }
@@ -136,12 +136,15 @@ pub async fn get_latest_firmware() -> Result<HashMap<String, String>, String> {
 }
 
 #[tauri::command]
-pub async fn dtr(serial_connection: State<'_, SerialConnection>) -> Result<String, SerialError> {
+pub async fn dtr(
+    serial_connection: State<'_, SerialConnection>,
+    level: bool,
+) -> Result<String, SerialError> {
     let port_binding = serial_connection.clone();
     let mut port_conn = port_binding.port.lock().await;
 
     match port_conn.as_mut() {
-        Some(port) => send_dtr(port).await,
+        Some(port) => send_dtr(port, level).await,
         None => Err(super::SerialError {
             error_type: SerialErrors::Write,
             message: "No connection found".into(),

@@ -38,8 +38,8 @@ pub fn read_serial(
             // Strip new line endings
             output = output.replace('\n', "");
 
-            if output == "ERROR" {
-                println!("Failed to read: {:?}", output);
+            if output == "ERROR" || output == "nok" {
+                println!("Failed to read/write: {:?}", output);
 
                 return Err(SerialError {
                     error_type: SerialErrors::Read,
@@ -50,7 +50,7 @@ pub fn read_serial(
             Ok(output)
         }
         Err(error) => {
-            println!("Failed to read: {:?}", error.to_string());
+            println!("Failed to read/write: {:?}", error.to_string());
 
             Err(SerialError {
                 error_type: SerialErrors::Read,
@@ -70,7 +70,7 @@ pub async fn write_serial(
             Ok(_) => {
                 if write as u32 == content.len() as u32 {
                     let content = content.replace('\n', "");
-                    println!("Successfully wrote to serial: {}", content);
+                    println!("Successfully sent write to serial: {}", content);
 
                     match read_serial(connection) {
                         Err(e) => Err(e),
@@ -143,15 +143,18 @@ pub async fn find_available_manager_ports<M: SerialManager>(
     }
 }
 
-pub async fn send_dtr(conn: &mut Box<dyn serialport::SerialPort>) -> Result<String, SerialError> {
+pub async fn send_dtr(
+    conn: &mut Box<dyn serialport::SerialPort>,
+    level: bool,
+) -> Result<String, SerialError> {
     // Sent DTR signal
-    if let Err(e) = conn.write_data_terminal_ready(true) {
+    if let Err(e) = conn.write_data_terminal_ready(level) {
         return Err(SerialError {
             error_type: SerialErrors::Boot,
             message: format!("Ran into issue sending DTR signal {:?}", e),
         });
     }
-    println!("Wrote DTR signal");
+    println!("Wrote DTR signal to level {:?}", level);
     Ok("DTR signal successfully sent".into())
 }
 

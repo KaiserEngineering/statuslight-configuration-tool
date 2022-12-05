@@ -11,6 +11,7 @@
 	let changelog = '';
 	let hex = '';
 	let showModal = false;
+	let progress = 0;
 
 	async function checkForNewVersion() {
 		$session.loading = true;
@@ -25,41 +26,55 @@
 			.finally(() => ($session.loading = false));
 	}
 
-	let progress = 0;
-
 	async function writeFirmware() {
-		$session.loading = true;
 		if (hex == '') {
 			error('No firmware HEX content found, not doing anything');
-			$session.loading = false;
 			return;
 		}
 		const lines = hex.split(/\r?\n|\r|\n/g);
 
-		progress = 0;
-
-		let res = await invoke('dtr', {});
+		let res = await invoke('dtr', { level: true }).catch((err) => {
+			error('Failed to write DTR signal to true: ' + err.message);
+		});
 		// Wait for the ShiftLight to reboot
-		await new Promise((r) => setTimeout(r, 2000));
-		res = await invoke('write', { content: 'hi\n' }).catch((err) => {
-			error('Failed to write DTR signal: ' + err.message);
+		await new Promise((r) => setTimeout(r, 200));
+
+		res = await invoke('dtr', { level: false }).catch((err) => {
+			error('Failed to write DTR signal to false: ' + err.message);
 		});
 
-		if (res == undefined) {
+		// Waiting some more
+		await new Promise((r) => setTimeout(r, 200));
+
+		let helloResponse: string = await invoke('write', { content: 'hi\n' })
+			.then((res: any) => {
+				return res.replace('hi;', '');
+			})
+			.catch((err) => {
+				error('Failed to write hi: ' + err.message);
+			});
+
+		if (helloResponse == undefined) {
 			return;
 		}
 
+		progress = 0;
+
 		for (let line of lines) {
+			if (line[0] !== ':') {
+				console.error("Skipping line as didn't start with ':'" + line);
+				continue;
+			}
+
 			try {
-				let res = await invoke('write', { content: line });
+				await invoke('write', { content: line + '\n' });
 				progress = progress + 1;
-			} catch (err: Promise<Error>) {
+			} catch (err: any) {
 				error(err.message);
-				$session.loading = false;
-				showModal = false;
-				break;
+				return;
 			}
 		}
+		success('Firmware updated: ' + helloResponse);
 	}
 
 	const handleToggleModal = () => {
@@ -121,7 +136,7 @@ Current version: #{$config.VER}
 			<article class="dark:text-black prose lg:prose-xl">{changelog}</article>
 		</div>
 
-		{progress}
+		Lines written: {progress}
 
 		<button class="input ke-button" on:click={writeFirmware}>Write</button>
 	</svelte:fragment>
