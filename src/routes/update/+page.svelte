@@ -11,7 +11,6 @@
 	let changelog = '';
 	let hex = '';
 	let showModal = false;
-	let progress = 0;
 
 	async function checkForNewVersion() {
 		$session.loading = true;
@@ -31,6 +30,7 @@
 			error('No firmware HEX content found, not doing anything');
 			return;
 		}
+
 		const lines = hex.split(/\r?\n|\r|\n/g);
 
 		let res = await invoke('dtr', { level: true }).catch((err) => {
@@ -58,22 +58,11 @@
 			return;
 		}
 
-		progress = 0;
+		await invoke('write_hex', { hex: hex }).catch((err) => {
+			error(err.message);
+			return;
+		});
 
-		for (let line of lines) {
-			if (line[0] !== ':') {
-				console.error("Skipping line as didn't start with ':'" + line);
-				continue;
-			}
-
-			try {
-				await invoke('write', { content: line + '\n' });
-				progress = progress + 1;
-			} catch (err: any) {
-				error(err.message);
-				return;
-			}
-		}
 		success('Firmware updated: ' + helloResponse);
 	}
 
@@ -135,8 +124,6 @@ Current version: #{$config.VER}
 			<h2>Change log:</h2>
 			<article class="dark:text-black prose lg:prose-xl">{changelog}</article>
 		</div>
-
-		Lines written: {progress}
 
 		<button class="input ke-button" on:click={writeFirmware}>Write</button>
 	</svelte:fragment>

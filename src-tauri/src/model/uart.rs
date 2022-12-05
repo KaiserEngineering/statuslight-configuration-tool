@@ -31,32 +31,29 @@ pub fn read_serial(
     let mut reader = BufReader::new(connection);
     let mut my_str = vec![];
 
-    match reader.read_until(0xA, &mut my_str) {
-        Ok(_) => {
-            let mut output = std::str::from_utf8(&my_str).unwrap().to_string();
+    if let Err(error) = reader.read_until(0xA, &mut my_str) {
+        println!("Failed to read/write: {:?}", error.to_string());
 
-            // Strip new line endings
-            output = output.replace('\n', "");
+        Err(SerialError {
+            error_type: SerialErrors::Read,
+            message: error.to_string(),
+        })
+    } else {
+        let mut output = std::str::from_utf8(&my_str).unwrap().to_string();
 
-            if output == "ERROR" || output == "nok" {
-                println!("Failed to read/write: {:?}", output);
+        // Strip new line endings
+        output = output.replace('\n', "");
 
-                return Err(SerialError {
-                    error_type: SerialErrors::Read,
-                    message: output,
-                });
-            }
-            println!("Successfully read from serial {:?}", output);
-            Ok(output)
-        }
-        Err(error) => {
-            println!("Failed to read/write: {:?}", error.to_string());
+        if output == "ERROR" || output == "nok" {
+            println!("Failed to read/write: {:?}", output);
 
-            Err(SerialError {
+            return Err(SerialError {
                 error_type: SerialErrors::Read,
-                message: error.to_string(),
-            })
+                message: output,
+            });
         }
+        println!("Successfully read from serial {:?}", output);
+        Ok(output)
     }
 }
 
@@ -66,8 +63,13 @@ pub async fn write_serial(
     content: String,
 ) -> Result<String, SerialError> {
     match connection.write(content.as_bytes()) {
-        Ok(write) => match connection.flush() {
-            Ok(_) => {
+        Ok(write) => {
+            if let Err(error) = connection.flush() {
+                Err(SerialError {
+                    error_type: SerialErrors::Write,
+                    message: error.to_string(),
+                })
+            } else {
                 if write as u32 == content.len() as u32 {
                     let content = content.replace('\n', "");
                     println!("Successfully sent write to serial: {}", content);
@@ -87,11 +89,7 @@ pub async fn write_serial(
                     })
                 }
             }
-            Err(error) => Err(SerialError {
-                error_type: SerialErrors::Write,
-                message: error.to_string(),
-            }),
-        },
+        }
         Err(error) => Err(SerialError {
             error_type: SerialErrors::Write,
             message: error.to_string(),

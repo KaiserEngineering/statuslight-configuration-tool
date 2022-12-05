@@ -151,3 +151,41 @@ pub async fn dtr(
         }),
     }
 }
+
+#[tauri::command]
+pub async fn write_hex(
+    serial_connection: State<'_, SerialConnection>,
+    hex: String,
+) -> Result<String, SerialError> {
+    let port_binding = serial_connection.clone();
+    let mut port_conn = port_binding.port.lock().await;
+
+    match port_conn.as_mut() {
+        Some(port) => {
+            let lines = hex.split('\n');
+            for line in lines {
+                // Skip empty line (last one)
+                if line == "" {
+                    continue;
+                }
+                match write_serial(port, format!("{}\n", line.to_string())).await {
+                    Err(e) => {
+                        return Err(super::SerialError {
+                            error_type: SerialErrors::Write,
+                            message: format!("{:?} for line {}", e.message, line),
+                        });
+                    }
+                    _ => {
+                        println!("Wrote line: {}", line);
+                    }
+                }
+            }
+
+            Ok("Successfully updated firmware!".to_string())
+        }
+        None => Err(super::SerialError {
+            error_type: SerialErrors::Write,
+            message: "Something went wrong getting active connection".into(),
+        }),
+    }
+}

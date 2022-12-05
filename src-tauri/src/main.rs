@@ -11,7 +11,7 @@ mod model;
 mod store;
 
 use model::controller::{
-    connect, dtr, find_available_ports, get_connection, get_latest_firmware, write,
+    connect, dtr, find_available_ports, get_connection, get_latest_firmware, write, write_hex,
 };
 use store::SerialConnection;
 
@@ -34,7 +34,8 @@ fn main() {
             connect,
             get_connection,
             get_latest_firmware,
-            dtr
+            dtr,
+            write_hex
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
