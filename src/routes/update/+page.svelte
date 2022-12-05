@@ -31,8 +31,6 @@
 			return;
 		}
 
-		const lines = hex.split(/\r?\n|\r|\n/g);
-
 		let res = await invoke('dtr', { level: true }).catch((err) => {
 			error('Failed to write DTR signal to true: ' + err.message);
 		});
