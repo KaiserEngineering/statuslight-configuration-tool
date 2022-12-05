@@ -68,6 +68,7 @@
 					if (results.error.length > 0) {
 						error(JSON.stringify('An error occurred while setting some values'));
 					} else {
+						$config = configCopy;
 						success('Config updated');
 					}
 				})
@@ -81,6 +82,10 @@
 	}
 
 	$: dark = $session.darkTheme;
+
+	// Delete All from our list of config modes
+	const ShiftLightConfigsModes = Object.assign({}, ShiftLightConfigs);
+	delete ShiftLightConfigsModes.All;
 </script>
 
 <div class="m-2">
@@ -89,10 +94,8 @@
 	</label>
 
 	<select class="input select select-sm" id="configType" bind:value={configCopy.CONFIG} required>
-		{#each Object.keys(ShiftLightConfigs) as type}
-			{#if type != 'All'}
-				<option>{type}</option>
-			{/if}
+		{#each Object.keys(ShiftLightConfigsModes) as type}
+			<option>{type}</option>
 		{/each}
 	</select>
 </div>

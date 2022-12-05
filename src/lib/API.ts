@@ -87,9 +87,13 @@ export async function submitConfig(
 	};
 
 	for (const key in config) {
-		if (key == "VER") {
+		if (key === "VER") {
 			continue;
 		}
+		if (key === 'CONFIG') {
+			config[key] = config[key] == "RPM" ? 0 : 1;
+		}
+
 		await invoke('write', {
 			portName: port_name,
 			content: key + ' ' + config[key] + '\n'
