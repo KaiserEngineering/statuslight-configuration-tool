@@ -28,10 +28,7 @@
 
 			inputOption.value = input;
 
-			if (
-				(fieldType != 'basics' && inputOption.fieldType != 'basics') ||
-				inputOption.fieldType.toLowerCase() === fieldType
-			) {
+			if (fieldType != 'basics' && inputOption.fieldType.toLowerCase() != 'basics') {
 				if (groupings[configType][inputOption.fieldType]) {
 					groupings[configType][inputOption.fieldType].push(inputOption);
 				} else {
