@@ -50,7 +50,6 @@
 
 		$session.loading = true;
 
-		configCopy.CONFIG = $session.currentConfigType;
 		// Only grab the fields that were changed from the current value
 		let updatedFields: { [key: string]: any } = {};
 		Object.keys(configCopy).forEach((key) => {
