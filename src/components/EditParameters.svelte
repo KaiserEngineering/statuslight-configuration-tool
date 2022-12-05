@@ -1,40 +1,10 @@
 <script lang="ts">
-	import { config } from '$lib/Store';
 	import Fa from 'sveltejs-fontawesome';
 	import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
-	import { ShiftLightConfigs } from '$lib/Config';
-	import type { SLConfig } from '$lib/types';
 
-	// Handle rendering UI for editing components based on
-	// the field Type value.
-	export let fieldType: string;
+	export let config: any;
+	export let groupings: any = {};
 	export let dark: boolean;
-	export let configType: string;
-	import { onMount } from 'svelte';
-
-	let inputOptions: SLConfig = {
-		...ShiftLightConfigs['All'],
-		...ShiftLightConfigs[configType]
-	};
-	onMount(async () => {
-		inputOptions = { ...ShiftLightConfigs['All'], ...ShiftLightConfigs[configType] };
-	});
-
-	let groupings: { [key: string]: any } = {};
-	Object.keys(inputOptions).forEach((input: string) => {
-		let inputOption = inputOptions[input];
-
-		if (
-			(fieldType === 'advanced' && inputOption.fieldType != 'Basics') ||
-			inputOption.fieldType.toLowerCase() === fieldType
-		) {
-			if (groupings[inputOption.fieldType]) {
-				groupings[inputOption.fieldType].push([input]);
-			} else {
-				groupings[inputOption.fieldType] = [input];
-			}
-		}
-	});
 </script>
 
 <div class="columns-1">
@@ -45,44 +15,44 @@
 			</h2>
 
 			<div class="grid grid-cols-2 gap-4">
-				{#each groupings[grouping] as input}
+				{#each groupings[grouping] as inputOption}
 					<div class="flex">
-						<label for={input}>
-							<span class="dark:text-white">{input}:</span>
+						<label for={inputOption.value}>
+							<span class="dark:text-white">{inputOption.value}:</span>
 						</label>
 
 						<!-- svelte-ignore a11y-missing-attribute -->
-						{#if inputOptions[input]['info']}
-							<span
-								data-bs-toggle="tooltip"
-								data-bs-placement="top"
-								title={inputOptions[input]['info']}
-								class="m-1 cursor-pointer"
-							>
-								<Fa icon={faCircleInfo} size="12" color={dark ? 'white' : 'black'} />
-							</span>
-						{/if}
+						<span
+							data-bs-toggle="tooltip"
+							data-bs-placement="top"
+							title={inputOption.info}
+							class="m-1 cursor-pointer"
+						>
+							<Fa icon={faCircleInfo} size="12" color={dark ? 'white' : 'black'} />
+						</span>
 					</div>
-					{#if typeof inputOptions[input]['type'] == 'string'}
+					{#if typeof inputOption.type === 'string'}
 						<input
-							max={inputOptions[input]['max']}
-							min={inputOptions[input]['min']}
+							max={inputOption.max}
+							min={inputOption.min}
 							type="number"
-							bind:value={$config[inputOptions[input]['code']]}
+							bind:value={config[inputOption.code]}
 							class="input w-1/2 p-2"
-							id={inputOptions[input]['code']}
+							id={inputOption.code}
 							required
 						/>
 					{:else}
 						<select
 							class="input w-1/2"
-							id={inputOptions[input]['code']}
-							bind:value={$config[inputOptions[input]['code']]}
+							id={inputOption.code}
+							bind:value={config[inputOption.code]}
 							required
 						>
-							{#each inputOptions[input]['type'] as option}
-								<option value={option['value']}>{option['label']}</option>
-							{/each}
+							{#if inputOption.type && inputOption.type.length > 0}
+								{#each inputOption.type as { value, label }}
+									<option {value}>{label}</option>
+								{/each}
+							{/if}
 						</select>
 					{/if}
 				{/each}

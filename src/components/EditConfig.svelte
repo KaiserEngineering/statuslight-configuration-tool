@@ -6,7 +6,40 @@
 	import { validate_config } from '$lib/Validator';
 	import EditParameters from './EditParameters.svelte';
 
+	let configCopy = Object.assign({}, $config);
 	export let fieldType: string;
+	let groupings: { [key: string]: any } = {};
+
+	// Get each type of config RPM, Boost, etc
+	Object.keys(ShiftLightConfigs).forEach((configType: string) => {
+		if (configType === 'All') {
+			return;
+		}
+		groupings[configType] = {};
+
+		let inputOptions = {
+			...ShiftLightConfigs['All'],
+			...ShiftLightConfigs[configType]
+		};
+
+		// Then build the groupings for the page we are rendering
+		Object.keys(inputOptions).forEach((input: string) => {
+			let inputOption = inputOptions[input];
+
+			inputOption.value = input;
+
+			if (
+				(fieldType != 'basics' && inputOption.fieldType != 'basics') ||
+				inputOption.fieldType.toLowerCase() === fieldType
+			) {
+				if (groupings[configType][inputOption.fieldType]) {
+					groupings[configType][inputOption.fieldType].push(inputOption);
+				} else {
+					groupings[configType][inputOption.fieldType] = [inputOption];
+				}
+			}
+		});
+	});
 
 	async function update(): Promise<void> {
 		let res = validate_config(configCopy);
@@ -17,6 +50,7 @@
 
 		$session.loading = true;
 
+		configCopy.CONFIG = $session.currentConfigType;
 		// Only grab the fields that were changed from the current value
 		let updatedFields: { [key: string]: any } = {};
 		Object.keys(configCopy).forEach((key) => {
@@ -46,7 +80,7 @@
 				});
 		}
 	}
-	let configCopy = Object.assign({}, $config);
+
 	$: dark = $session.darkTheme;
 </script>
 
@@ -69,14 +103,13 @@
 <!-- Only show port selection until a port is chosen -->
 <!-- Our form for out version the shiftlight is configured for -->
 {#if $session.port}
-<form on:submit|preventDefault={update} class="w-3/4">
-	{#if configCopy.CONFIG}
-		<EditParameters configType={configCopy.CONFIG} {fieldType} {dark} />
-	{/if}
-	<div class="col-span-full flex place-content-end">
-		<button class="ke-button input">Update</button>
-	</div>
-</form>
+	<form on:submit|preventDefault={update} class="w-3/4">
+		<EditParameters config={configCopy} groupings={groupings[configCopy.CONFIG]} {dark} />
+
+		<div class="col-span-full flex place-content-end">
+			<button class="ke-button input">Update</button>
+		</div>
+	</form>
 {:else}
-No serial port connected
+	No serial port connected
 {/if}

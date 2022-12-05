@@ -181,7 +181,7 @@ export const ShiftLightConfigs: SLConfig = {
 			fieldType: 'Basics',
 			info: 'Set the current Boost value. This is typically used for simulating vehicle data.',
 		},
-		'Acquiistion Mode': {
+		'Acquistion Mode': {
 			code: 'ACQ',
 			type: [
 				{ label: 'OBDII', value: '0' },
