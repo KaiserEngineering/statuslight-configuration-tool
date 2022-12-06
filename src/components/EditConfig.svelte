@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { submitConfig } from '$lib/API';
-	import { session, config } from '$lib/Store';
+	import { session, config, port } from '$lib/Store';
 	import { success, error } from '$lib/Toasts';
 	import { ShiftLightConfigs } from '$lib/Config';
 	import { validate_config } from '$lib/Validator';
@@ -62,13 +62,14 @@
 			updatedFields.CONFIG = configCopy.CONFIG;
 		}
 
-		if ($session.port !== null) {
-			submitConfig(updatedFields, $session.port.port_name)
+		if ($port !== null) {
+			submitConfig(updatedFields, $port.port_name)
 				.then((results) => {
 					if (results.error.length > 0) {
 						error(JSON.stringify('An error occurred while setting some values'));
 					} else {
-						$config = configCopy;
+						// $config = configCopy;
+						console.log(configCopy);
 						success('Config updated');
 					}
 				})
@@ -79,6 +80,13 @@
 					$session.loading = false;
 				});
 		}
+	}
+
+	// Handle when a new connection is made and update our local
+	// config copy.
+	$: {
+		$port;
+		configCopy = Object.assign({}, $config);
 	}
 
 	$: dark = $session.darkTheme;
@@ -104,7 +112,7 @@
 
 <!-- Only show port selection until a port is chosen -->
 <!-- Our form for out version the shiftlight is configured for -->
-{#if $session.port}
+{#if $port}
 	<form on:submit|preventDefault={update} class="w-3/4">
 		<EditParameters config={configCopy} groupings={groupings[configCopy.CONFIG]} {dark} />
 
