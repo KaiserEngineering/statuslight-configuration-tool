@@ -68,7 +68,7 @@
 					if (results.error.length > 0) {
 						error(JSON.stringify('An error occurred while setting some values'));
 					} else {
-						$config = configCopy;
+						$config = Object.assign({}, $config);
 						success('Config updated');
 					}
 				})
@@ -85,7 +85,7 @@
 		if ($newConnection) {
 			// Acknowledge
 			$newConnection = false;
-			configCopy = $config;
+			configCopy = Object.assign({}, $config);
 		}
 	}
 
