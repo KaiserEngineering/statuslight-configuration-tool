@@ -2,7 +2,7 @@ name: "publish"
 on:
   push:
     branches:
-      - "release"
+      - release
 
 jobs:
   publish-tauri:
@@ -41,7 +41,6 @@ jobs:
       - name: install app dependencies and build it
         run: yarn && yarn build
       - uses: tauri-apps/tauri-action@v0
-
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
