@@ -28,33 +28,32 @@ pub struct SerialError {
 pub fn read_serial(
     connection: &mut Box<dyn serialport::SerialPort>,
 ) -> Result<String, SerialError> {
-    let mut reader = BufReader::new(connection);
-    let mut my_str = vec![];
+    let mut buf = vec![];
+    let mut b_reader = BufReader::with_capacity(1, connection);
 
-    if let Err(error) = reader.read_until(0xA, &mut my_str) {
-        println!("Failed to read/write: {:?}", error.to_string());
-
-        Err(SerialError {
+    if let Err(error) = b_reader.read_until(0x0A, &mut buf) {
+        eprintln!("Reading error: {:?}", error);
+        return Err(SerialError {
             error_type: SerialErrors::Read,
             message: error.to_string(),
-        })
-    } else {
-        let mut output = std::str::from_utf8(&my_str).unwrap().to_string();
-
-        // Strip new line endings
-        output = output.replace('\n', "");
-
-        if output == "ERROR" || output == "nok" {
-            println!("Failed to read/write: {:?}", output);
-
-            return Err(SerialError {
-                error_type: SerialErrors::Read,
-                message: output,
-            });
-        }
-        println!("Successfully read from serial {:?}", output);
-        Ok(output)
+        });
     }
+    let mut output = std::str::from_utf8(&buf).unwrap().to_string();
+
+    // Strip new line endings
+    output = output.replace('\n', "");
+
+    if output == "ERROR" || output == "nok" {
+        println!("Failed to read/write: {:?}", output);
+
+        return Err(SerialError {
+            error_type: SerialErrors::Read,
+            message: output,
+        });
+    }
+
+    println!("Successfully read from serial {:?}", output);
+    Ok(output)
 }
 
 // Write our data via Serial
