@@ -86,7 +86,7 @@ export const ShiftLightConfigs: SLConfig = {
 			info: 'Configure the baud rate of the Shift Light',
 		},
 		'CAN Bus Identifier Lengh': {
-			code: 'CANID',
+			code: 'CANIDE',
 			type: [
 				{ label: '11BIT', value: '0' },
 				{ label: '29BIT', value: '1' }
