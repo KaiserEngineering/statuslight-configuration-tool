@@ -1,7 +1,7 @@
 {
-	"version": "v.0.1.1",
-	"notes": "Test version",
-	"pub_date": "2020-06-22T19:25:57Z",
+	"version": "v.0.1.2",
+	"notes": "Working version #1",
+	"pub_date": "2020-12-07T19:25:57Z",
 	"platforms": {
 		"darwin-x86_64": {
 			"signature": "",

@@ -9,7 +9,7 @@
 		type Port
 	} from '$lib/API';
 	import { faRefresh, faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
-	import { session, config, port } from '../lib/Store';
+	import { session, config, port, newConnection } from '../lib/Store';
 	import Fa from 'sveltejs-fontawesome';
 
 	async function setInitialConfig() {
@@ -26,6 +26,7 @@
 				getCurrentConfig()
 					.then((res) => {
 						$config = res;
+						$newConnection = true;
 						success('Connection established');
 					})
 					.catch((err) => {
@@ -49,13 +50,13 @@
 
 		let open_conn = '';
 		getCurrentConnection()
-			.then((res) => {
+			.then((res: any) => {
 				open_conn = res;
 			})
 			.catch((_err) => {})
 			.finally(() => {
 				return getSerialPorts()
-					.then((ports_found) => {
+					.then((ports_found: any) => {
 						ports = ports_found;
 
 						for (let foundPort of ports_found) {

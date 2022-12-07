@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { submitConfig } from '$lib/API';
-	import { session, config, port } from '$lib/Store';
+	import { session, config, port, newConnection } from '$lib/Store';
 	import { success, error } from '$lib/Toasts';
 	import { ShiftLightConfigs } from '$lib/Config';
 	import { validate_config } from '$lib/Validator';
@@ -68,8 +68,7 @@
 					if (results.error.length > 0) {
 						error(JSON.stringify('An error occurred while setting some values'));
 					} else {
-						// $config = configCopy;
-						console.log(configCopy);
+						$config = Object.assign({}, configCopy);
 						success('Config updated');
 					}
 				})
@@ -82,11 +81,12 @@
 		}
 	}
 
-	// Handle when a new connection is made and update our local
-	// config copy.
 	$: {
-		$port;
-		configCopy = Object.assign({}, $config);
+		if ($newConnection) {
+			// Acknowledge
+			$newConnection = false;
+			configCopy = Object.assign({}, $config);
+		}
 	}
 
 	$: dark = $session.darkTheme;
