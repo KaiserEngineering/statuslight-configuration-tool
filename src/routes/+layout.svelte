@@ -4,9 +4,8 @@
 	import Loading from '../components/Loading.svelte';
 	import { SvelteToast } from '@zerodevx/svelte-toast';
 	import Stylesheet from '../components/Stylesheet.svelte';
-	import '../app.css';
-
 	import { session } from '../lib/Store';
+	import '../app.css';
 
 	// So we can use class:dark
 	$: dark = $session.darkTheme;

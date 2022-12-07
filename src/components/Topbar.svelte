@@ -9,11 +9,11 @@
 		type Port
 	} from '$lib/API';
 	import { faRefresh, faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
-	import { session, config } from '../lib/Store';
+	import { session, config, port } from '../lib/Store';
 	import Fa from 'sveltejs-fontawesome';
 
 	async function setInitialConfig() {
-		if (!$session.port) {
+		if (!$port) {
 			return;
 		}
 
@@ -21,26 +21,26 @@
 
 		$config = {};
 
-		await connectToSerialPort($session.port.port_name)
-		.then(() => {
-			getCurrentConfig()
-			.then((res) => {
-				$config = res;
-				success('Connection established');
+		await connectToSerialPort($port.port_name)
+			.then(() => {
+				getCurrentConfig()
+					.then((res) => {
+						$config = res;
+						success('Connection established');
+					})
+					.catch((err) => {
+						error(err);
+					})
+					.finally(() => {
+						$session.loading = false;
+					});
 			})
 			.catch((err) => {
-				error(err);
-			})
-			.finally(() => {
 				$session.loading = false;
+				error(err);
+				$port = undefined;
+				return;
 			});
-		})
-		.catch((err) => {
-			$session.loading = false;
-			error(err );
-			$session.port = undefined;
-			return;
-		})
 	}
 
 	let ports: [Port] | [] = [];
@@ -58,11 +58,11 @@
 					.then((ports_found) => {
 						ports = ports_found;
 
-						for (let port of ports_found) {
-							if (!open_conn && port.port_info.includes('SHIFTLIGHT')) {
-								$session.port = port;
-							} else if (open_conn == port.port_name) {
-								$session.port = port;
+						for (let foundPort of ports_found) {
+							if (!open_conn && foundPort.port_info.includes('SHIFTLIGHT')) {
+								$port = foundPort;
+							} else if (open_conn == foundPort.port_name) {
+								$port = foundPort;
 								break;
 							}
 						}
@@ -97,7 +97,7 @@
 			id="shiftlight-port"
 			class="rounded-lg block input select
 				p-2 m-2"
-			bind:value={$session.port}
+			bind:value={$port}
 			on:change={setInitialConfig}
 		>
 			<option value="" disabled selected> Select UART Port</option>
