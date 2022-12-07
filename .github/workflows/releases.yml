@@ -1,12 +1,12 @@
 name: "publish"
 on:
   push:
-    branch:
-      - "release"
+    branches:
+      - "releases"
 
 jobs:
   publish-tauri:
-    environment: release
+    environment: releases
     strategy:
       fail-fast: true
       matrix:
