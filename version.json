@@ -5,19 +5,19 @@
 	"platforms": {
 		"darwin-x86_64": {
 			"signature": "",
-			"url": "https://github.com/KaiserEngineering/shiftlight-configuration-tool/releases/latest/download/KE.ShiftLight.app.tar.gz"
+			"url": "https://github.com/KaiserEngineering/shiftlight-configuration-tool/releases/latest/download/app-v{{version}}/KE.ShiftLight.app.tar.gz"
 		},
 		"darwin-aarch64": {
 			"signature": "",
-			"url": "https://github.com/KaiserEngineering/shiftlight-configuration-tool/releases/latest/download/KE.ShiftLight_{{version}}_x64.dmg"
+			"url": "https://github.com/KaiserEngineering/shiftlight-configuration-tool/releases/latest/download/app-v{{version}}/KE.ShiftLight_{{version}}_x64.dmg"
 		},
 		"linux-x86_64": {
 			"signature": "",
-			"url": "https://github.com/KaiserEngineering/shiftlight-configuration-tool/releases/latest/download/KE.ShiftLight.app.tar.gz"
+			"url": "https://github.com/KaiserEngineering/shiftlight-configuration-tool/releases/latest/download/app-v{{version}}/KE.ShiftLight.app.tar.gz"
 		},
 		"windows-x86_64": {
 			"signature": "",
-			"url": "https://github.com/KaiserEngineering/shiftlight-configuration-tool/releases/latest/download/KE.ShiftLight_{{version}}_x64_en-US.msi"
+			"url": "https://github.com/KaiserEngineering/shiftlight-configuration-tool/releases/latest/download/app-v{{version}}/KE.ShiftLight_{{version}}_x64_en-US.msi"
 		}
 	}
 }
