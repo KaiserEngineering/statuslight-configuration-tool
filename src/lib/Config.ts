@@ -21,8 +21,8 @@ export const ShiftLightConfigs: SLConfig = {
 		'Illumination Mode': {
 			code: 'ILLUMMODE',
 			type: [
-				{ label: 'DAYTIME', value: '0' },
-				{ label: 'NIGHTTIME', value: '1' }
+				{ label: 'Daytime', value: '0' },
+				{ label: 'Nighttime', value: '1' }
 			],
 			fieldType: 'Display',
 			info: 'Configure the Shift Light illumination mode',
@@ -38,10 +38,10 @@ export const ShiftLightConfigs: SLConfig = {
 		'Animation Mode': {
 			code: 'ANIM',
 			type: [
-				{ label: 'LEFT_TO_RIGHT', value: '0' },
-				{ label: 'RIGHT_TO_LEFT', value: '1' },
-				{ label: 'OUT_TO_IN', value: '2' },
-				{ label: 'IN_TO_OUT', value: '3' }
+				{ label: 'Left To Right', value: '0' },
+				{ label: 'Right To Left', value: '1' },
+				{ label: 'Out To In', value: '2' },
+				{ label: 'In To Out', value: '3' }
 			],
 			info: 'Configure the LED animation',
 			fieldType: 'Basics',
@@ -50,8 +50,8 @@ export const ShiftLightConfigs: SLConfig = {
 			code: 'ACQ',
 			type: [
 				{ label: 'OBDII', value: '0' },
-				{ label: 'SNIFF', value: '1' },
-				{ label: 'TACH', value: '2' }
+				{ label: 'Sniff', value: '1' },
+				{ label: 'Tach', value: '2' }
 			],
 			fieldType: 'Advanced',
 			info: 'Configure the acquisition mode, for example OBDII or tachometer',
@@ -59,8 +59,8 @@ export const ShiftLightConfigs: SLConfig = {
 		'Power Saver': {
 			code: 'POWER',
 			type: [
-				{ label: 'DISABLED', value: '0' },
-				{ label: 'ENABLED', value: '1' }
+				{ label: 'Disabled', value: '0' },
+				{ label: 'Enabled', value: '1' }
 			],
 			fieldType: 'Power',
 			info: 'Configure if the Shift Light will go into sleep mode when the vehicle is powered off',
@@ -88,8 +88,8 @@ export const ShiftLightConfigs: SLConfig = {
 		'CAN Bus Identifier Lengh': {
 			code: 'CANIDE',
 			type: [
-				{ label: '11BIT', value: '0' },
-				{ label: '29BIT', value: '1' }
+				{ label: '11Bit', value: '0' },
+				{ label: '29Bit', value: '1' }
 			],
 			fieldType: 'CAN',
 			info: 'Configure the CAN bus identifier length for either 11-bit or 29-bit',
@@ -123,10 +123,10 @@ export const ShiftLightConfigs: SLConfig = {
 		'Color Palette': {
 			code: 'COLOR',
 			type: [
-				{ label: 'BLU_GRN_RED', value: '0' },
-				{ label: 'GRN_RED_BLU', value: '1' },
-				{ label: 'GRN_RED', value: '2' },
-				{ label: 'AURA', value: '3' }
+				{ label: 'Blue Green Red', value: '0' },
+				{ label: 'Green Red Blue', value: '1' },
+				{ label: 'Green Red', value: '2' },
+				{ label: 'Aura', value: '3' }
 			],
 			info: 'Configure the LED color palette',
 			fieldType: 'Basics',
@@ -142,8 +142,8 @@ export const ShiftLightConfigs: SLConfig = {
 		'Peak Hold': {
 			code: 'PEAK',
 			type: [
-				{ label: 'DISABLED', value: '0' },
-				{ label: 'ENABLED', value: '1' }
+				{ label: 'Disabled', value: '0' },
+				{ label: 'Enabled', value: '1' }
 			],
 			fieldType: 'Basics',
 			info: 'Configure the Shift Light to display to peak RPM value and decay after a given delay',
@@ -151,13 +151,14 @@ export const ShiftLightConfigs: SLConfig = {
 		'Shift Color': {
 			code: 'SHIFTCOLOR',
 			type: [
-				{ label: 'WHITE', value: '0' },
-				{ label: 'RED', value: '1' },
-				{ label: 'GREEN', value: '2' },
-				{ label: 'BLUE', value: '3' },
-				{ label: 'YELLOW', value: '4' },
-				{ label: 'TEAL', value: '5' },
-				{ label: 'PURPLE', value: '6' }
+				{ label: 'Off', value: '0' },
+				{ label: 'Blue', value: '1' },
+				{ label: 'Green', value: '2' },
+				{ label: 'Teal', value: '3' },
+				{ label: 'Red', value: '4' },
+				{ label: 'Purple', value: '5' },
+				{ label: 'Yellow', value: '6' },
+				{ label: 'White', value: '7' },
 			],
 			fieldType: 'Basics',
 			info: 'Configure the color the Shift Light will illuminate when it is time to shift',
@@ -165,8 +166,8 @@ export const ShiftLightConfigs: SLConfig = {
 		'Flash On Shift': {
 			code: 'FLASH',
 			type: [
-				{ label: 'DISABLED', value: '0' },
-				{ label: 'ENABLED', value: '1' }
+				{ label: 'Disabled', value: '0' },
+				{ label: 'Enabled', value: '1' }
 			],
 			fieldType: 'Basics',
 			info: 'Configure if the Shift Light will flash or illuminate a solid color when it is time to shift',
@@ -185,8 +186,8 @@ export const ShiftLightConfigs: SLConfig = {
 			code: 'ACQ',
 			type: [
 				{ label: 'OBDII', value: '0' },
-				{ label: 'SNIFF', value: '1' },
-				{ label: 'TACH', value: '2' }
+				{ label: 'Sniff', value: '1' },
+				{ label: 'Tach', value: '2' }
 			],
 			fieldType: 'Basics',
 			info: 'Configure the acquisition mode, for example OBDII or tachometer',
