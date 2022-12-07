@@ -2,6 +2,7 @@ import { writable } from 'svelte/store';
 import { appWindow } from '@tauri-apps/api/window';
 import type { ShiftLightConfigs } from '../lib/Config';
 import { listen } from '@tauri-apps/api/event';
+import type { Port } from './API';
 
 // listen to the `click` event and get a function to remove the event listener
 // there's also a `once` function that subscribes to an event and automatically unsubscribes the listener on the first event
@@ -36,5 +37,8 @@ sessionObj.setDarkThemeFromSystem();
 
 export const session = writable<Session['ui_data']>(sessionObj.ui_data);
 export const config = writable<typeof ShiftLightConfigs['RPM'] | typeof ShiftLightConfigs['Boost']>({});
-export const port = writable<string>();
+export const port = writable<undefined | Port>();
 
+// This is so that we can update the edit components when
+// a new connection is made.
+export const newConnection = writable<boolean>(false);
