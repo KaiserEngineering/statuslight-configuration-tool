@@ -68,7 +68,7 @@
 					if (results.error.length > 0) {
 						error(JSON.stringify('An error occurred while setting some values'));
 					} else {
-						$config = Object.assign({}, $config);
+						$config = Object.assign({}, configCopy);
 						success('Config updated');
 					}
 				})
