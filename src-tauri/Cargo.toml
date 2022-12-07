@@ -1,10 +1,10 @@
 [package]
 name = "app"
-version = "0.1.3"
-description = "A Tauri App for configuring the KE ShiftLight"
-authors = ["craig@kaiserengineering.io"]
+version = "0.1.4"
+description = "A Tauri App to configure the KE ShiftLight"
+authors = ["craig@kaiserengineering.io", "matt@kaiserengineering.io"]
 license = ""
-repository = ""
+repository = "https://github.com/KaiserEngineering/shiftlight-configuration-tool"
 default-run = "app"
 edition = "2021"
 rust-version = "1.57"
