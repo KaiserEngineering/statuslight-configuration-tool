@@ -1,4 +1,4 @@
-name: 'publish'
+name: "publish"
 on:
   push:
     branches:
@@ -14,6 +14,7 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v2
+
       - name: setup node
         uses: actions/setup-node@v1
         with:
@@ -23,31 +24,22 @@ jobs:
         with:
           toolchain: nightly
 
-      - name: macos signing
-      if: matrix.platform == 'macos-latest'
-      env:
-        ENABLE_CODE_SIGNING: ${{ secrets.APPLE_CERTIFICATE }}
-        APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
-        APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
-        APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
-        APPLE_ID: ${{ secrets.APPLE_ID }}
-        APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
-
       - name: import windows certificate
-      if: matrix.platform == 'windows-latest'
-      env:
-        WINDOWS_CERTIFICATE: ${{ secrets.WINDOWS_CERTIFICATE }}
-        WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
-      run: |
-        New-Item -ItemType directory -Path certificate
-        Set-Content -Path certificate/tempCert.txt -Value $env:WINDOWS_CERTIFICATE
-        certutil -decode certificate/tempCert.txt certificate/certificate.pfx
-        Remove-Item -path certificate -include tempCert.txt
-        Import-PfxCertificate -FilePath certificate/certificate.pfx -CertStoreLocation Cert:\CurrentUser\My -Password (ConvertTo-SecureString -String $env:WINDOWS_CERTIFICATE_PASSWORD -Force -AsPlainText)
+        if: matrix.platform == 'windows-latest'
+        env:
+          WINDOWS_CERTIFICATE: ${{ secrets.WINDOWS_CERTIFICATE }}
+          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
+        run: |
+          New-Item -ItemType directory -Path certificate
+          Set-Content -Path certificate/tempCert.txt -Value $env:WINDOWS_CERTIFICATE
+          certutil -decode certificate/tempCert.txt certificate/certificate.pfx
+          Remove-Item -path certificate -include tempCert.txt
+          Import-PfxCertificate -FilePath certificate/certificate.pfx -CertStoreLocation Cert:\CurrentUser\My -Password (ConvertTo-SecureString -String $env:WINDOWS_CERTIFICATE_PASSWORD -Force -AsPlainText)
 
       - name: install app dependencies and build it
         run: yarn && yarn build
       - uses: tauri-apps/tauri-action@v0
+
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ENABLE_CODE_SIGNING: ${{ secrets.APPLE_CERTIFICATE }}
@@ -57,8 +49,8 @@ jobs:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
         with:
-          tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
-          releaseName: 'App v__VERSION__'
-          releaseBody: 'See the assets to download this version and install.'
+          tagName: app-v__VERSION__
+          releaseName: "App v__VERSION__"
+          releaseBody: "See the assets to download this version and install."
           releaseDraft: true
           prerelease: false
