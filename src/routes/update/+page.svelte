@@ -12,7 +12,6 @@
 	let progress = 0;
 	async function setUpProgressListener() {
 		const unlistenProgress = await appWindow.listen('PROGRESS', ({ event, payload }) => {
-			console.log(payload);
 			progress = payload.percentage;
 		});
 	}
