@@ -1,6 +1,6 @@
 {
-	"version": "0.1.5",
-	"notes": "Upgrade packages and run cargo fmt + cargo clippy",
+	"version": "0.1.6",
+	"notes": "Add progress % for hex flash and version footer",
 	"pub_date": "2020-12-07T19:25:57Z",
 	"platforms": {
 		"darwin-x86_64": {
