@@ -25,7 +25,3 @@ sessionObj.setDarkThemeFromSystem();
 export const session = writable<Session['ui_data']>(sessionObj.ui_data);
 export const config = writable<typeof ShiftLightConfigs['RPM'] | typeof ShiftLightConfigs['Boost']>({});
 export const port = writable<undefined | Port>();
-
-// This is so that we can update the edit components when
-// a new connection is made.
-export const newConnection = writable<boolean>(false);

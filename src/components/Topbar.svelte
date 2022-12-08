@@ -11,6 +11,7 @@
 	import { faRefresh, faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
 	import { session, config, port, newConnection } from '../lib/Store';
 	import Fa from 'sveltejs-fontawesome';
+	import { invoke } from '@tauri-apps/api';
 
 	async function setInitialConfig() {
 		if (!$port) {
@@ -26,7 +27,7 @@
 				getCurrentConfig()
 					.then((res) => {
 						$config = res;
-						$newConnection = true;
+						invoke('new_connection_event', {});
 						success('Connection established');
 					})
 					.catch((err) => {

@@ -5,6 +5,7 @@
 	import { ShiftLightConfigs } from '$lib/Config';
 	import { validate_config } from '$lib/Validator';
 	import EditParameters from './EditParameters.svelte';
+	import { listen } from '@tauri-apps/api/event';
 
 	let configCopy = Object.assign({}, $config);
 	export let fieldType: string;
@@ -81,13 +82,14 @@
 		}
 	}
 
-	$: {
-		if ($newConnection) {
-			// Acknowledge
-			$newConnection = false;
+	async function setupNewConnectionListener() {
+		const unlisten = await listen('new-connection', (event) => {
+			// event.event is the event name (useful if you want to use a single callback fn for multiple event types)
+			// event.payload is the payload object
 			configCopy = Object.assign({}, $config);
-		}
+		});
 	}
+	setupNewConnectionListener();
 
 	$: dark = $session.darkTheme;
 

@@ -4,6 +4,7 @@
 use crate::{store::SerialConnection, Session};
 use core::time;
 use std::{collections::HashMap, thread};
+use tauri::Manager;
 use tauri::State;
 use tauri::Window;
 
@@ -18,6 +19,16 @@ pub async fn find_available_ports() -> Result<Vec<SerialPort>, SerialError> {
     //! Wrapper that calls find_available_manager_ports which will then call the
     //! code to find the available serial ports on the machine.
     find_available_manager_ports(RealSerialManager).await
+}
+
+// Command to emit an event and propagate that a
+// new connection was made and the $config store was
+// updated.
+#[tauri::command]
+pub fn new_connection_event(app_handle: tauri::AppHandle) {
+    if let Err(e) = app_handle.emit_all("new-connection", {}) {
+        eprintln!("Error emiting new-connection event: {:?}", e);
+    }
 }
 
 #[tauri::command]
