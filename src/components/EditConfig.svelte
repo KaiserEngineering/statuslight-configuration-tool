@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { submitConfig } from '$lib/API';
-	import { session, config, port, newConnection } from '$lib/Store';
+	import { session, config, port } from '$lib/Store';
 	import { success, error } from '$lib/Toasts';
 	import { ShiftLightConfigs } from '$lib/Config';
 	import { validate_config } from '$lib/Validator';
