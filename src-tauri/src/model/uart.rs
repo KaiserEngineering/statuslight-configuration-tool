@@ -68,25 +68,23 @@ pub async fn write_serial(
                     error_type: SerialErrors::Write,
                     message: error.to_string(),
                 })
-            } else {
-                if write as u32 == content.len() as u32 {
-                    let content = content.replace('\n', "");
-                    println!("Successfully sent write to serial: {}", content);
+            } else if write as u32 == content.len() as u32 {
+                let content = content.replace('\n', "");
+                println!("Successfully sent write to serial: {}", content);
 
-                    match read_serial(connection) {
-                        Err(e) => Err(e),
-                        Ok(res) => Ok(res),
-                    }
-                } else {
-                    Err(SerialError {
-                        error_type: SerialErrors::Write,
-                        message: format!(
-                            "Incomplete write only wrote {} bytes of {}",
-                            write,
-                            content.len()
-                        ),
-                    })
+                match read_serial(connection) {
+                    Err(e) => Err(e),
+                    Ok(res) => Ok(res),
                 }
+            } else {
+                Err(SerialError {
+                    error_type: SerialErrors::Write,
+                    message: format!(
+                        "Incomplete write only wrote {} bytes of {}",
+                        write,
+                        content.len()
+                    ),
+                })
             }
         }
         Err(error) => Err(SerialError {

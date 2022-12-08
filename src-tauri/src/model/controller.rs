@@ -165,10 +165,10 @@ pub async fn write_hex(
             let lines = hex.split('\n');
             for line in lines {
                 // Skip empty line (last one)
-                if line == "" {
+                if line.is_empty() {
                     continue;
                 }
-                match write_serial(port, format!("{}\n", line.to_string())).await {
+                match write_serial(port, format!("{}\n", line)).await {
                     Err(e) => {
                         return Err(super::SerialError {
                             error_type: SerialErrors::Write,

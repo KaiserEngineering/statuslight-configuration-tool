@@ -1,6 +1,6 @@
 {
-	"version": "0.1.4",
-	"notes": "Working version #1",
+	"version": "0.1.5",
+	"notes": "Upgrade packages and run cargo fmt + cargo clippy",
 	"pub_date": "2020-12-07T19:25:57Z",
 	"platforms": {
 		"darwin-x86_64": {
