@@ -7,6 +7,16 @@
 	import Modal from '../../components/Modal.svelte';
 	import { faArrowCircleUp, faFileArchive } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'sveltejs-fontawesome';
+	import { appWindow } from '@tauri-apps/api/window';
+
+	let progress = 0;
+	async function setUpProgressListener() {
+		const unlistenProgress = await appWindow.listen('PROGRESS', ({ event, payload }) => {
+			console.log(payload);
+			progress = payload.percentage;
+		});
+	}
+	setUpProgressListener();
 
 	let changelog = '';
 	let hex = '';
@@ -56,7 +66,7 @@
 			return;
 		}
 
-		await invoke('write_hex', { hex: hex }).catch((err) => {
+		await invoke('write_hex', { window: appWindow, hex: hex }).catch((err) => {
 			error(err.message);
 			return;
 		});
@@ -122,6 +132,8 @@ Current version: #{$config.VER}
 			<h2>Change log:</h2>
 			<article class="dark:text-black prose lg:prose-xl">{changelog}</article>
 		</div>
+
+		{progress}%
 
 		<button class="input ke-button" on:click={writeFirmware}>Write</button>
 	</svelte:fragment>

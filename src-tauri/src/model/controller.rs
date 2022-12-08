@@ -1,11 +1,11 @@
 //! Controller entry point for our frontend to access, this is where
 //! our tauri::command's should be located!
 
+use crate::{store::SerialConnection, Session};
 use core::time;
 use std::{collections::HashMap, thread};
 use tauri::State;
-
-use crate::{store::SerialConnection, Session};
+use tauri::Window;
 
 use super::{
     find_available_manager_ports, get, send_dtr,
@@ -152,17 +152,26 @@ pub async fn dtr(
     }
 }
 
+#[derive(Clone, serde::Serialize)]
+struct Payload {
+    percentage: i32,
+}
+
 #[tauri::command]
 pub async fn write_hex(
     serial_connection: State<'_, SerialConnection>,
+    window: Window,
     hex: String,
 ) -> Result<String, SerialError> {
     let port_binding = serial_connection.clone();
     let mut port_conn = port_binding.port.lock().await;
 
+    let mut progress = 0.0;
     match port_conn.as_mut() {
         Some(port) => {
             let lines = hex.split('\n');
+            let num_lines = lines.clone().count() as f32;
+
             for line in lines {
                 // Skip empty line (last one)
                 if line.is_empty() {
@@ -176,7 +185,20 @@ pub async fn write_hex(
                         });
                     }
                     _ => {
-                        println!("Wrote line: {}", line);
+                        progress = progress + 1.0;
+                        let base = (progress * 100.0) / num_lines;
+                        let percentage = base.round() as i32;
+
+                        if let Err(e) = window.emit("PROGRESS", Payload { percentage }) {
+                            return Err(super::SerialError {
+                                error_type: SerialErrors::Write,
+                                message: format!(
+                                    "Failed to emit progress updates -- bailing: {:?}",
+                                    e
+                                ),
+                            });
+                        }
+                        // println!("Wrote line: {}", line);
                     }
                 }
             }
