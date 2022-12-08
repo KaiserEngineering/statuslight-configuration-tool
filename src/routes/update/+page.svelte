@@ -19,6 +19,7 @@
 
 	let changelog = '';
 	let hex = '';
+	let version = '';
 	let showModal = false;
 
 	async function checkForNewVersion() {
@@ -27,6 +28,7 @@
 			.then((res: any) => {
 				changelog = res.changelog;
 				hex = res.hex;
+				version = res.version;
 
 				showModal = true;
 			})
@@ -121,11 +123,7 @@ Current version: #{$config.VER}
 	<Fa icon={faFileArchive} size="28" color={dark ? 'white' : 'black'} />
 </div>
 
-<Modal
-	title="New Version Found: #{$config.VER}"
-	open={showModal}
-	on:close={() => handleToggleModal()}
->
+<Modal title="New Version Found: #{version}" open={showModal} on:close={() => handleToggleModal()}>
 	<svelte:fragment slot="body">
 		<div class="row m-2">
 			<h2>Change log:</h2>
