@@ -6,6 +6,7 @@
 	import Stylesheet from '../components/Stylesheet.svelte';
 	import { session } from '../lib/Store';
 	import '../app.css';
+	import Footer from '../components/Footer.svelte';
 
 	// So we can use class:dark
 	$: dark = $session.darkTheme;
@@ -24,6 +25,10 @@
 
 			<div class="content-list">
 				<slot />
+			</div>
+
+			<div class="footer">
+				<Footer />
 			</div>
 		</div>
 	</div>

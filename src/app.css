@@ -125,3 +125,7 @@
 .landing {
 	@apply ml-16 h-full;
 }
+
+.footer {
+	@apply mb-0 ml-16;
+}
