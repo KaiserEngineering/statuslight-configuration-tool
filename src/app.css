@@ -127,5 +127,5 @@
 }
 
 .footer {
-	@apply mb-0 ml-16;
+	@apply mb-0 flex items-center justify-center;
 }
