@@ -1,6 +1,6 @@
 {
 	"name": "keshift-light-configuration",
-	"version": "0.1.6",
+	"version": "0.1.4",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
@@ -35,12 +35,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@fortawesome/fontawesome-svg-core": "^6.2.1",
-		"@fortawesome/free-brands-svg-icons": "^6.2.1",
-		"@fortawesome/free-solid-svg-icons": "^6.2.1",
 		"@tailwindcss/typography": "^0.5.8",
-		"@tauri-apps/api": "^1.2.0",
-		"svelte-file-dropzone": "^1.0.0",
-		"sveltejs-fontawesome": "^0.1.3"
+		"@tauri-apps/api": "^1.2.0"
 	}
 }
