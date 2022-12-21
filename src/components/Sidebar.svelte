@@ -1,12 +1,11 @@
 <script lang="ts">
-	import { faHome, faGear, faMicrochip, faExclamation } from '@fortawesome/free-solid-svg-icons';
-
-	import Fa from 'sveltejs-fontawesome';
+	import { home, gear, microchip, exclamation } from 'svelte-awesome/icons';
+	import Icon from 'svelte-awesome';
 </script>
 
 <div class="sidebar">
 	<a href="/" class="sidebar-icon group">
-		<Fa icon={faHome} color="white" />
+		<Icon data={home} style="color:white"/>
 
 		<span class="sidebar-tooltip group-hover:scale-100">Home</span>
 	</a>
@@ -14,13 +13,13 @@
 	<hr class="sidebar-hr" />
 
 	<a href="/edit/basics" class="sidebar-icon group">
-		<Fa icon={faGear} color="white" />
+		<Icon data={gear} style="color:white"/>
 
 		<span class="sidebar-tooltip group-hover:scale-100">Basic Config</span>
 	</a>
 
 	<a href="/edit/advanced" class="sidebar-icon group">
-		<Fa icon={faExclamation} color="white" />
+		<Icon data={exclamation} style="color:white"/>
 
 		<span class="sidebar-tooltip group-hover:scale-100">Advanced Config</span>
 	</a>
@@ -28,7 +27,7 @@
 	<hr class="sidebar-hr" />
 
 	<a href="/update" class="sidebar-icon group">
-		<Fa secondaryColor="blue" icon={faMicrochip} color="white" />
+		<Icon data={microchip} style="color:white"/>
 
 		<span class="sidebar-tooltip group-hover:scale-100">Update firmware version</span>
 	</a>

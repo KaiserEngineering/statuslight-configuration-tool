@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Fa from 'sveltejs-fontawesome';
-	import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
+	import { infoCircle } from 'svelte-awesome/icons';
+	import Icon from 'svelte-awesome';
 
 	export let config: any;
 	export let groupings: any = {};
@@ -29,7 +29,7 @@
 								title={inputOption.info}
 								class="m-1 cursor-pointer"
 							>
-								<Fa icon={faCircleInfo} size="12" color={dark ? 'white' : 'black'} />
+								<Icon data={infoCircle} size="12" color={dark ? 'white' : 'black'} />
 							</span>
 						</div>
 						{#if typeof inputOption.type === 'string'}
