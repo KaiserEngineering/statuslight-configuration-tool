@@ -29,7 +29,7 @@ export const ShiftLightConfigs: SLConfig = {
 		},
 		'USB Echo': {
 			code: 'ECHO',
-			type: 'number',
+			type: 'checkbox',
 			min: 0,
 			max: 1,
 			fieldType: 'Advanced',
