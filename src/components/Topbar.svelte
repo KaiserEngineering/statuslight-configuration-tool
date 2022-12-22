@@ -8,9 +8,9 @@
 		getSerialPorts,
 		type Port
 	} from '$lib/API';
-	import { faRefresh, faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
+	import { refresh, moonO, sunO } from 'svelte-awesome/icons';
+	import Icon from 'svelte-awesome';
 	import { session, config, port } from '../lib/Store';
-	import Fa from 'sveltejs-fontawesome';
 	import { invoke } from '@tauri-apps/api';
 
 	async function setInitialConfig() {
@@ -80,13 +80,13 @@
 	}
 	getPorts();
 
-	let darkModeIcon = $session.darkTheme ? faMoon : faSun;
+	let darkModeIcon = $session.darkTheme ? moonO : sunO;
 	const toggleDark = () => {
 		$session.darkTheme = !$session.darkTheme;
 		if ($session.darkTheme) {
-			darkModeIcon = faSun;
+			darkModeIcon = sunO;
 		} else {
-			darkModeIcon = faMoon;
+			darkModeIcon = moonO;
 		}
 	};
 
@@ -109,7 +109,7 @@
 		</select>
 
 		<div class="sidebar-icon group" on:click={getPorts} on:keydown={getPorts}>
-			<Fa icon={faRefresh} color="white" />
+			<Icon data={refresh} style="color:white"/>
 
 			<span class="sidebar-tooltip group-hover:scale-100">Refresh available ports</span>
 		</div>
@@ -117,7 +117,7 @@
 
 	<div class="fixed right-2">
 		<div class="sidebar-icon group" on:click={toggleDark} on:keydown={toggleDark}>
-			<Fa icon={darkModeIcon} color="white" />
+			<Icon data={darkModeIcon} style="color:white"/>
 
 			<span class="sidebar-tooltip-left group-hover:scale-100">Toggle dark mode</span>
 		</div>
