@@ -7,10 +7,11 @@ license = ""
 repository = "https://github.com/KaiserEngineering/shiftlight-configuration-tool"
 default-run = "app"
 edition = "2021"
-rust-version = "1.57"
+rust-version = "1.68"
     
 [build-dependencies]
 tauri-build = { version = "2.0.0-alpha.0", features = [] }
+cc = "1.0"
 
 [dependencies]
 anyhow = "1.0.65"

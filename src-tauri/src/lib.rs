@@ -68,7 +68,7 @@ impl AppBuilder {
                 get_latest_firmware,
                 dtr,
                 write_hex,
-                new_connection_event
+                new_connection_event,
             ])
             .run(tauri::generate_context!())
             .expect("error while running tauri application");
