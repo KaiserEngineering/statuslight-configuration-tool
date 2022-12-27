@@ -103,7 +103,12 @@
 		<span class="dark:text-white">Config Type:</span>
 	</label>
 
-	<select class="input select select-sm" id="configType" bind:value={configCopy.CONFIG} required>
+	<select
+		class="input ke-input select select-sm"
+		id="configType"
+		bind:value={configCopy.CONFIG}
+		required
+	>
 		{#each Object.keys(ShiftLightConfigsModes) as type}
 			<option>{type}</option>
 		{/each}
@@ -119,7 +124,7 @@
 		<EditParameters config={configCopy} groupings={groupings[configCopy.CONFIG]} {dark} />
 
 		<div class="col-span-full flex place-content-end">
-			<button class="ke-button input">Update</button>
+			<button class="ke-button ke-input input">Update</button>
 		</div>
 	</form>
 {:else}

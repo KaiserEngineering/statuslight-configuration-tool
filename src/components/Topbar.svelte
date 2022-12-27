@@ -109,7 +109,7 @@
 		</select>
 
 		<div class="sidebar-icon group" on:click={getPorts} on:keydown={getPorts}>
-			<Icon data={refresh} style="color:white"/>
+			<Icon data={refresh} style="color:white" />
 
 			<span class="sidebar-tooltip group-hover:scale-100">Refresh available ports</span>
 		</div>
@@ -117,7 +117,7 @@
 
 	<div class="fixed right-2">
 		<div class="sidebar-icon group" on:click={toggleDark} on:keydown={toggleDark}>
-			<Icon data={darkModeIcon} style="color:white"/>
+			<Icon data={darkModeIcon} style="color:white" />
 
 			<span class="sidebar-tooltip-left group-hover:scale-100">Toggle dark mode</span>
 		</div>

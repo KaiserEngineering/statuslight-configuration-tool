@@ -19,7 +19,15 @@
 	}
 
 	.ke-button {
-		@apply dark:bg-nord6 p-2 rounded m-2;
+		@apply dark:bg-nord6 p-2 rounded m-2
+		hover:bg-nord2 hover:text-white
+	}
+
+	.ke-checkbox {
+		@apply  appearance-none h-4 w-4 border border-gray-300 rounded-sm
+		bg-white checked:bg-nord2 checked:border-white focus:outline-none
+		transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain
+		float-left mr-2 cursor-pointer
 	}
 
 	.select {
@@ -111,6 +119,10 @@
     mt-0 ml-0 mx-auto px-0 pb-12 
     overflow-y-scroll
 		dark:bg-zinc-900 bg-nord5 dark:text-zinc-300 text-nord1;
+	}
+
+	.ke-input {
+		@apply dark:text-gray-900
 	}
 }
 
