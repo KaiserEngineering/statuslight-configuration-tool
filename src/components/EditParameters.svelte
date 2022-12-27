@@ -4,7 +4,6 @@
 
 	export let config: any;
 	export let groupings: any = {};
-	export let dark: boolean;
 </script>
 
 {#if groupings}
@@ -27,9 +26,9 @@
 								data-bs-toggle="tooltip"
 								data-bs-placement="top"
 								title={inputOption.info}
-								class="m-1 cursor-pointer"
+								class="ml-1 cursor-pointer content-center"
 							>
-								<Icon data={infoCircle} size="12" color={dark ? 'white' : 'black'} />
+								<Icon data={infoCircle} scale={0.75} />
 							</span>
 						</div>
 						{#if typeof inputOption.type === 'string'}
