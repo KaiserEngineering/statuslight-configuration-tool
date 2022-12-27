@@ -100,7 +100,7 @@
 
 <div class="m-2">
 	<label for="CONFIG">
-		<span class="dark:text-white">Config Type:</span>
+		<span>Config Type:</span>
 	</label>
 
 	<select

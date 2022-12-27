@@ -20,18 +20,14 @@
 
 	.ke-button {
 		@apply dark:bg-nord6 p-2 rounded m-2
-		hover:bg-nord2 hover:text-white
+		hover:bg-nord2 hover:text-white dark:hover:bg-nord11
 	}
 
 	.ke-checkbox {
 		@apply  appearance-none h-4 w-4 border border-gray-300 rounded-sm
-		bg-white checked:bg-nord2 checked:border-white focus:outline-none
-		transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain
-		float-left mr-2 cursor-pointer
-	}
-
-	.select {
-		@apply text-nord12;
+			bg-white checked:bg-nord2 checked:border-white focus:outline-none
+			transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain
+			float-left mr-2 cursor-pointer
 	}
 
 	.input {
@@ -40,11 +36,11 @@
 
 	.sidebar-icon {
 		@apply relative flex items-center justify-center 
-    h-10 w-10 mt-2 mb-2 mx-auto  
-		bg-nord2 hover:bg-red-600
-    hover:rounded-xl rounded-3xl
-    transition-all duration-300 ease-linear
-    cursor-pointer shadow-lg;
+			h-10 w-10 mt-2 mb-2 mx-auto  
+			bg-nord2 hover:bg-nord11
+			hover:rounded-xl rounded-3xl
+			transition-all duration-300 ease-linear
+			cursor-pointer shadow-lg;
 	}
 
 	.sidebar-tooltip {
@@ -70,24 +66,23 @@
 
 	.sidebar {
 		@apply fixed top-0 left-0 h-screen w-16 flex flex-col
-		bg-nord6 dark:bg-zinc-800
-		shadow-lg;
+		bg-nord6 dark:bg-nord0 shadow-lg;
 	}
 
 	.top-navigation {
 		@apply flex flex-row items-center
-    bg-nord4 dark:bg-zinc-700 bg-opacity-90
-    w-full h-16
-    ml-16
-    shadow-lg;
+		bg-nord4 dark:bg-nord1 bg-opacity-90
+		w-full h-16
+		ml-16
+		shadow-lg;
 	}
 
 	.top-navigation-icon {
 		@apply text-gray-500
-    mr-3 ml-4
-    transition duration-300 ease-in-out 
-    hover:text-pink-400 
-    cursor-pointer;
+		mr-3 ml-4
+		transition duration-300 ease-in-out 
+		hover:text-pink-400 
+		cursor-pointer;
 	}
 
 	.top-navigation-icon:first {
@@ -96,33 +91,33 @@
 
 	.title-hashtag {
 		@apply text-lg tracking-wider font-semibold text-gray-500 
-    ml-2 my-auto;
+		ml-2 my-auto;
 	}
 
 	.title-text {
 		@apply text-xl text-gray-500 tracking-wider font-semibold text-opacity-80 
-    mr-auto ml-2 my-auto 
-    transition duration-300 ease-in-out;
+		mr-auto ml-2 my-auto 
+		transition duration-300 ease-in-out;
 	}
 
 	.content-container {
 		@apply flex flex-col 
-    bg-gray-300 dark:bg-gray-700
-    m-0
-    h-full w-full 
-    overflow-hidden;
+			bg-gray-300 dark:bg-gray-700
+			m-0
+			h-full w-full 
+			overflow-hidden;
 	}
 
 	.content-list {
 		@apply flex flex-col items-center 
-    h-full w-full 
-    mt-0 ml-0 mx-auto px-0 pb-12 
-    overflow-y-scroll
-		dark:bg-zinc-900 bg-nord5 dark:text-zinc-300 text-nord1;
+			h-full w-full 
+			mt-0 ml-0 mx-auto px-0 pb-12 
+			overflow-y-scroll
+			dark:bg-nord2 bg-nord5 dark:text-zinc-300 text-nord1;
 	}
 
 	.ke-input {
-		@apply dark:text-gray-900
+		@apply dark:text-gray-900 dark:bg-nord6;
 	}
 }
 
@@ -139,5 +134,7 @@
 }
 
 .footer {
-	@apply mb-0 flex items-center justify-center;
+	@apply mb-0 flex items-center justify-center
+		bg-nord4 dark:bg-nord1 dark:text-zinc-300
+		text-nord1;
 }

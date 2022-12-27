@@ -13,7 +13,7 @@
 </script>
 
 <div class:dark>
-	<div class="h-screen flex dark:text-white">
+	<div class="h-screen flex">
 		<Loading />
 
 		<SvelteToast />
