@@ -9,6 +9,15 @@ export const success = (m) =>
 		}
 	});
 
+export const info = (m) =>
+	toast.push(m, {
+		theme: {
+			'--toastBackground': 'blue',
+			'--toastColor': 'white',
+			'--toastBarBackground': 'white'
+		}
+	});
+
 export const error = (m) =>
 	toast.push(m, {
 		theme: {

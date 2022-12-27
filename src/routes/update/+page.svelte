@@ -2,53 +2,43 @@
 	import { invoke } from '@tauri-apps/api/tauri';
 	import { open } from '@tauri-apps/api/dialog';
 	import { readTextFile } from '@tauri-apps/api/fs';
-	import { success, error } from '$lib/Toasts';
+	import { success, error, info } from '$lib/Toasts';
 	import { session, config } from '$lib/Store';
 	import Modal from '../../components/Modal.svelte';
-	import { arrowCircleOUp, spinner, cog, fileArchiveO } from 'svelte-awesome/icons';
+	import { cog, fileArchiveO } from 'svelte-awesome/icons';
 	import Icon from 'svelte-awesome';
 	import { appWindow } from '@tauri-apps/api/window';
-	import ProgressBar from "@okrad/svelte-progressbar";
+	import ProgressBar from '@okrad/svelte-progressbar';
 
 	export let series = [0];
 
 	async function setUpProgressListener() {
-		const unlistenProgress = await appWindow.listen('PROGRESS', ({ event, payload }) => {
-			series = series[payload.percentage];
+		const unlistenProgress = await appWindow.listen('PROGRESS', ({ payload }) => {
+			series = [payload.percentage];
 		});
 	}
 	setUpProgressListener();
-	$: {
-		if (series[0] === 100 ) {
-			console.log("Closing modal")
-			showModal = false;
-		} else if (series[0] !== 0) {
-			console.log("Something is still going on")
-		}
-		
-	}
-
-	function progressSpoof() {
-		series = [series[0] + 50]; 
-	}
-	
 
 	let changelog = '';
 	let hex = '';
 	let version = '';
 	let showModal = false;
-	
-	
 
 	async function checkForNewVersion() {
 		$session.loading = true;
 		await invoke('get_latest_firmware')
 			.then((res: any) => {
-				changelog = res.changelog;
-				hex = res.hex;
-				version = res.version;
+				if (res.version[0] > $config.VER) {
+					changelog = res.changelog;
+					hex = res.hex;
+					version = res.version;
 
-				showModal = true;
+					showModal = true;
+				} else {
+					info(
+						'Current version ' + $config.VER + ' is newer than ' + res.version + ", you're all set!"
+					);
+				}
 			})
 			.catch((e) => error(e))
 			.finally(() => ($session.loading = false));
@@ -121,60 +111,38 @@
 			showModal = true;
 		});
 	}
-
-	$: dark = $session.darkTheme;
 </script>
 
-Current version: #{$config.VER} 'X'
+<div class="text-center text-xl inline-grid grid-cols-2 gap-4">
+	<div class="text-left">Current version:</div>
+	<div>#{$config.VER}</div>
 
-<div
-	class="m-2 cursor-pointer flex items-center"
-	on:click={checkForNewVersion}
-	on:keydown={checkForNewVersion}
->
-	<span class="mr-8 content-center" for="newReleaseIcon">Check for Updates</span>
-	<Icon data={cog} scale={2} />
+	<span class="text-left" for="newReleaseIcon">Check for Updates:</span>
+
+	<div class="cursor-pointer" on:click={checkForNewVersion} on:keydown={checkForNewVersion}>
+		<Icon data={cog} scale={2} />
+	</div>
+
+	<label for="newReleaseIcon">Select custom firmware hex file:</label>
+
+	<div class="cursor-pointer" on:click={getFile} on:keydown={getFile}>
+		<Icon data={fileArchiveO} scale={2} />
+	</div>
 </div>
-
-<div class="m-2 cursor-pointer flex items-center" on:click={getFile} on:keydown={getFile}>
-	<label class="mr-2 content-center" for="newReleaseIcon">Select custom firmware hex file</label>
-	<Icon data={fileArchiveO} scale={2} />
-</div>
-
 
 <Modal title="New Version Found: #{version}" open={showModal} on:close={() => handleToggleModal()}>
 	<svelte:fragment slot="body">
-		<div class="row m-8">
+		<div class="flex items-center justify-center">
+			{#if series[0] !== 0}
+				{series[0]}% <ProgressBar {series} />
+			{/if}
+		</div>
+
+		<div class="row">
 			<h2>Change log:</h2>
-			<article class="dark:text-black prose lg:prose-xl">{changelog}</article>
-			<Icon data={fileArchiveO} scale={2} />
-		</div>	
-		
-			<div class="outerdog">
-				<div class="innerdog"><ProgressBar {series} /></div>
-			</div>
-
-		<style>
-			.innerdog, .outerdog {
-				height: 20px;
-				border-radius: 20px;
-			}
-			.outerdog {
-				width: 20vw;
-				margin: 50px auto;
-				background-color: blue;
-				border: transparent;
-			}
-		</style>
-		
-	
-
-		<button class="input ke-button" on:click="{progressSpoof}">Spoof write</button>
+			<article class="ml-4 dark:text-black prose lg:prose-xl">{changelog}</article>
+		</div>
 
 		<button class="input ke-button" on:click={writeFirmware}>Write</button>
-		
-
-		
 	</svelte:fragment>
 </Modal>
-
