@@ -15,6 +15,7 @@
 	async function setUpProgressListener() {
 		const unlistenProgress = await appWindow.listen('PROGRESS', ({ payload }) => {
 			series = [payload.percentage];
+			flashing = true;
 		});
 	}
 	setUpProgressListener();
@@ -23,6 +24,7 @@
 	let hex = '';
 	let version = '';
 	let showModal = false;
+	let flashing = false;
 
 	async function checkForNewVersion() {
 		$session.loading = true;
@@ -75,15 +77,25 @@
 			return;
 		}
 
-		await invoke('write_hex', { window: appWindow, hex: hex }).catch((err) => {
-			error(err.message);
-			return;
-		});
+		flashing = true;
+		await invoke('write_hex', { window: appWindow, hex: hex })
+			.catch((err) => {
+				error(err.message);
+				flashing = false;
+				return;
+			})
+			.then(() => {
+				flashing = false;
+			});
 
 		success('Firmware updated: ' + helloResponse);
 	}
 
 	const handleToggleModal = () => {
+		if (flashing) {
+			info('Flash in progress, hang around for a few minutes!');
+			return;
+		}
 		showModal = !showModal;
 	};
 

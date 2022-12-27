@@ -6,16 +6,14 @@ export const success = (m) =>
 			'--toastBackground': 'green',
 			'--toastColor': 'white',
 			'--toastBarBackground': 'olive'
-		}
+		},
+		pausable: true
 	});
 
 export const info = (m) =>
 	toast.push(m, {
-		theme: {
-			'--toastBackground': 'blue',
-			'--toastColor': 'white',
-			'--toastBarBackground': 'white'
-		}
+		classes: ['bg-nord10'],
+		pausable: true
 	});
 
 export const error = (m) =>
@@ -23,5 +21,6 @@ export const error = (m) =>
 		theme: {
 			'--toastBackground': '#F56565',
 			'--toastBarBackground': '#C53030'
-		}
+		},
+		pausable: true
 	});
