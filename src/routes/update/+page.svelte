@@ -11,8 +11,6 @@
 	import ProgressBar from '@okrad/svelte-progressbar';
 	import semver from 'semver';
 
-	console.log(semver.cmp('1.0.0', '>', '0.1.9'));
-
 	export let series = [0];
 
 	async function setUpProgressListener() {
@@ -45,7 +43,10 @@
 					);
 				}
 			})
-			.catch((e) => error(e))
+			.catch((e) => {
+				error(e.toString());
+				$session.loading = false;
+			})
 			.finally(() => ($session.loading = false));
 	}
 
