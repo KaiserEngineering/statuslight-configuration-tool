@@ -9,6 +9,9 @@
 	import Icon from 'svelte-awesome';
 	import { appWindow } from '@tauri-apps/api/window';
 	import ProgressBar from '@okrad/svelte-progressbar';
+	import semver from 'semver';
+
+	console.log(semver.cmp('1.0.0', '>', '0.1.9'));
 
 	export let series = [0];
 
@@ -30,7 +33,7 @@
 		$session.loading = true;
 		await invoke('get_latest_firmware')
 			.then((res: any) => {
-				if (res.version[0] > $config.VER) {
+				if (semver.cmp(res.version, '>', $config.VER)) {
 					changelog = res.changelog;
 					hex = res.hex;
 					version = res.version;
@@ -142,9 +145,11 @@
 	</div>
 </div>
 
-<Modal title="New Version Found: #{version}" open={showModal} on:close={() => handleToggleModal()}>
+<Modal title="Version: #{version}" open={showModal} on:close={() => handleToggleModal()}>
 	<svelte:fragment slot="body">
 		<div class="flex items-center justify-center">
+			{semver.diff($config.VER, version)} change
+
 			{#if series[0] !== 0}
 				{series[0]}% <ProgressBar {series} />
 			{/if}
