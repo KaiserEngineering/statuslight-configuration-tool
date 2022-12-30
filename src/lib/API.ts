@@ -8,11 +8,11 @@ export type Port = {
 };
 
 export async function getCurrentConnection() {
-	return await invoke('get_connection', {});
+	return await invoke('plugin:serial|get_connection', {});
 }
 
 export async function connectToSerialPort(portName: string) {
-	return await invoke('connect', {
+	return await invoke('plugin:serial|connect', {
 		portName
 	});
 }
@@ -23,7 +23,7 @@ Load the config for the provided config type.
 Return the new config object.
 */
 export async function getCurrentConfig() {
-	return await invoke('write', {
+	return await invoke('plugin:serial|write', {
 		content: 'CONFIG\n'
 	})
 		.then(async (configType: any) => {
@@ -40,7 +40,7 @@ export async function getCurrentConfig() {
 
 			const new_config: SLConfig = {};
 			for (const key in keys) {
-				await invoke('write', {
+				await invoke('plugin:serial|write', {
 					content: keys[key]['code'] + '\n'
 				})
 					.then((res: any) => {
@@ -55,18 +55,28 @@ export async function getCurrentConfig() {
 			return new_config;
 		})
 		.catch((error) => {
-			throw error.message;
+			if (error.message) {
+				throw error.message;
+			}
+			else {
+				throw error;
+			}
 		});
 }
 
 export async function getSerialPorts() {
-	return await invoke('find_available_ports')
+	return await invoke('plugin:serial|find_available_ports')
 		// `invoke` returns a Promise
 		.then((response) => {
 			return response;
 		})
 		.catch((error) => {
-			throw error.message;
+			if (error.message) {
+				throw error.message;
+			}
+			else {
+				throw error;
+			}
 		});
 }
 
@@ -94,7 +104,7 @@ export async function submitConfig(
 			config[key] = config[key] == "RPM" ? 0 : 1;
 		}
 
-		await invoke('write', {
+		await invoke('plugin:serial|write', {
 			portName: port_name,
 			content: key + ' ' + config[key] + '\n'
 		})

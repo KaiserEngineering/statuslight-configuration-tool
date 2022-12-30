@@ -1,25 +1,15 @@
 //! Controller entry point for our frontend to access, this is where
 //! our tauri::command's should be located!
 
-use crate::{store::SerialConnection, Session};
-use core::time;
-use std::{collections::HashMap, thread};
+use std::collections::HashMap;
 use tauri::Manager;
 use tauri::State;
 use tauri::Window;
 
-use super::{
-    find_available_manager_ports, get, send_dtr,
-    uart::{self, write_serial},
-    RealSerialManager, SerialError, SerialErrors, SerialPort,
-};
+use super::get;
 
-#[tauri::command]
-pub async fn find_available_ports() -> Result<Vec<SerialPort>, SerialError> {
-    //! Wrapper that calls find_available_manager_ports which will then call the
-    //! code to find the available serial ports on the machine.
-    find_available_manager_ports(RealSerialManager).await
-}
+use tauri_plugin_serial::command::{write_serial, SerialError, SerialErrors};
+use tauri_plugin_serial::state::SerialState;
 
 // Command to emit an event and propagate that a
 // new connection was made and the $config store was
@@ -28,99 +18,6 @@ pub async fn find_available_ports() -> Result<Vec<SerialPort>, SerialError> {
 pub fn new_connection_event(app_handle: tauri::AppHandle) {
     if let Err(e) = app_handle.emit_all("new-connection", {}) {
         eprintln!("Error emiting new-connection event: {:?}", e);
-    }
-}
-
-#[tauri::command]
-pub async fn get_connection(
-    serial_connection: State<'_, SerialConnection>,
-) -> Result<String, String> {
-    //! Returns the current connecion for our Tauri state
-    let lock = serial_connection.port.lock().await;
-    match &*lock {
-        Some(port) => Ok(port.name().unwrap()),
-        None => Err("No port".to_string()),
-    }
-}
-
-#[tauri::command]
-pub async fn connect(
-    port_name: String,
-    serial_connection: State<'_, SerialConnection>,
-    session: State<'_, Session>,
-) -> Result<String, String> {
-    //! Connect to selected serial port based on port name
-    println!("Model::Controller::connect called for {}", port_name);
-
-    let port_binding = serial_connection.clone();
-    let mut port_binding = port_binding.port.lock().await;
-
-    // If we have a valid connection for the port we are trying to connect to,
-    // there is nothing to do.
-    if !port_binding.is_none() && port_binding.as_ref().unwrap().name().unwrap() == port_name {
-        println!("Found existing connection");
-        return Ok("Found existing connection".to_string());
-    }
-
-    let serial_port = serialport::new(&port_name, 57600)
-        .timeout(time::Duration::from_millis(500))
-        .open();
-
-    match serial_port {
-        Err(err) => {
-            println!("Could not open port '{}': {}", port_name, err);
-
-            Err(format!("Couldn't open serial port: {}", err))
-        }
-        Ok(active_port) => {
-            println!("New port connection opened");
-
-            *session.port_name.lock().await = port_name.to_string();
-            *port_binding = Some(active_port);
-
-            if let Err(e) = port_binding
-                .as_mut()
-                .unwrap()
-                .write_data_terminal_ready(true)
-            {
-                return Err(e.to_string());
-            }
-            println!("DTR signal written");
-
-            // Sleep while the device reboots
-            let sleep = time::Duration::from_millis(200);
-            thread::sleep(sleep);
-
-            Ok("New connection established".to_string())
-        }
-    }
-}
-
-#[tauri::command]
-pub async fn write(
-    session: State<'_, Session>,
-    conn: State<'_, SerialConnection>,
-    content: String,
-) -> Result<String, uart::SerialError> {
-    //! Write string content to connected serial port.
-    let conn_clone = conn.clone();
-
-    if let Err(e) = SerialConnection::validate_connection(session, conn_clone).await {
-        return Err(super::SerialError {
-            error_type: SerialErrors::Write,
-            message: e,
-        });
-    }
-
-    let port_binding = conn.clone();
-    let mut port_conn = port_binding.port.lock().await;
-
-    match port_conn.as_mut() {
-        Some(port) => write_serial(port, content).await,
-        None => Err(super::SerialError {
-            error_type: SerialErrors::Write,
-            message: "No connection found".into(),
-        }),
     }
 }
 
@@ -146,23 +43,6 @@ pub async fn get_latest_firmware() -> Result<HashMap<String, String>, String> {
     Ok(content)
 }
 
-#[tauri::command]
-pub async fn dtr(
-    serial_connection: State<'_, SerialConnection>,
-    level: bool,
-) -> Result<String, SerialError> {
-    let port_binding = serial_connection.clone();
-    let mut port_conn = port_binding.port.lock().await;
-
-    match port_conn.as_mut() {
-        Some(port) => send_dtr(port, level).await,
-        None => Err(super::SerialError {
-            error_type: SerialErrors::Write,
-            message: "No connection found".into(),
-        }),
-    }
-}
-
 #[derive(Clone, serde::Serialize)]
 struct Payload {
     percentage: i32,
@@ -170,15 +50,14 @@ struct Payload {
 
 #[tauri::command]
 pub async fn write_hex(
-    serial_connection: State<'_, SerialConnection>,
+    serial_state: State<'_, SerialState>,
     window: Window,
     hex: String,
 ) -> Result<String, SerialError> {
-    let port_binding = serial_connection.clone();
-    let mut port_conn = port_binding.port.lock().await;
+    let mut guard = serial_state.connection.lock().await;
 
     let mut progress = 0.0;
-    match port_conn.as_mut() {
+    match &mut *guard {
         Some(port) => {
             let lines = hex.split('\n');
             let num_lines = lines.clone().count() as f32;
@@ -190,7 +69,7 @@ pub async fn write_hex(
                 }
                 match write_serial(port, format!("{}\n", line)).await {
                     Err(e) => {
-                        return Err(super::SerialError {
+                        return Err(SerialError {
                             error_type: SerialErrors::Write,
                             message: format!("{:?} for line {}", e.message, line),
                         });
@@ -201,7 +80,7 @@ pub async fn write_hex(
                         let percentage = base.round() as i32;
 
                         if let Err(e) = window.emit("PROGRESS", Payload { percentage }) {
-                            return Err(super::SerialError {
+                            return Err(SerialError {
                                 error_type: SerialErrors::Write,
                                 message: format!(
                                     "Failed to emit progress updates -- bailing: {:?}",
@@ -216,7 +95,7 @@ pub async fn write_hex(
 
             Ok("Successfully updated firmware!".to_string())
         }
-        None => Err(super::SerialError {
+        None => Err(SerialError {
             error_type: SerialErrors::Write,
             message: "Something went wrong getting active connection".into(),
         }),

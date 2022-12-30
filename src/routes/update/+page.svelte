@@ -56,20 +56,20 @@
 			return;
 		}
 
-		let res = await invoke('dtr', { level: true }).catch((err) => {
+		let res = await invoke('plugin:serial|dtr', { level: true }).catch((err) => {
 			error('Failed to write DTR signal to true: ' + err.message);
 		});
 		// Wait for the ShiftLight to reboot
 		await new Promise((r) => setTimeout(r, 200));
 
-		res = await invoke('dtr', { level: false }).catch((err) => {
+		res = await invoke('plugin:serial|dtr', { level: false }).catch((err) => {
 			error('Failed to write DTR signal to false: ' + err.message);
 		});
 
 		// Waiting some more
 		await new Promise((r) => setTimeout(r, 200));
 
-		let helloResponse: string = await invoke('write', { content: 'hi\n' })
+		let helloResponse: string = await invoke('f|write', { content: 'hi\n' })
 			.then((res: any) => {
 				return res.replace('hi;', '');
 			})

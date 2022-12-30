@@ -3,20 +3,9 @@
 
 use tauri::App;
 
-use tokio::sync::Mutex;
-
 mod model;
-mod store;
 
-use model::controller::{
-    connect, dtr, find_available_ports, get_connection, get_latest_firmware, new_connection_event,
-    write, write_hex,
-};
-use store::SerialConnection;
-
-pub struct Session {
-    pub port_name: Mutex<String>,
-}
+use model::controller::{get_latest_firmware, new_connection_event, write_hex};
 
 #[cfg(mobile)]
 mod mobile;
@@ -45,28 +34,10 @@ impl AppBuilder {
     }
 
     pub fn run(self) {
-        let setup = self.setup;
         tauri::Builder::default()
-            .setup(move |app| {
-                if let Some(setup) = setup {
-                    (setup)(app)?;
-                }
-                Ok(())
-            })
-            // Manage our connection and create our session
-            .manage(SerialConnection {
-                port: Default::default(),
-            })
-            .manage(Session {
-                port_name: Mutex::new("".to_string()),
-            })
+            .plugin(tauri_plugin_serial::init())
             .invoke_handler(tauri::generate_handler![
-                find_available_ports,
-                write,
-                connect,
-                get_connection,
                 get_latest_firmware,
-                dtr,
                 write_hex,
                 new_connection_event,
             ])

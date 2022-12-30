@@ -2,9 +2,9 @@ fn main() {
     // Link our ShiftLight firmware
     if let Ok(path) = std::env::var("SHIFTLIGHTXPATH") {
         cc::Build::new()
-            .file(format!("{}/ke_shiftlight.c", path))
+            .file(format!("{path}/ke_shiftlight.c"))
             .flag("-DSIMULATE")
-            .include(format!("{}", path))
+            .include(path)
             .compile("ke_shiftlight");
     } else {
         eprint!("Could not link firmware!")
