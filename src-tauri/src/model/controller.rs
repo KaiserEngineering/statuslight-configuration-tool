@@ -16,8 +16,8 @@ use tauri_plugin_serial::state::SerialState;
 // updated.
 #[tauri::command]
 pub fn new_connection_event(app_handle: tauri::AppHandle) {
-    if let Err(e) = app_handle.emit_all("new-connection", {}) {
-        eprintln!("Error emiting new-connection event: {:?}", e);
+    if let Err(e) = app_handle.emit_all("new-connection", ()) {
+        eprintln!("Error emiting new-connection event: {e:?}");
     }
 }
 
@@ -67,7 +67,7 @@ pub async fn write_hex(
                 if line.is_empty() {
                     continue;
                 }
-                match write_serial(port, format!("{}\n", line)).await {
+                match write_serial(port, format!("{line}\n")).await {
                     Err(e) => {
                         return Err(SerialError {
                             error_type: SerialErrors::Write,
@@ -75,7 +75,7 @@ pub async fn write_hex(
                         });
                     }
                     _ => {
-                        progress = progress + 1.0;
+                        progress += 1.0;
                         let base = (progress * 100.0) / num_lines;
                         let percentage = base.round() as i32;
 
@@ -83,8 +83,7 @@ pub async fn write_hex(
                             return Err(SerialError {
                                 error_type: SerialErrors::Write,
                                 message: format!(
-                                    "Failed to emit progress updates -- bailing: {:?}",
-                                    e
+                                    "Failed to emit progress updates -- bailing: {e:?}"
                                 ),
                             });
                         }
