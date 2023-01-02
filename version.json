@@ -1,6 +1,6 @@
 {
-	"version": "0.1.6",
-	"notes": "Add progress % for hex flash and version footer",
+	"version": "0.1.8",
+	"notes": "Stable",
 	"pub_date": "2020-12-07T19:25:57Z",
 	"platforms": {
 		"darwin-x86_64": {
