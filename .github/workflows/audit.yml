@@ -7,14 +7,14 @@ on:
     branches:
       - main
     paths:
-      - "**/Cargo.lock"
-      - "**/Cargo.toml"
+      - "src-tauri/Cargo.lock"
+      - "src-tauri/Cargo.toml"
   pull_request:
     branches:
       - main
     paths:
-      - "**/Cargo.lock"
-      - "**/Cargo.toml"
+      - "src-tauri/Cargo.lock"
+      - "src-tauri/Cargo.toml"
 
 jobs:
   audit:
