@@ -7,7 +7,6 @@ on:
   pull_request:
     branches:
       - main
-      - dev
 
 jobs:
   clippy:
@@ -20,7 +19,7 @@ jobs:
       - name: install system deps
         run: |
           sudo apt-get update
-          sudo apt-get install -y libudev-dev libssl-dev
+          sudo apt-get install -y libudev-dev libssl-dev libgtk-3-dev
       - name: Install clippy with nightly toolchain
         uses: actions-rs/toolchain@v1
         with:
