@@ -1,4 +1,4 @@
-name: Clippy
+name: Lint
 
 on:
   push:
@@ -17,10 +17,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: install libudev
+      - name: install system deps
         run: |
           sudo apt-get update
-          sudo apt-get install -y libudev-dev
+          sudo apt-get install -y libudev-dev libssl-dev
       - name: Install clippy with nightly toolchain
         uses: actions-rs/toolchain@v1
         with:
