@@ -1,3 +1,8 @@
+[![Lint](https://github.com/KaiserEngineering/shiftlight-configuration-tool/actions/workflows/lint.yml/badge.svg?branch=main)](https://github.com/KaiserEngineering/shiftlight-configuration-tool/actions/workflows/lint.yml)
+[![Format](https://github.com/KaiserEngineering/shiftlight-configuration-tool/actions/workflows/format.yml/badge.svg)](https://github.com/KaiserEngineering/shiftlight-configuration-tool/actions/workflows/format.yml)
+[![Audit](https://github.com/KaiserEngineering/shiftlight-configuration-tool/actions/workflows/audit.yml/badge.svg)](https://github.com/KaiserEngineering/shiftlight-configuration-tool/actions/workflows/audit.yml)
+[![publish](https://github.com/KaiserEngineering/shiftlight-configuration-tool/actions/workflows/releases.yml/badge.svg)](https://github.com/KaiserEngineering/shiftlight-configuration-tool/actions/workflows/releases.yml)
+
 # KE ShiftLight Configuration Tool
 
 This is a desktop application that allows for the configuration of the KE ShiftLight. It can also be used to update the ShiftLight.
