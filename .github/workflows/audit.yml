@@ -20,7 +20,8 @@ jobs:
   audit:
     runs-on: ubuntu-latest
     steps:
-      working-directory: ./src-tauri
+      - name: audit
+        working-directory: ./src-tauri
       - uses: actions/checkout@v2
       - uses: actions-rs/audit-check@v1
         with:
