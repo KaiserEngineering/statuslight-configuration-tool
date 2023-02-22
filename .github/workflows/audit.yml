@@ -16,12 +16,14 @@ on:
       - "src-tauri/Cargo.lock"
       - "src-tauri/Cargo.toml"
 
+defaults:
+  run:
+    working-directory: ./src-tauri
+
 jobs:
   audit:
     runs-on: ubuntu-latest
     steps:
-      - name: audit
-        working-directory: ./src-tauri
       - uses: actions/checkout@v2
       - uses: actions-rs/audit-check@v1
         with:
