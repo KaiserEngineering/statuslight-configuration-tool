@@ -94,10 +94,10 @@
 </script>
 
 <div class="top-navigation">
-	<div class="flex justify-start">
+	<div class="flex">
 		<select
 			id="shiftlight-port"
-			class="rounded-lg block input select
+			class="rounded-lg input select
 				p-2 m-2"
 			bind:value={$port}
 			on:change={setInitialConfig}

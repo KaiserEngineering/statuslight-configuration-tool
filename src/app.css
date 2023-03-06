@@ -70,11 +70,9 @@
 	}
 
 	.top-navigation {
-		@apply flex flex-row items-center
+		@apply flex flex-row
 		bg-nord4 dark:bg-nord1 bg-opacity-90
 		w-full h-16
-		ml-16
-		shadow-lg;
 	}
 
 	.top-navigation-icon {
