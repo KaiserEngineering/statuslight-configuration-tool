@@ -69,7 +69,7 @@
 		// Waiting some more
 		await new Promise((r) => setTimeout(r, 200));
 
-		let helloResponse: string = await invoke('f|write', { content: 'hi\n' })
+		let helloResponse: string = await invoke('plugin:serial|write', { content: 'hi\n' })
 			.then((res: any) => {
 				return res.replace('hi;', '');
 			})
