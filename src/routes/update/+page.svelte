@@ -133,7 +133,7 @@
 	<div class="text-left">Current version:</div>
 	<div>#{$config.VER}</div>
 
-	<span class="text-left" for="newReleaseIcon">Check for Updates:</span>
+	<span class="text-left">Check for Updates:</span>
 
 	<div class="cursor-pointer" on:click={checkForNewVersion} on:keydown={checkForNewVersion}>
 		<Icon data={cog} scale={2} />
