@@ -70,7 +70,11 @@
 			submitConfig(updatedFields, $port.port_name)
 				.then((results) => {
 					if (results.error.length > 0) {
-						error(JSON.stringify(results.error));
+						let error_message: string = '';
+						results.error.forEach((error) => {
+							error_message += `${error}\n`;
+						});
+						error(error_message);
 					} else {
 						$config = Object.assign({}, configCopy);
 						success('Config updated');
