@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { submitConfig } from '$lib/API';
 	import { session, config, port } from '$lib/Store';
-	import { success, error } from '$lib/Toasts';
+	import { success, error, info } from '$lib/Toasts';
 	import { ShiftLightConfigs } from '$lib/Config';
 	import { validate_config } from '$lib/Validator';
 	import EditParameters from './EditParameters.svelte';
@@ -63,11 +63,14 @@
 			updatedFields.CONFIG = configCopy.CONFIG;
 		}
 
-		if ($port !== null) {
+		if (Object.keys(updatedFields).length == 0) {
+			info('Nothing to update');
+			$session.loading = false;
+		} else if ($port !== null) {
 			submitConfig(updatedFields, $port.port_name)
 				.then((results) => {
 					if (results.error.length > 0) {
-						error(JSON.stringify('An error occurred while setting some values'));
+						error(JSON.stringify(results.error));
 					} else {
 						$config = Object.assign({}, configCopy);
 						success('Config updated');
