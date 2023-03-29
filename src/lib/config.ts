@@ -1,5 +1,3 @@
-import type { SLConfig } from '../app';
-
 export const ShiftLightConfigs: SLConfig = {
 	All: {
 		'Daytime Illumination': {
