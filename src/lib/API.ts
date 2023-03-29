@@ -1,6 +1,5 @@
 import { invoke } from '@tauri-apps/api';
-import { ShiftLightConfigs } from './Config';
-import type { SerialError, SLConfig } from 'src/app';
+import { ShiftLightConfigs } from './config';
 
 export type Port = {
 	port_name: string;
@@ -8,7 +7,13 @@ export type Port = {
 };
 
 export async function getCurrentConnection() {
-	return await invoke('plugin:serial|get_connection', {});
+	return await invoke('plugin:serial|get_connection', {})
+		.catch((_) => {
+			invoke('plugin:serial|drop_connection', {})
+				.catch((err) => {
+					throw err;
+				});
+		});
 }
 
 export async function connectToSerialPort(portName: string) {
@@ -19,7 +24,7 @@ export async function connectToSerialPort(portName: string) {
 
 /*
 Load the config for the provided config type.
-
+	
 Return the new config object.
 */
 export async function getCurrentConfig() {
@@ -83,7 +88,7 @@ export async function getSerialPorts() {
 /*
 Takes a configuration object and writes it to the serial
 port currently connected.
-
+	
 Returns an object{ error: [], success: [] }
 */
 export async function submitConfig(

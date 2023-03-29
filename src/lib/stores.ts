@@ -1,7 +1,7 @@
-import { writable } from 'svelte/store';
+import { writable, type Writable, derived } from 'svelte/store';
 import { appWindow } from '@tauri-apps/api/window';
-import type { ShiftLightConfigs } from '../lib/Config';
-import type { Port } from './API';
+import type { ShiftLightConfigs } from './config';
+import type { Port } from './api';
 
 export class Session {
 	public ui_data = {
@@ -25,3 +25,4 @@ sessionObj.setDarkThemeFromSystem();
 export const session = writable<Session['ui_data']>(sessionObj.ui_data);
 export const config = writable<typeof ShiftLightConfigs['RPM'] | typeof ShiftLightConfigs['Boost']>({});
 export const port = writable<undefined | Port>();
+export const ports: Writable<[Port] | []> = writable([]);

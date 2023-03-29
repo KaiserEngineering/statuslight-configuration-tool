@@ -2,8 +2,8 @@
 	import { invoke } from '@tauri-apps/api/tauri';
 	import { open } from '@tauri-apps/api/dialog';
 	import { readTextFile } from '@tauri-apps/api/fs';
-	import { success, error, info } from '$lib/Toasts';
-	import { session, config } from '$lib/Store';
+	import { success, error, info } from '$lib/toasts';
+	import { session, config } from '$lib/stores';
 	import Modal from '../../components/Modal.svelte';
 	import { cog, fileArchiveO } from 'svelte-awesome/icons';
 	import Icon from 'svelte-awesome';
