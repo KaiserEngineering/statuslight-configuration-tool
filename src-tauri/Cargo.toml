@@ -1,6 +1,6 @@
 [package]
 name = "app"
-version = "0.1.7"
+version = "0.1.8"
 description = "A Tauri App to configure the KE ShiftLight"
 authors = ["craig@kaiserengineering.io", "matt@kaiserengineering.io"]
 license = ""
@@ -23,7 +23,7 @@ mockall = "0.11.2"
 tokio = { version = "1", features = ["full"] }
 reqwest = "0.11.12"
 ts-rs = "6.2"
-tauri-plugin-serial = {path = "/Users/craigkaiser/kaiserengineering/tauri-plugin-serial" }
+tauri-plugin-serial = {git = "https://github.com/kaiserengineering/tauri-plugin-serial", branch="main" }
 
 [features]
 # by default Tauri runs in production mode

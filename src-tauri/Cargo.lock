@@ -67,7 +67,7 @@ checksum = "7de8ce5e0f9f8d88245311066a578d72b7af3e7088f32783804676302df237e4"
 
 [[package]]
 name = "app"
-version = "0.1.7"
+version = "0.1.8"
 dependencies = [
  "anyhow",
  "cc",
@@ -3144,6 +3144,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-serial"
 version = "0.0.0"
+source = "git+https://github.com/kaiserengineering/tauri-plugin-serial?branch=main#c09c639a7d071e97f54067660c0b85761d41060e"
 dependencies = [
  "rusb",
  "serde",
