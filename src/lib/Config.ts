@@ -1,4 +1,4 @@
-import type { SLConfig } from "../app";
+import type { SLConfig } from '../app';
 
 export const ShiftLightConfigs: SLConfig = {
 	All: {
@@ -8,7 +8,7 @@ export const ShiftLightConfigs: SLConfig = {
 			min: 0,
 			max: 255,
 			fieldType: 'Display',
-			info: 'Configure the Shift Light brightness when light out',
+			info: 'Configure the Shift Light brightness when light out'
 		},
 		'Nighttime Illumination': {
 			code: 'ILLUMNIGHT',
@@ -16,7 +16,7 @@ export const ShiftLightConfigs: SLConfig = {
 			min: 0,
 			max: 255,
 			fieldType: 'Display',
-			info: 'Configure the Shift Light brightness when dark out',
+			info: 'Configure the Shift Light brightness when dark out'
 		},
 		'Illumination Mode': {
 			code: 'ILLUMMODE',
@@ -25,7 +25,7 @@ export const ShiftLightConfigs: SLConfig = {
 				{ label: 'Nighttime', value: '1' }
 			],
 			fieldType: 'Display',
-			info: 'Configure the Shift Light illumination mode',
+			info: 'Configure the Shift Light illumination mode'
 		},
 		'USB Echo': {
 			code: 'ECHO',
@@ -33,7 +33,7 @@ export const ShiftLightConfigs: SLConfig = {
 			min: 0,
 			max: 1,
 			fieldType: 'Advanced',
-			info: 'Configure the USB to echo back the received data',
+			info: 'Configure the USB to echo back the received data'
 		},
 		'Animation Mode': {
 			code: 'ANIM',
@@ -44,7 +44,7 @@ export const ShiftLightConfigs: SLConfig = {
 				{ label: 'In To Out', value: '3' }
 			],
 			info: 'Configure the LED animation',
-			fieldType: 'Basics',
+			fieldType: 'Basics'
 		},
 		'Acquisition Mode': {
 			code: 'ACQ',
@@ -54,7 +54,7 @@ export const ShiftLightConfigs: SLConfig = {
 				{ label: 'Tach', value: '2' }
 			],
 			fieldType: 'Advanced',
-			info: 'Configure the acquisition mode, for example OBDII or tachometer',
+			info: 'Configure the acquisition mode, for example OBDII or tachometer'
 		},
 		'Power Saver': {
 			code: 'POWER',
@@ -63,7 +63,7 @@ export const ShiftLightConfigs: SLConfig = {
 				{ label: 'Enabled', value: '1' }
 			],
 			fieldType: 'Power',
-			info: 'Configure if the Shift Light will go into sleep mode when the vehicle is powered off',
+			info: 'Configure if the Shift Light will go into sleep mode when the vehicle is powered off'
 		},
 		'Battery Voltage': {
 			code: 'BATTERY',
@@ -74,7 +74,7 @@ export const ShiftLightConfigs: SLConfig = {
 				{ label: '13V5', value: '3' }
 			],
 			fieldType: 'Power',
-			info: 'Configure the voltage threshold to trigger the Shift Light to wake-up',
+			info: 'Configure the voltage threshold to trigger the Shift Light to wake-up'
 		},
 		'CAN Bus Baud Rate': {
 			code: 'CANBAUD',
@@ -83,7 +83,7 @@ export const ShiftLightConfigs: SLConfig = {
 				{ label: '250KB', value: '1' }
 			],
 			fieldType: 'CAN',
-			info: 'Configure the baud rate of the Shift Light',
+			info: 'Configure the baud rate of the Shift Light'
 		},
 		'CAN Bus Identifier Lengh': {
 			code: 'CANIDE',
@@ -92,7 +92,7 @@ export const ShiftLightConfigs: SLConfig = {
 				{ label: '29Bit', value: '1' }
 			],
 			fieldType: 'CAN',
-			info: 'Configure the CAN bus identifier length for either 11-bit or 29-bit',
+			info: 'Configure the CAN bus identifier length for either 11-bit or 29-bit'
 		},
 		'CAN Bus Sniff ID': {
 			code: 'SNIFF',
@@ -100,7 +100,7 @@ export const ShiftLightConfigs: SLConfig = {
 			min: 0,
 			max: 65535,
 			fieldType: 'CAN',
-			info: 'Configure the CAN bus ID where RPM data is located',
+			info: 'Configure the CAN bus ID where RPM data is located'
 		}
 	},
 	RPM: {
@@ -110,7 +110,7 @@ export const ShiftLightConfigs: SLConfig = {
 			min: 500,
 			max: 16000,
 			fieldType: 'Basics',
-			info: 'Configure when the Shift Light will indicate shift point',
+			info: 'Configure when the Shift Light will indicate shift point'
 		},
 		'Activation Point': {
 			code: 'ACT',
@@ -118,7 +118,7 @@ export const ShiftLightConfigs: SLConfig = {
 			min: 0,
 			max: 15500,
 			fieldType: 'Basics',
-			info: 'Configure when the Shift Light will turn on',
+			info: 'Configure when the Shift Light will turn on'
 		},
 		'Color Palette': {
 			code: 'COLOR',
@@ -129,7 +129,7 @@ export const ShiftLightConfigs: SLConfig = {
 				{ label: 'Aura', value: '3' }
 			],
 			info: 'Configure the LED color palette',
-			fieldType: 'Basics',
+			fieldType: 'Basics'
 		},
 		'Real-time RPM Value': {
 			code: 'RPM',
@@ -137,7 +137,7 @@ export const ShiftLightConfigs: SLConfig = {
 			min: 500,
 			max: 16000,
 			fieldType: 'Advanced',
-			info: 'Set the current RPM value. This is typically used for simulating vehicle data.',
+			info: 'Set the current RPM value. This is typically used for simulating vehicle data.'
 		},
 		'Peak Hold': {
 			code: 'PEAK',
@@ -146,7 +146,7 @@ export const ShiftLightConfigs: SLConfig = {
 				{ label: 'Enabled', value: '1' }
 			],
 			fieldType: 'Basics',
-			info: 'Configure the Shift Light to display to peak RPM value and decay after a given delay',
+			info: 'Configure the Shift Light to display to peak RPM value and decay after a given delay'
 		},
 		'Shift Color': {
 			code: 'SHIFTCOLOR',
@@ -158,10 +158,10 @@ export const ShiftLightConfigs: SLConfig = {
 				{ label: 'Red', value: '4' },
 				{ label: 'Purple', value: '5' },
 				{ label: 'Yellow', value: '6' },
-				{ label: 'White', value: '7' },
+				{ label: 'White', value: '7' }
 			],
 			fieldType: 'Basics',
-			info: 'Configure the color the Shift Light will illuminate when it is time to shift',
+			info: 'Configure the color the Shift Light will illuminate when it is time to shift'
 		},
 		'Flash On Shift': {
 			code: 'FLASH',
@@ -170,7 +170,7 @@ export const ShiftLightConfigs: SLConfig = {
 				{ label: 'Enabled', value: '1' }
 			],
 			fieldType: 'Basics',
-			info: 'Configure if the Shift Light will flash or illuminate a solid color when it is time to shift',
+			info: 'Configure if the Shift Light will flash or illuminate a solid color when it is time to shift'
 		}
 	},
 	Boost: {
@@ -180,7 +180,7 @@ export const ShiftLightConfigs: SLConfig = {
 			min: -11,
 			max: 24,
 			fieldType: 'Basics',
-			info: 'Set the current Boost value. This is typically used for simulating vehicle data.',
+			info: 'Set the current Boost value. This is typically used for simulating vehicle data.'
 		},
 		'Acquistion Mode': {
 			code: 'ACQ',
@@ -190,7 +190,7 @@ export const ShiftLightConfigs: SLConfig = {
 				{ label: 'Tach', value: '2' }
 			],
 			fieldType: 'Basics',
-			info: 'Configure the acquisition mode, for example OBDII or tachometer',
+			info: 'Configure the acquisition mode, for example OBDII or tachometer'
 		}
 	}
-}
+};

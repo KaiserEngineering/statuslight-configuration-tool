@@ -2,8 +2,8 @@
 	import { invoke } from '@tauri-apps/api/tauri';
 	import { open } from '@tauri-apps/api/dialog';
 	import { readTextFile } from '@tauri-apps/api/fs';
-	import { success, error, info } from '$lib/Toasts';
-	import { session, config } from '$lib/Store';
+	import { success, error, info } from '$lib/toasts';
+	import { session, config } from '$lib/stores';
 	import Modal from '../../components/Modal.svelte';
 	import { cog, fileArchiveO } from 'svelte-awesome/icons';
 	import Icon from 'svelte-awesome';
@@ -69,7 +69,7 @@
 		// Waiting some more
 		await new Promise((r) => setTimeout(r, 200));
 
-		let helloResponse: string = await invoke('f|write', { content: 'hi\n' })
+		let helloResponse: string = await invoke('plugin:serial|write', { content: 'hi\n' })
 			.then((res: any) => {
 				return res.replace('hi;', '');
 			})
@@ -133,7 +133,7 @@
 	<div class="text-left">Current version:</div>
 	<div>#{$config.VER}</div>
 
-	<span class="text-left" for="newReleaseIcon">Check for Updates:</span>
+	<span class="text-left">Check for Updates:</span>
 
 	<div class="cursor-pointer" on:click={checkForNewVersion} on:keydown={checkForNewVersion}>
 		<Icon data={cog} scale={2} />

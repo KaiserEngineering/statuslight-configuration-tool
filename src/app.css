@@ -20,14 +20,14 @@
 
 	.ke-button {
 		@apply dark:bg-nord6 p-2 rounded m-2
-		hover:bg-nord2 hover:text-white dark:hover:bg-nord11
+		hover:bg-nord2 hover:text-white dark:hover:bg-nord11;
 	}
 
 	.ke-checkbox {
-		@apply  appearance-none h-4 w-4 border border-gray-300 rounded-sm
+		@apply appearance-none h-4 w-4 border border-gray-300 rounded-sm
 			bg-white checked:bg-nord2 checked:border-white focus:outline-none
 			transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain
-			float-left mr-2 cursor-pointer
+			float-left mr-2 cursor-pointer;
 	}
 
 	.input {
@@ -72,7 +72,7 @@
 	.top-navigation {
 		@apply flex flex-row
 		bg-nord4 dark:bg-nord1 bg-opacity-90
-		w-full h-16
+		w-full h-16;
 	}
 
 	.top-navigation-icon {

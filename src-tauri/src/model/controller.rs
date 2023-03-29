@@ -25,10 +25,9 @@ pub fn new_connection_event(app_handle: tauri::AppHandle) {
 pub async fn get_latest_firmware() -> Result<HashMap<String, String>, String> {
     let mut content = HashMap::new();
 
-    content.insert(
-        "version".into(),
-        get("https://raw.githubusercontent.com/KaiserEngineering/shiftlight-versioning/main/version.txt".to_string()).await?
-    );
+    let version = get("https://raw.githubusercontent.com/KaiserEngineering/shiftlight-versioning/main/version.txt".to_string()).await?;
+
+    content.insert("version".into(), version.replace("\n", ""));
 
     content.insert(
         "hex".into(),
@@ -87,7 +86,6 @@ pub async fn write_hex(
                                 ),
                             });
                         }
-                        // println!("Wrote line: {}", line);
                     }
                 }
             }

@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { submitConfig } from '$lib/API';
-	import { session, config, port } from '$lib/Store';
-	import { success, error, info } from '$lib/Toasts';
-	import { ShiftLightConfigs } from '$lib/Config';
-	import { validate_config } from '$lib/Validator';
+	import { submitConfig } from '$lib/api';
+	import { session, config, port } from '$lib/stores';
+	import { success, error, info } from '$lib/toasts';
+	import { ShiftLightConfigs } from '$lib/config';
+	import { validate_config } from '$lib/validator';
 	import EditParameters from './EditParameters.svelte';
 	import { listen } from '@tauri-apps/api/event';
 
