@@ -6,7 +6,7 @@ import type { Port } from './api';
 export class Session {
 	public ui_data = {
 		loading: false,
-		darkTheme: false,
+		darkTheme: false
 	};
 
 	async setDarkThemeFromSystem() {
@@ -23,6 +23,8 @@ const sessionObj = new Session();
 sessionObj.setDarkThemeFromSystem();
 
 export const session = writable<Session['ui_data']>(sessionObj.ui_data);
-export const config = writable<typeof ShiftLightConfigs['RPM'] | typeof ShiftLightConfigs['Boost']>({});
+export const config = writable<
+	(typeof ShiftLightConfigs)['RPM'] | (typeof ShiftLightConfigs)['Boost']
+>({});
 export const port = writable<undefined | Port>();
 export const ports: Writable<[Port] | []> = writable([]);

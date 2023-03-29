@@ -7,7 +7,7 @@
 	import { invoke } from '@tauri-apps/api';
 
 	// Grab a list of our available ports
-	async function getPorts(initial = false) {
+	async function getPorts(initial?) {
 		$session.loading = true;
 		invoke('plugin:serial|drop_connection', {})
 			.then((res: string) => {

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { submitConfig } from '$lib/api';
 	import { session, config, port } from '$lib/stores';
-	import { success, error } from '$lib/toasts';
+	import { success, error, info } from '$lib/toasts';
 	import { ShiftLightConfigs } from '$lib/config';
 	import { validate_config } from '$lib/validator';
 	import EditParameters from './EditParameters.svelte';

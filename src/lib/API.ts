@@ -7,13 +7,11 @@ export type Port = {
 };
 
 export async function getCurrentConnection() {
-	return await invoke('plugin:serial|get_connection', {})
-		.catch((_) => {
-			invoke('plugin:serial|drop_connection', {})
-				.catch((err) => {
-					throw err;
-				});
+	return await invoke('plugin:serial|get_connection', {}).catch((_) => {
+		invoke('plugin:serial|drop_connection', {}).catch((err) => {
+			throw err;
 		});
+	});
 }
 
 export async function connectToSerialPort(portName: string) {
@@ -32,11 +30,13 @@ export async function getCurrentConfig() {
 		content: 'CONFIG\n'
 	})
 		.then(async (configType: any) => {
-			configType = configType == 0 ? "RPM" : "Boost";
-			const keys = JSON.parse(JSON.stringify({
-				...ShiftLightConfigs["All"],
-				...ShiftLightConfigs[configType]
-			}));
+			configType = configType == 0 ? 'RPM' : 'Boost';
+			const keys = JSON.parse(
+				JSON.stringify({
+					...ShiftLightConfigs['All'],
+					...ShiftLightConfigs[configType]
+				})
+			);
 
 			// Stash current firmware version
 			keys.VERSION = {
@@ -62,8 +62,7 @@ export async function getCurrentConfig() {
 		.catch((error) => {
 			if (error.message) {
 				throw error.message;
-			}
-			else {
+			} else {
 				throw error;
 			}
 		});
@@ -78,8 +77,7 @@ export async function getSerialPorts() {
 		.catch((error) => {
 			if (error.message) {
 				throw error.message;
-			}
-			else {
+			} else {
 				throw error;
 			}
 		});
@@ -92,21 +90,20 @@ port currently connected.
 Returns an object{ error: [], success: [] }
 */
 export async function submitConfig(
-	config: typeof ShiftLightConfigs['RPM'] | typeof ShiftLightConfigs['Boost'],
+	config: (typeof ShiftLightConfigs)['RPM'] | (typeof ShiftLightConfigs)['Boost'],
 	port_name: string
 ) {
-
 	const results = {
 		success: [],
 		error: []
 	};
 
 	for (const key in config) {
-		if (key === "VER") {
+		if (key === 'VER') {
 			continue;
 		}
 		if (key === 'CONFIG') {
-			config[key] = config[key] == "RPM" ? 0 : 1;
+			config[key] = config[key] == 'RPM' ? 0 : 1;
 		}
 
 		await invoke('plugin:serial|write', {
