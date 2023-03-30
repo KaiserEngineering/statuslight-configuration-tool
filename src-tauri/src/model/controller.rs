@@ -27,7 +27,7 @@ pub async fn get_latest_firmware() -> Result<HashMap<String, String>, String> {
 
     let version = get("https://raw.githubusercontent.com/KaiserEngineering/shiftlight-versioning/main/version.txt".to_string()).await?;
 
-    content.insert("version".into(), version.replace("\n", ""));
+    content.insert("version".into(), version.replace('\n', ""));
 
     content.insert(
         "hex".into(),
