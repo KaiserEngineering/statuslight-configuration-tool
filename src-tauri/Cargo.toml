@@ -23,7 +23,7 @@ mockall = "0.11.2"
 tokio = { version = "1", features = ["full"] }
 reqwest = "0.11.12"
 ts-rs = "6.2"
-tauri-plugin-serial = {git = "https://github.com/kaiserengineering/tauri-plugin-serial", branch="main" }
+tauri-plugin-serial = {path = "/Users/craigkaiser/kaiserengineering/tauri-plugin-serial" }
 
 [features]
 # by default Tauri runs in production mode

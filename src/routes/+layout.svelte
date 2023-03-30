@@ -6,15 +6,32 @@
 	import Loading from '../components/Loading.svelte';
 	import { SvelteToast } from '@zerodevx/svelte-toast';
 	import Footer from '../components/Footer.svelte';
-	import { port, session, config } from '$lib/stores';
+	import { port, session, config, connected } from '$lib/stores';
 	import { connectToSerialPort, getCurrentConfig } from '$lib/api';
-	import { error, success } from '$lib/toasts';
+	import { error } from '$lib/toasts';
 	import { invoke } from '@tauri-apps/api';
+
+	function handleConnectToggle(event: { code: string }) {
+		// Mac is 'Key' and Windows is 'Control'
+		if (event.code == 'KeyD' || event.code == 'ControlD') {
+			if ($connected) {
+				invoke('plugin:serial|drop_connection', {}).catch((err) => {
+					error(err);
+				});
+			} else {
+				if (!$port.port_name) {
+					error('Select a port to connect!');
+				} else {
+					connectToSerialPort($port.port_name).catch((err) => error(err));
+				}
+			}
+		}
+	}
 
 	// Set the inital config store, this function is bound to
 	// when our port store is set.
 	async function setInitialConfig() {
-		if (!$port) {
+		if (!$port || !$port.port_name) {
 			return;
 		}
 
@@ -22,28 +39,17 @@
 		// Reset our config
 		$config = {};
 
-		connectToSerialPort($port.port_name)
-			.then(() => {
-				console.log('Calling get current config');
-				getCurrentConfig()
-					.then((res) => {
-						$config = res;
-						invoke('new_connection_event', {});
-						success('Connection established');
-					})
-					.catch((err) => {
-						error(err);
-					})
-					.finally(() => {
-						$session.loading = false;
-					});
-				$session.loading = false;
+		getCurrentConfig()
+			.then((res) => {
+				$config = res;
 			})
 			.catch((err) => {
-				$session.loading = false;
 				error(err);
-				$port = undefined;
+			})
+			.finally(() => {
+				$session.loading = false;
 			});
+		$session.loading = false;
 	}
 
 	// Bind our initial config setting to the changing of our
@@ -52,6 +58,8 @@
 
 	$: dark = $session.darkTheme;
 </script>
+
+<svelte:window on:keydown={handleConnectToggle} />
 
 <div class:dark>
 	<div class="h-screen flex">
