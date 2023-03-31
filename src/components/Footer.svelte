@@ -17,9 +17,9 @@
 		class="ml-1 content-center"
 	>
 		{#if $connected}
-			<p class="m-2 bg-green-600 rounded p-1">Connected</p>
+			<p class="m-2 bg-green-600 text-slate-900 rounded p-1">Connected</p>
 		{:else}
-			<p class="m-2 bg-red-600 rounded p-1">Disconnected</p>
+			<p class="m-2 bg-red-600 text-slate-900 rounded p-1">Disconnected</p>
 		{/if}
 	</div>
 {/await}
