@@ -9,6 +9,7 @@
 
 	export let fieldType: string;
 	let groupings: { [key: string]: any } = {};
+	let configCopy = Object.assign({}, $config);
 
 	// Get each type of config RPM, Boost, etc
 	Object.keys(ShiftLightConfigs).forEach((configType: string) => {
@@ -53,12 +54,12 @@
 		// Only grab the fields that were changed from the current value
 		let updatedFields: { [key: string]: any } = {};
 		Object.keys($config).forEach((key) => {
-			if ($config[key] !== $config[key]) {
+			if ($config[key] !== configCopy[key]) {
 				updatedFields[key] = $config[key];
 			}
 		});
 
-		if ($config.CONFIG !== $config.CONFIG) {
+		if ($config.CONFIG !== configCopy.CONFIG) {
 			updatedFields.CONFIG = $config.CONFIG;
 		}
 
@@ -75,7 +76,7 @@
 						});
 						error(error_message);
 					} else {
-						$config = Object.assign({}, $config);
+						configCopy = Object.assign({}, $config);
 						success('Config updated');
 					}
 				})

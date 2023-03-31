@@ -19,7 +19,12 @@
 		invoke('plugin:serial|drop_connection', {}).catch((err) => {
 			error(err);
 		});
-		connectToSerialPort($port.port_name).catch((err) => error(err));
+
+		connectToSerialPort($port.port_name)
+			.then((_) => {
+				$connected = true;
+			})
+			.catch((err) => error(err));
 		getCurrentConfig()
 			.then((res) => {
 				$config = res;
@@ -62,9 +67,25 @@
 			$session.loading = false;
 		});
 
-		const DEVICE_LIST_UPDATED = await appWindow.listen('DEVICE_LIST_UPDATED', (event) => {
-			$ports = event.payload.devices as unknown as [Port] | [];
-		});
+		const DEVICE_LIST_UPDATED = await appWindow.listen(
+			'DEVICE_LIST_UPDATED',
+			(event: { payload: { devices: [Port] } }) => {
+				$ports = event.payload.devices;
+
+				let port_still_here = [];
+				if ($port && $port.port_name) {
+					port_still_here = event.payload.devices.filter((p: Port) => {
+						p.port_name == $port.port_name;
+					});
+				}
+
+				if (port_still_here.length > 0 && !$connected) {
+					newConnection();
+				} else if (port_still_here.length == 0 && $connected) {
+					$connected = false;
+				}
+			}
+		);
 	}
 	ListenForConnectionEvents();
 

@@ -32,6 +32,8 @@
 			darkModeIcon = moonO;
 		}
 	};
+	let selectedPort = $port;
+	$: $port = selectedPort;
 </script>
 
 <div class="top-navigation">
@@ -40,11 +42,12 @@
 			id="shiftlight-port"
 			class="rounded-lg input select
 				p-2 m-2"
-			bind:value={$port.port_name}
+			bind:value={selectedPort}
 		>
+			>
 			<option value="" disabled selected> Select UART Port</option>
 			{#each $ports as port}
-				<option value={port.port_name}>{port.port_name} - {port.port_info}</option>
+				<option value={port}>{port.port_name} - {port.port_info}</option>
 			{/each}
 		</select>
 
