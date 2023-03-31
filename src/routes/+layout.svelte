@@ -6,52 +6,88 @@
 	import Loading from '../components/Loading.svelte';
 	import { SvelteToast } from '@zerodevx/svelte-toast';
 	import Footer from '../components/Footer.svelte';
-	import { port, session, config } from '$lib/stores';
-	import { connectToSerialPort, getCurrentConfig } from '$lib/api';
-	import { error, success } from '$lib/toasts';
+	import { port, ports, session, config, connected } from '$lib/stores';
+	import { connectToSerialPort, getCurrentConfig, type Port } from '$lib/api';
+	import { error } from '$lib/toasts';
 	import { invoke } from '@tauri-apps/api';
+	import { appWindow } from '@tauri-apps/api/window';
 
-	// Set the inital config store, this function is bound to
-	// when our port store is set.
-	async function setInitialConfig() {
-		if (!$port) {
-			return;
-		}
-
+	async function newConnection() {
 		$session.loading = true;
-		// Reset our config
-		$config = {};
+		invoke('plugin:serial|drop_connection', {}).catch((err) => {
+			error(err.message);
+			return;
+		});
 
-		connectToSerialPort($port.port_name)
-			.then(() => {
-				console.log('Calling get current config');
-				getCurrentConfig()
-					.then((res) => {
-						$config = res;
-						invoke('new_connection_event', {});
-						success('Connection established');
-					})
-					.catch((err) => {
-						error(err);
-					})
-					.finally(() => {
-						$session.loading = false;
-					});
-				$session.loading = false;
-			})
-			.catch((err) => {
-				$session.loading = false;
-				error(err);
-				$port = undefined;
-			});
+		await connectToSerialPort($port.port_name).catch((err) => {
+			error(err.message);
+		});
+		$session.loading = false;
 	}
 
-	// Bind our initial config setting to the changing of our
-	// port store.
-	$: $port, setInitialConfig();
+	function handleConnectToggle(event: { code: string }) {
+		// Mac is 'Key' and Windows is 'Control'
+		if (event.code == 'KeyD' || event.code == 'ControlD') {
+			if (!$port || !$port.port_name) {
+				error('Select a port to connect!');
+			} else if ($connected) {
+				$connected = false;
+			} else {
+				newConnection();
+			}
+		}
+	}
+
+	async function ListenForConnectionEvents() {
+		const unlistenDisconnectEvent = await appWindow.listen('DISCONNECTED', ({}) => {
+			connected.set(false);
+		});
+
+		const unlistenConnectedEvent = await appWindow.listen('CONNECTED', ({}) => {
+			if (!$port || !$port.port_name) {
+				return;
+			}
+			$session.loading = true;
+			connected.set(true);
+
+			getCurrentConfig()
+				.then((res) => {
+					$config = res;
+				})
+				.catch((err) => {
+					error(err.message);
+				});
+			$session.loading = false;
+		});
+
+		const DEVICE_LIST_UPDATED = await appWindow.listen(
+			'DEVICE_LIST_UPDATED',
+			(event: { payload: { devices: [Port] } }) => {
+				$ports = event.payload.devices;
+
+				let port_still_here = [];
+				if ($port && $port.port_name) {
+					port_still_here = event.payload.devices.filter((p: Port) => {
+						p.port_name == $port.port_name;
+					});
+				}
+
+				if (port_still_here.length > 0 && !$connected) {
+					newConnection();
+				} else if (port_still_here.length == 0 && $connected) {
+					$connected = false;
+				}
+			}
+		);
+	}
+	ListenForConnectionEvents();
+
+	$: $port, newConnection;
 
 	$: dark = $session.darkTheme;
 </script>
+
+<svelte:window on:keydown={handleConnectToggle} />
 
 <div class:dark>
 	<div class="h-screen flex">
@@ -62,7 +98,7 @@
 		<Sidebar />
 
 		<div class="content-container">
-			<Topbar />
+			<Topbar {newConnection} />
 
 			<div class="content-list">
 				<slot />

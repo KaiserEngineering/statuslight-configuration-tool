@@ -1,25 +1,17 @@
 <script lang="ts">
-	import { error, info } from '$lib/toasts';
-	import { getSerialPorts } from '$lib/api';
+	import { error } from '$lib/toasts';
 	import { refresh, moonO, sunO } from 'svelte-awesome/icons';
 	import Icon from 'svelte-awesome';
-	import { session, port, ports } from '$lib/stores';
+	import { session, port, ports, connected } from '$lib/stores';
 	import { invoke } from '@tauri-apps/api';
 
-	// Grab a list of our available ports
-	async function getPorts(initial?) {
-		$session.loading = true;
-		invoke('plugin:serial|drop_connection', {})
-			.then((res: string) => {
-				if (initial != true) {
-					info(res);
-				}
-			})
-			.catch((err) => {
-				error(err);
-			});
+	export let newConnection;
 
-		getSerialPorts()
+	// Grab a list of our available ports
+	async function getPorts() {
+		$session.loading = true;
+
+		invoke('plugin:serial|find_available_ports', {})
 			.then((ports_found: any) => {
 				$ports = ports_found;
 			})
@@ -31,7 +23,7 @@
 			});
 	}
 	// Always grab ports on mount
-	getPorts(true);
+	getPorts();
 
 	let darkModeIcon = $session.darkTheme ? moonO : sunO;
 	const toggleDark = () => {
@@ -42,6 +34,10 @@
 			darkModeIcon = moonO;
 		}
 	};
+
+	let selectedPort = $port.port_name;
+
+	$: selectedPort, ($port = $ports.filter((p) => p.port_name == selectedPort).pop());
 </script>
 
 <div class="top-navigation">
@@ -50,11 +46,13 @@
 			id="shiftlight-port"
 			class="rounded-lg input select
 				p-2 m-2"
-			bind:value={$port}
+			bind:value={selectedPort}
+			on:change={newConnection}
 		>
-			<option value="" disabled selected> Select UART Port</option>
+			>
+			<option value="" disabled> Select UART Port</option>
 			{#each $ports as port}
-				<option value={port}>{port.port_name} - {port.port_info}</option>
+				<option value={port.port_name}>{port.port_name} - {port.port_info}</option>
 			{/each}
 		</select>
 

@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { submitConfig } from '$lib/api';
-	import { session, config, port } from '$lib/stores';
+	import { session, config, port, connected } from '$lib/stores';
 	import { success, error, info } from '$lib/toasts';
 	import { ShiftLightConfigs } from '$lib/config';
 	import { validate_config } from '$lib/validator';
 	import EditParameters from './EditParameters.svelte';
-	import { listen } from '@tauri-apps/api/event';
 
-	let configCopy = Object.assign({}, $config);
 	export let fieldType: string;
 	let groupings: { [key: string]: any } = {};
+	let configCopy = Object.assign({}, $config);
+	$: $connected, $connected ? (configCopy = $config) : '';
 
 	// Get each type of config RPM, Boost, etc
 	Object.keys(ShiftLightConfigs).forEach((configType: string) => {
@@ -43,6 +43,11 @@
 	});
 
 	async function update(): Promise<void> {
+		if (!$connected) {
+			error("You're not connected to your ShiftLight!");
+			return;
+		}
+
 		let res = validate_config(configCopy);
 		if (!res.is_valid) {
 			error(res.error);
@@ -54,8 +59,8 @@
 		// Only grab the fields that were changed from the current value
 		let updatedFields: { [key: string]: any } = {};
 		Object.keys(configCopy).forEach((key) => {
-			if (configCopy[key] !== $config[key]) {
-				updatedFields[key] = configCopy[key];
+			if ($config[key] !== configCopy[key]) {
+				updatedFields[key] = $config[key];
 			}
 		});
 
@@ -89,17 +94,6 @@
 		}
 	}
 
-	async function setupNewConnectionListener() {
-		const unlisten = await listen('new-connection', (event) => {
-			// event.event is the event name (useful if you want to use a single callback fn for multiple event types)
-			// event.payload is the payload object
-			configCopy = Object.assign({}, $config);
-		});
-	}
-	setupNewConnectionListener();
-
-	$: dark = $session.darkTheme;
-
 	// Delete All from our list of config modes
 	const ShiftLightConfigsModes = Object.assign({}, ShiftLightConfigs);
 	delete ShiftLightConfigsModes.All;
@@ -126,14 +120,14 @@
 
 <!-- Only show port selection until a port is chosen -->
 <!-- Our form for out version the shiftlight is configured for -->
-{#if $port}
+{#if configCopy && configCopy.ACT}
 	<form on:submit|preventDefault={update} class="w-3/4">
-		<EditParameters config={configCopy} groupings={groupings[configCopy.CONFIG]} {dark} />
+		<EditParameters config={$config} groupings={groupings[configCopy.CONFIG]} />
 
 		<div class="col-span-full flex place-content-end">
 			<button class="ke-button ke-input input">Update</button>
 		</div>
 	</form>
 {:else}
-	No serial port connected
+	No configuration loaded from ShiftLight
 {/if}

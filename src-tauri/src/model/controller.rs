@@ -2,7 +2,6 @@
 //! our tauri::command's should be located!
 
 use std::collections::HashMap;
-use tauri::Manager;
 use tauri::State;
 use tauri::Window;
 
@@ -10,16 +9,6 @@ use super::get;
 
 use tauri_plugin_serial::command::{write_serial, SerialError, SerialErrors};
 use tauri_plugin_serial::state::SerialState;
-
-// Command to emit an event and propagate that a
-// new connection was made and the $config store was
-// updated.
-#[tauri::command]
-pub fn new_connection_event(app_handle: tauri::AppHandle) {
-    if let Err(e) = app_handle.emit_all("new-connection", ()) {
-        eprintln!("Error emiting new-connection event: {e:?}");
-    }
-}
 
 #[tauri::command]
 pub async fn get_latest_firmware() -> Result<HashMap<String, String>, String> {

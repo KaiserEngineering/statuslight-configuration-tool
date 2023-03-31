@@ -45,6 +45,10 @@ export async function getCurrentConfig() {
 
 			const new_config: SLConfig = {};
 			for (const key in keys) {
+				if (key == 'CONFIG') {
+					continue;
+				}
+
 				await invoke('plugin:serial|write', {
 					content: keys[key]['code'] + '\n'
 				})
@@ -58,21 +62,6 @@ export async function getCurrentConfig() {
 			}
 			new_config.CONFIG = configType;
 			return new_config;
-		})
-		.catch((error) => {
-			if (error.message) {
-				throw error.message;
-			} else {
-				throw error;
-			}
-		});
-}
-
-export async function getSerialPorts() {
-	return await invoke('plugin:serial|find_available_ports')
-		// `invoke` returns a Promise
-		.then((response) => {
-			return response;
 		})
 		.catch((error) => {
 			if (error.message) {
