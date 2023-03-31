@@ -45,7 +45,7 @@ export async function getCurrentConfig() {
 
 			const new_config: SLConfig = {};
 			for (const key in keys) {
-				if (key == "CONFIG") {
+				if (key == 'CONFIG') {
 					continue;
 				}
 
