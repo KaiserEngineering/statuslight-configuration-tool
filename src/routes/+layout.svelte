@@ -12,31 +12,15 @@
 	import { invoke } from '@tauri-apps/api';
 	import { appWindow } from '@tauri-apps/api/window';
 
-	// Kick-off our device watcher
-	invoke('plugin:serial|watch_devices', {}).catch((err) => error(err));
-
 	async function newConnection() {
 		invoke('plugin:serial|drop_connection', {}).catch((err) => {
-			error(err);
+			error(err.message);
 			return;
 		});
 
-		if (!$connected) {
-			connectToSerialPort($port.port_name)
-				.then((_) => {
-					$connected = true;
-					getCurrentConfig()
-						.then((res) => {
-							$config = res;
-						})
-						.catch((err) => {
-							error(err);
-						});
-				})
-				.catch((err) => {
-					error(err);
-				});
-		}
+		connectToSerialPort($port.port_name).catch((err) => {
+			error(err.message);
+		});
 	}
 
 	function handleConnectToggle(event: { code: string }) {
@@ -44,6 +28,8 @@
 		if (event.code == 'KeyD' || event.code == 'ControlD') {
 			if (!$port.port_name) {
 				error('Select a port to connect!');
+			} else if ($connected) {
+				$connected = false;
 			} else {
 				newConnection();
 			}
@@ -67,7 +53,7 @@
 					$config = res;
 				})
 				.catch((err) => {
-					error(err);
+					error(err.message);
 				});
 			$session.loading = false;
 		});
@@ -110,7 +96,7 @@
 		<Sidebar />
 
 		<div class="content-container">
-			<Topbar />
+			<Topbar {newConnection} />
 
 			<div class="content-list">
 				<slot />

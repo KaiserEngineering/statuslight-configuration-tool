@@ -10,6 +10,7 @@
 	export let fieldType: string;
 	let groupings: { [key: string]: any } = {};
 	let configCopy = Object.assign({}, $config);
+	$: console.log(configCopy);
 
 	// Get each type of config RPM, Boost, etc
 	Object.keys(ShiftLightConfigs).forEach((configType: string) => {
@@ -90,10 +91,10 @@
 	}
 
 	async function setupNewConnectionListener() {
-		const unlisten = await listen('new-connection', (event) => {
+		const unlisten = await listen('CONNECTED', (event) => {
 			// event.event is the event name (useful if you want to use a single callback fn for multiple event types)
 			// event.payload is the payload object
-			$config = Object.assign({}, $config);
+			configCopy = Object.assign({}, $config);
 		});
 	}
 	setupNewConnectionListener();

@@ -2,8 +2,10 @@
 	import { error } from '$lib/toasts';
 	import { refresh, moonO, sunO } from 'svelte-awesome/icons';
 	import Icon from 'svelte-awesome';
-	import { session, port, ports } from '$lib/stores';
+	import { session, port, ports, connected } from '$lib/stores';
 	import { invoke } from '@tauri-apps/api';
+
+	export let newConnection;
 
 	// Grab a list of our available ports
 	async function getPorts() {
@@ -32,8 +34,10 @@
 			darkModeIcon = moonO;
 		}
 	};
-	let selectedPort = $port;
-	$: $port = selectedPort;
+
+	let selectedPort = $port.port_name;
+
+	$: selectedPort, ($port = $ports.filter((p) => p.port_name == selectedPort).pop());
 </script>
 
 <div class="top-navigation">
@@ -43,11 +47,12 @@
 			class="rounded-lg input select
 				p-2 m-2"
 			bind:value={selectedPort}
+			on:change={newConnection}
 		>
 			>
-			<option value="" disabled selected> Select UART Port</option>
+			<option value="none" disabled> Select UART Port</option>
 			{#each $ports as port}
-				<option value={port}>{port.port_name} - {port.port_info}</option>
+				<option value={port.port_name}>{port.port_name} - {port.port_info}</option>
 			{/each}
 		</select>
 

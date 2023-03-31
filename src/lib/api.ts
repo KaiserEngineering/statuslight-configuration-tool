@@ -29,43 +29,47 @@ export async function getCurrentConfig() {
 	return await invoke('plugin:serial|write', {
 		content: 'CONFIG\n'
 	})
-		.then(async (configType: any) => {
-			configType = configType == 0 ? 'RPM' : 'Boost';
-			const keys = JSON.parse(
-				JSON.stringify({
-					...ShiftLightConfigs['All'],
-					...ShiftLightConfigs[configType]
-				})
-			);
+	// .then(async (configType: any) => {
+	// 	configType = configType == 0 ? 'RPM' : 'Boost';
+	// 	const keys = JSON.parse(
+	// 		JSON.stringify({
+	// 			...ShiftLightConfigs['All'],
+	// 			...ShiftLightConfigs[configType]
+	// 		})
+	// 	);
 
-			// Stash current firmware version
-			keys.VERSION = {
-				code: 'VER'
-			};
+	// 	// Stash current firmware version
+	// 	keys.VERSION = {
+	// 		code: 'VER'
+	// 	};
 
-			const new_config: SLConfig = {};
-			for (const key in keys) {
-				await invoke('plugin:serial|write', {
-					content: keys[key]['code'] + '\n'
-				})
-					.then((res: any) => {
-						new_config[keys[key]['code']] = res;
-					})
-					// Errors get pushed into the resulting config?
-					.catch((error: SerialError) => {
-						new_config[keys[key]['code']] = error.message;
-					});
-			}
-			new_config.CONFIG = configType;
-			return new_config;
-		})
-		.catch((error) => {
-			if (error.message) {
-				throw error.message;
-			} else {
-				throw error;
-			}
-		});
+	// 	const new_config: SLConfig = {};
+	// 	for (const key in keys) {
+	// 		if (key == "CONFIG") {
+	// 			continue;
+	// 		}
+
+	// 		await invoke('plugin:serial|write', {
+	// 			content: keys[key]['code'] + '\n'
+	// 		})
+	// 			.then((res: any) => {
+	// 				new_config[keys[key]['code']] = res;
+	// 			})
+	// 			// Errors get pushed into the resulting config?
+	// 			.catch((error: SerialError) => {
+	// 				new_config[keys[key]['code']] = error.message;
+	// 			});
+	// 	}
+	// 	new_config.CONFIG = configType;
+	// 	return new_config;
+	// })
+	// .catch((error) => {
+	// 	if (error.message) {
+	// 		throw error.message;
+	// 	} else {
+	// 		throw error;
+	// 	}
+	// });
 }
 
 /*

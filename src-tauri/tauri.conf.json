@@ -10,6 +10,11 @@
 		"productName": "KE ShiftLight",
 		"version": "0.1.9"
 	},
+	"plugins": {
+		"plugin_serial": {
+			"baud_rate": 57600
+		}
+	},
 	"tauri": {
 		"allowlist": {
 			"fs": {
