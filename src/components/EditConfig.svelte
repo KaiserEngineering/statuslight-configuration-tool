@@ -1,16 +1,15 @@
 <script lang="ts">
 	import { submitConfig } from '$lib/api';
-	import { session, config, port } from '$lib/stores';
+	import { session, config, port, connected } from '$lib/stores';
 	import { success, error, info } from '$lib/toasts';
 	import { ShiftLightConfigs } from '$lib/config';
 	import { validate_config } from '$lib/validator';
 	import EditParameters from './EditParameters.svelte';
-	import { listen } from '@tauri-apps/api/event';
 
 	export let fieldType: string;
 	let groupings: { [key: string]: any } = {};
 	let configCopy = Object.assign({}, $config);
-	$: console.log(configCopy);
+	$: $connected, $connected ? (configCopy = $config) : '';
 
 	// Get each type of config RPM, Boost, etc
 	Object.keys(ShiftLightConfigs).forEach((configType: string) => {
@@ -44,7 +43,12 @@
 	});
 
 	async function update(): Promise<void> {
-		let res = validate_config($config);
+		if (!$connected) {
+			error("You're not connected to your ShiftLight!");
+			return;
+		}
+
+		let res = validate_config(configCopy);
 		if (!res.is_valid) {
 			error(res.error);
 			return;
@@ -54,14 +58,14 @@
 
 		// Only grab the fields that were changed from the current value
 		let updatedFields: { [key: string]: any } = {};
-		Object.keys($config).forEach((key) => {
+		Object.keys(configCopy).forEach((key) => {
 			if ($config[key] !== configCopy[key]) {
 				updatedFields[key] = $config[key];
 			}
 		});
 
 		if ($config.CONFIG !== configCopy.CONFIG) {
-			updatedFields.CONFIG = $config.CONFIG;
+			updatedFields.CONFIG = configCopy.CONFIG;
 		}
 
 		if (Object.keys(updatedFields).length == 0) {
@@ -77,7 +81,7 @@
 						});
 						error(error_message);
 					} else {
-						configCopy = Object.assign({}, $config);
+						$config = Object.assign({}, configCopy);
 						success('Config updated');
 					}
 				})
@@ -89,17 +93,6 @@
 				});
 		}
 	}
-
-	async function setupNewConnectionListener() {
-		const unlisten = await listen('CONNECTED', (event) => {
-			// event.event is the event name (useful if you want to use a single callback fn for multiple event types)
-			// event.payload is the payload object
-			configCopy = Object.assign({}, $config);
-		});
-	}
-	setupNewConnectionListener();
-
-	$: dark = $session.darkTheme;
 
 	// Delete All from our list of config modes
 	const ShiftLightConfigsModes = Object.assign({}, ShiftLightConfigs);
@@ -114,7 +107,7 @@
 	<select
 		class="input ke-input select select-sm"
 		id="configType"
-		bind:value={$config.CONFIG}
+		bind:value={configCopy.CONFIG}
 		required
 	>
 		{#each Object.keys(ShiftLightConfigsModes) as type}
@@ -127,14 +120,14 @@
 
 <!-- Only show port selection until a port is chosen -->
 <!-- Our form for out version the shiftlight is configured for -->
-{#if $port}
+{#if configCopy && configCopy.ACT}
 	<form on:submit|preventDefault={update} class="w-3/4">
-		<EditParameters config={$config} groupings={groupings[$config.CONFIG]} {dark} />
+		<EditParameters config={$config} groupings={groupings[configCopy.CONFIG]} />
 
 		<div class="col-span-full flex place-content-end">
 			<button class="ke-button ke-input input">Update</button>
 		</div>
 	</form>
 {:else}
-	No serial port connected
+	No configuration loaded from ShiftLight
 {/if}

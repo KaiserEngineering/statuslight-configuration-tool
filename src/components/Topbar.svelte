@@ -50,7 +50,7 @@
 			on:change={newConnection}
 		>
 			>
-			<option value="none" disabled> Select UART Port</option>
+			<option value="" disabled> Select UART Port</option>
 			{#each $ports as port}
 				<option value={port.port_name}>{port.port_name} - {port.port_info}</option>
 			{/each}
