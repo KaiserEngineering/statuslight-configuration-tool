@@ -27,12 +27,16 @@
 		$session.loading = false;
 	}
 
-	function handleConnectToggle(event: { code: string }) {
+	async function handleConnectToggle(event: { code: string }) {
 		// Mac is 'Key' and Windows is 'Control'
 		if (event.code == 'KeyD' || event.code == 'ControlD') {
 			if (!$port || !$port.port_name) {
 				error('Select a port to connect!');
 			} else if ($connected) {
+				await invoke('plugin:serial|drop_connection', {}).catch((err) => {
+					error(err);
+					return;
+				});
 				$connected = false;
 			} else {
 				newConnection();
