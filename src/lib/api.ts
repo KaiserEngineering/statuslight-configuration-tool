@@ -65,7 +65,7 @@ export async function getCurrentConfig() {
 		})
 		.catch((error) => {
 			if (error.message) {
-				throw error.message;
+				throw error;
 			} else {
 				throw error;
 			}
