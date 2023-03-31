@@ -18,20 +18,25 @@
 	async function newConnection() {
 		invoke('plugin:serial|drop_connection', {}).catch((err) => {
 			error(err);
+			return;
 		});
 
-		connectToSerialPort($port.port_name)
-			.then((_) => {
-				$connected = true;
-			})
-			.catch((err) => error(err));
-		getCurrentConfig()
-			.then((res) => {
-				$config = res;
-			})
-			.catch((err) => {
-				error(err);
-			});
+		if (!$connected) {
+			connectToSerialPort($port.port_name)
+				.then((_) => {
+					$connected = true;
+					getCurrentConfig()
+						.then((res) => {
+							$config = res;
+						})
+						.catch((err) => {
+							error(err);
+						});
+				})
+				.catch((err) => {
+					error(err);
+				});
+		}
 	}
 
 	function handleConnectToggle(event: { code: string }) {
