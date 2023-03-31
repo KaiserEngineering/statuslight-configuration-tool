@@ -21,7 +21,7 @@
 
 		if ($port && $port.port_name) {
 			await connectToSerialPort($port.port_name).catch((err) => {
-				error(err.message);
+				error(err);
 			});
 		}
 		$session.loading = false;
