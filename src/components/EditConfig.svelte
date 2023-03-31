@@ -60,7 +60,7 @@
 		let updatedFields: { [key: string]: any } = {};
 		Object.keys(configCopy).forEach((key) => {
 			if ($config[key] !== configCopy[key]) {
-				updatedFields[key] = $config[key];
+				updatedFields[key] = configCopy[key];
 			}
 		});
 
