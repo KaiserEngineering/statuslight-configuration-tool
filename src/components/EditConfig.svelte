@@ -9,7 +9,7 @@
 	export let fieldType: string;
 	let groupings: { [key: string]: any } = {};
 	let configCopy = Object.assign({}, $config);
-	$: $connected, $connected ? (configCopy = $config) : '';
+	$: $connected, $connected ? (configCopy = Object.assign({}, $config)) : '';
 
 	// Get each type of config RPM, Boost, etc
 	Object.keys(ShiftLightConfigs).forEach((configType: string) => {
@@ -122,7 +122,7 @@
 <!-- Our form for out version the shiftlight is configured for -->
 {#if configCopy && configCopy.ACT}
 	<form on:submit|preventDefault={update} class="w-3/4">
-		<EditParameters config={$config} groupings={groupings[configCopy.CONFIG]} />
+		<EditParameters config={configCopy} groupings={groupings[configCopy.CONFIG]} />
 
 		<div class="col-span-full flex place-content-end">
 			<button class="ke-button ke-input input">Update</button>
