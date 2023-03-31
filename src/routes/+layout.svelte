@@ -69,9 +69,9 @@
 
 				let port_still_here = [];
 				if ($port && $port.port_name) {
-					port_still_here = event.payload.devices.filter((p: Port) => {
-						p.port_name == $port.port_name;
-					});
+					port_still_here = event.payload.devices.filter(
+						(p: Port) => p.port_name == $port.port_name
+					);
 				}
 
 				if (port_still_here.length > 0 && !$connected) {
@@ -85,7 +85,6 @@
 	ListenForConnectionEvents();
 
 	$: $port, newConnection;
-
 	$: dark = $session.darkTheme;
 </script>
 
