@@ -1,7 +1,10 @@
-<div class="p-10 landing">
-	<h2 class="text-4xl font-bold mb-2">
-		Welcome to the KaiserEngineering Shiftlight Configuration tool
-	</h2>
-	<h3 class="text-2xl mb-8">Configuring your Shiftlight</h3>
-	<h3 class="text-2xl mb-8">Updating Shiftlight firmware</h3>
+<div class="landing m-2">
+	<h2 class="text-4xl font-bold">KaiserEngineering Shiftlight Configuration tool</h2>
+
+	<div class="flex justify-center">
+		<ul class="list-none text-xl">
+			<li>Configure your Shiftlight</li>
+			<li>Update your firmware</li>
+		</ul>
+	</div>
 </div>

@@ -106,7 +106,11 @@
 			<Topbar {newConnection} />
 
 			<div class="content-list">
-				<slot />
+				{#if $port && $port.port_name}
+					<slot />
+				{:else}
+					<div class="flex">Waiting on a connection...!</div>
+				{/if}
 			</div>
 
 			<div class="footer">
