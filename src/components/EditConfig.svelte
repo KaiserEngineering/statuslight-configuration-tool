@@ -7,7 +7,6 @@
 	import EditParameters from './EditParameters.svelte';
 	import { listen } from '@tauri-apps/api/event';
 
-	let configCopy = Object.assign({}, $config);
 	export let fieldType: string;
 	let groupings: { [key: string]: any } = {};
 
@@ -43,7 +42,7 @@
 	});
 
 	async function update(): Promise<void> {
-		let res = validate_config(configCopy);
+		let res = validate_config($config);
 		if (!res.is_valid) {
 			error(res.error);
 			return;
@@ -53,14 +52,14 @@
 
 		// Only grab the fields that were changed from the current value
 		let updatedFields: { [key: string]: any } = {};
-		Object.keys(configCopy).forEach((key) => {
-			if (configCopy[key] !== $config[key]) {
-				updatedFields[key] = configCopy[key];
+		Object.keys($config).forEach((key) => {
+			if ($config[key] !== $config[key]) {
+				updatedFields[key] = $config[key];
 			}
 		});
 
-		if ($config.CONFIG !== configCopy.CONFIG) {
-			updatedFields.CONFIG = configCopy.CONFIG;
+		if ($config.CONFIG !== $config.CONFIG) {
+			updatedFields.CONFIG = $config.CONFIG;
 		}
 
 		if (Object.keys(updatedFields).length == 0) {
@@ -76,7 +75,7 @@
 						});
 						error(error_message);
 					} else {
-						$config = Object.assign({}, configCopy);
+						$config = Object.assign({}, $config);
 						success('Config updated');
 					}
 				})
@@ -93,7 +92,7 @@
 		const unlisten = await listen('new-connection', (event) => {
 			// event.event is the event name (useful if you want to use a single callback fn for multiple event types)
 			// event.payload is the payload object
-			configCopy = Object.assign({}, $config);
+			$config = Object.assign({}, $config);
 		});
 	}
 	setupNewConnectionListener();
@@ -113,7 +112,7 @@
 	<select
 		class="input ke-input select select-sm"
 		id="configType"
-		bind:value={configCopy.CONFIG}
+		bind:value={$config.CONFIG}
 		required
 	>
 		{#each Object.keys(ShiftLightConfigsModes) as type}
@@ -128,7 +127,7 @@
 <!-- Our form for out version the shiftlight is configured for -->
 {#if $port}
 	<form on:submit|preventDefault={update} class="w-3/4">
-		<EditParameters config={configCopy} groupings={groupings[configCopy.CONFIG]} {dark} />
+		<EditParameters config={$config} groupings={groupings[$config.CONFIG]} {dark} />
 
 		<div class="col-span-full flex place-content-end">
 			<button class="ke-button ke-input input">Update</button>

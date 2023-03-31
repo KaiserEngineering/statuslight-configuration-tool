@@ -6,55 +6,69 @@
 	import Loading from '../components/Loading.svelte';
 	import { SvelteToast } from '@zerodevx/svelte-toast';
 	import Footer from '../components/Footer.svelte';
-	import { port, session, config, connected } from '$lib/stores';
-	import { connectToSerialPort, getCurrentConfig } from '$lib/api';
+	import { port, ports, session, config, connected } from '$lib/stores';
+	import { connectToSerialPort, getCurrentConfig, type Port } from '$lib/api';
 	import { error } from '$lib/toasts';
 	import { invoke } from '@tauri-apps/api';
+	import { appWindow } from '@tauri-apps/api/window';
 
-	function handleConnectToggle(event: { code: string }) {
-		// Mac is 'Key' and Windows is 'Control'
-		if (event.code == 'KeyD' || event.code == 'ControlD') {
-			if ($connected) {
-				invoke('plugin:serial|drop_connection', {}).catch((err) => {
-					error(err);
-				});
-			} else {
-				if (!$port.port_name) {
-					error('Select a port to connect!');
-				} else {
-					connectToSerialPort($port.port_name).catch((err) => error(err));
-				}
-			}
-		}
-	}
+	// Kick-off our device watcher
+	invoke('plugin:serial|watch_devices', {}).catch((err) => error(err));
 
-	// Set the inital config store, this function is bound to
-	// when our port store is set.
-	async function setInitialConfig() {
-		if (!$port || !$port.port_name) {
-			return;
-		}
-
-		$session.loading = true;
-		// Reset our config
-		$config = {};
-
+	async function newConnection() {
+		invoke('plugin:serial|drop_connection', {}).catch((err) => {
+			error(err);
+		});
+		connectToSerialPort($port.port_name).catch((err) => error(err));
 		getCurrentConfig()
 			.then((res) => {
 				$config = res;
 			})
 			.catch((err) => {
 				error(err);
-			})
-			.finally(() => {
-				$session.loading = false;
 			});
-		$session.loading = false;
 	}
 
-	// Bind our initial config setting to the changing of our
-	// port store.
-	$: $port, setInitialConfig();
+	function handleConnectToggle(event: { code: string }) {
+		// Mac is 'Key' and Windows is 'Control'
+		if (event.code == 'KeyD' || event.code == 'ControlD') {
+			if (!$port.port_name) {
+				error('Select a port to connect!');
+			} else {
+				newConnection();
+			}
+		}
+	}
+
+	async function ListenForConnectionEvents() {
+		const unlistenDisconnectEvent = await appWindow.listen('DISCONNECTED', ({}) => {
+			connected.set(false);
+		});
+
+		const unlistenConnectedEvent = await appWindow.listen('CONNECTED', ({}) => {
+			if (!$port || !$port.port_name) {
+				return;
+			}
+			$session.loading = true;
+			connected.set(true);
+
+			getCurrentConfig()
+				.then((res) => {
+					$config = res;
+				})
+				.catch((err) => {
+					error(err);
+				});
+			$session.loading = false;
+		});
+
+		const DEVICE_LIST_UPDATED = await appWindow.listen('DEVICE_LIST_UPDATED', (event) => {
+			$ports = event.payload.devices as unknown as [Port] | [];
+		});
+	}
+	ListenForConnectionEvents();
+
+	$: $port, newConnection;
 
 	$: dark = $session.darkTheme;
 </script>

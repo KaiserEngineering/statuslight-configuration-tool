@@ -5,7 +5,7 @@ use tauri::App;
 
 mod model;
 
-use model::controller::{get_latest_firmware, new_connection_event, write_hex};
+use model::controller::{get_latest_firmware, write_hex};
 
 #[cfg(mobile)]
 mod mobile;
@@ -36,11 +36,7 @@ impl AppBuilder {
     pub fn run(self) {
         tauri::Builder::default()
             .plugin(tauri_plugin_serial::init())
-            .invoke_handler(tauri::generate_handler![
-                get_latest_firmware,
-                write_hex,
-                new_connection_event,
-            ])
+            .invoke_handler(tauri::generate_handler![get_latest_firmware, write_hex,])
             .run(tauri::generate_context!())
             .expect("error while running tauri application");
     }

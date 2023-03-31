@@ -68,21 +68,6 @@ export async function getCurrentConfig() {
 		});
 }
 
-export async function getSerialPorts() {
-	return await invoke('plugin:serial|find_available_ports')
-		// `invoke` returns a Promise
-		.then((response) => {
-			return response;
-		})
-		.catch((error) => {
-			if (error.message) {
-				throw error.message;
-			} else {
-				throw error;
-			}
-		});
-}
-
 /*
 Takes a configuration object and writes it to the serial
 port currently connected.

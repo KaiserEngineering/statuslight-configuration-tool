@@ -1,15 +1,15 @@
 <script lang="ts">
-	import { error, info } from '$lib/toasts';
-	import { getSerialPorts } from '$lib/api';
+	import { error } from '$lib/toasts';
 	import { refresh, moonO, sunO } from 'svelte-awesome/icons';
 	import Icon from 'svelte-awesome';
 	import { session, port, ports } from '$lib/stores';
+	import { invoke } from '@tauri-apps/api';
 
 	// Grab a list of our available ports
 	async function getPorts() {
 		$session.loading = true;
 
-		getSerialPorts()
+		invoke('plugin:serial|find_available_ports', {})
 			.then((ports_found: any) => {
 				$ports = ports_found;
 			})

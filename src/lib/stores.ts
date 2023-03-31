@@ -23,22 +23,10 @@ const sessionObj = new Session();
 sessionObj.setDarkThemeFromSystem();
 
 export const session = writable<Session['ui_data']>(sessionObj.ui_data);
-export const config = writable<
-	(typeof ShiftLightConfigs)['RPM'] | (typeof ShiftLightConfigs)['Boost']
->({});
+export const config = writable<(typeof ShiftLightConfigs)['RPM'] | (typeof ShiftLightConfigs)['Boost']>({});
 export const port: Writable<Port> = writable({
 	port_info: '',
 	port_name: ''
 });
 export const ports: Writable<[Port] | []> = writable([]);
 export const connected: Writable<boolean> = writable(false);
-
-async function ListenForConnectionEvents() {
-	const unlistenDisconnectEvent = await appWindow.listen('DISCONNECTED', ({ }) => {
-		connected.set(false);
-	});
-	const unlistenConnectedEvent = await appWindow.listen('CONNECTED', ({ }) => {
-		connected.set(true);
-	});
-}
-ListenForConnectionEvents();
