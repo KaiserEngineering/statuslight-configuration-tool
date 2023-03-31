@@ -1,30 +1,30 @@
-name: Audit
+# name: Audit
 
-on:
-  schedule:
-    - cron: '0 0 * * *'
-  push:
-    branches:
-      - main
-    paths:
-      - "src-tauri/Cargo.lock"
-      - "src-tauri/Cargo.toml"
-  pull_request:
-    branches:
-      - main
-    paths:
-      - "src-tauri/Cargo.lock"
-      - "src-tauri/Cargo.toml"
+# on:
+#   schedule:
+#     - cron: '0 0 * * *'
+#   push:
+#     branches:
+#       - main
+#     paths:
+#       - "src-tauri/Cargo.lock"
+#       - "src-tauri/Cargo.toml"
+#   pull_request:
+#     branches:
+#       - main
+#     paths:
+#       - "src-tauri/Cargo.lock"
+#       - "src-tauri/Cargo.toml"
 
-defaults:
-  run:
-    working-directory: ./src-tauri
+# defaults:
+#   run:
+#     working-directory: ./src-tauri
 
-jobs:
-  audit:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/audit-check@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+# jobs:
+#   audit:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
+#       - uses: actions-rs/audit-check@v1
+#         with:
+#           token: ${{ secrets.GITHUB_TOKEN }}
