@@ -3143,7 +3143,8 @@ dependencies = [
 
 [[package]]
 name = "tauri-plugin-serial"
-version = "0.0.1"
+version = "0.0.0"
+source = "git+https://github.com/kaiserengineering/tauri-plugin-serial?branch=main#c09c639a7d071e97f54067660c0b85761d41060e"
 dependencies = [
  "rusb",
  "serde",
