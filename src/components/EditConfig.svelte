@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { submitConfig } from '$lib/api';
+	import { getCurrentConfig, submitConfig } from '$lib/api';
 	import { session, config, port, connected } from '$lib/stores';
 	import { success, error, info } from '$lib/toasts';
 	import { ShiftLightConfigs } from '$lib/config';
@@ -90,6 +90,13 @@
 				})
 				.finally(() => {
 					$session.loading = false;
+				});
+			await getCurrentConfig()
+				.then((res) => {
+					$config = res;
+				})
+				.catch((err) => {
+					error(err.message);
 				});
 		}
 	}
