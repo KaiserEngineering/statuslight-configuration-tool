@@ -109,7 +109,9 @@
 				{#if $port && $port.port_name}
 					<slot />
 				{:else}
-					<div class="flex">Waiting on a connection...!</div>
+					<div class="flex grid h-full content-center">
+						<div>Waiting on a connection...!</div>
+					</div>
 				{/if}
 			</div>
 
