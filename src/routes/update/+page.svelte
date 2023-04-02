@@ -4,7 +4,7 @@
 	import { readTextFile } from '@tauri-apps/api/fs';
 	import { success, error, info } from '$lib/toasts';
 	import { session, config } from '$lib/stores';
-	import Modal from '../../components/Modal.svelte';
+	import Modal from '$lib/components/Modal.svelte';
 	import { cog, fileArchiveO } from 'svelte-awesome/icons';
 	import Icon from 'svelte-awesome';
 	import { appWindow } from '@tauri-apps/api/window';

@@ -1,11 +1,11 @@
 <script lang="ts">
-	import Stylesheet from '../components/Stylesheet.svelte';
+	import Stylesheet from '$lib/components/Stylesheet.svelte';
 	import '../app.css';
-	import Sidebar from '../components/Sidebar.svelte';
-	import Topbar from '../components/Topbar.svelte';
-	import Loading from '../components/Loading.svelte';
+	import Sidebar from '$lib/components/Sidebar.svelte';
+	import Topbar from '$lib/components/Topbar.svelte';
+	import Loading from '$lib/components/Loading.svelte';
 	import { SvelteToast } from '@zerodevx/svelte-toast';
-	import Footer from '../components/Footer.svelte';
+	import Footer from '$lib/components/Footer.svelte';
 	import { port, ports, session, config, connected } from '$lib/stores';
 	import { connectToSerialPort, getCurrentConfig, type Port } from '$lib/api';
 	import { error } from '$lib/toasts';
