@@ -1,10 +1,48 @@
 import { invoke } from '@tauri-apps/api';
+import { get } from 'svelte/store';
+import { session, port } from '$lib/stores';
 import { ShiftLightConfigs } from './config';
+import { error } from '$lib/toasts';
 
 export type Port = {
 	port_name: string;
 	port_info: string;
 };
+
+export async function newConnection() {
+	let sessionObj = get(session);
+	let portObj = get(port);
+
+	session.set({
+		...sessionObj,
+		loading: true,
+	});
+
+	await invoke('plugin:serial|drop_connection', {}).then(async () => {
+		if (portObj && portObj.port_name) {
+			await connectToSerialPort(portObj.port_name).catch((err) => {
+				error(err.message);
+
+				session.set({
+					...sessionObj,
+					loading: false,
+				});
+			});
+		}
+	}).catch((err: SerialError) => {
+		error(err.message);
+
+		session.set({
+			...sessionObj,
+			loading: false,
+		});
+	});
+
+	session.set({
+		...sessionObj,
+		loading: false,
+	});
+}
 
 export async function getCurrentConnection() {
 	return await invoke('plugin:serial|get_connection', {}).catch((_) => {

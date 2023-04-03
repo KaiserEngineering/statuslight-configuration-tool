@@ -10,6 +10,7 @@
 	import { appWindow } from '@tauri-apps/api/window';
 	import ProgressBar from '@okrad/svelte-progressbar';
 	import semver from 'semver';
+	import { newConnection } from '$lib/api';
 
 	export let series = [0];
 
@@ -90,11 +91,12 @@
 				flashing = false;
 				return;
 			})
-			.then(() => {
+			.then(async () => {
+				await newConnection();
 				flashing = false;
 			});
 
-		success('Firmware updated: ' + helloResponse);
+		success('Firmware updated: ' + $config.VER);
 	}
 
 	const handleToggleModal = () => {

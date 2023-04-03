@@ -4,8 +4,7 @@
 	import Icon from 'svelte-awesome';
 	import { session, port, ports } from '$lib/stores';
 	import { invoke } from '@tauri-apps/api';
-
-	export let newConnection;
+	import { newConnection } from '$lib/api';
 
 	// Grab a list of our available ports
 	async function getPorts() {
@@ -15,8 +14,8 @@
 			.then((ports_found: any) => {
 				$ports = ports_found;
 			})
-			.catch((err) => {
-				error(err);
+			.catch((err: SerialError) => {
+				error(err.message);
 			})
 			.finally(() => {
 				$session.loading = false;
@@ -39,7 +38,10 @@
 
 	function portSelected() {
 		$port = $ports.filter((p) => p.port_name == selectedPort).pop();
-		newConnection();
+		newConnection().catch((err) => {
+			$session.loading = false;
+			error(err);
+		});
 	}
 </script>
 

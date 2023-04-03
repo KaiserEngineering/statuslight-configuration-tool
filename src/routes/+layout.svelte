@@ -7,25 +7,10 @@
 	import { SvelteToast } from '@zerodevx/svelte-toast';
 	import Footer from '$lib/components/Footer.svelte';
 	import { port, ports, session, config, connected } from '$lib/stores';
-	import { connectToSerialPort, getCurrentConfig, type Port } from '$lib/api';
+	import { newConnection, getCurrentConfig, type Port } from '$lib/api';
 	import { error } from '$lib/toasts';
 	import { invoke } from '@tauri-apps/api';
 	import { appWindow } from '@tauri-apps/api/window';
-
-	async function newConnection() {
-		$session.loading = true;
-		invoke('plugin:serial|drop_connection', {}).catch((err) => {
-			error(err.message);
-			return;
-		});
-
-		if ($port && $port.port_name) {
-			await connectToSerialPort($port.port_name).catch((err) => {
-				error(err.message);
-			});
-		}
-		$session.loading = false;
-	}
 
 	async function handleConnectToggle(event: { code: string }) {
 		// Mac is 'Key' and Windows is 'Control'
@@ -33,7 +18,7 @@
 			if (!$port || !$port.port_name) {
 				error('Select a port to connect!');
 			} else if ($connected) {
-				await invoke('plugin:serial|drop_connection', {}).catch((err) => {
+				await invoke('plugin:serial|drop_connection', {}).catch((err: string) => {
 					error(err);
 					return;
 				});
@@ -89,6 +74,7 @@
 	ListenForConnectionEvents();
 
 	$: $port, newConnection;
+
 	$: dark = $session.darkTheme;
 </script>
 
@@ -103,7 +89,7 @@
 		<Sidebar />
 
 		<div class="content-container">
-			<Topbar {newConnection} />
+			<Topbar />
 
 			<div class="content-list">
 				{#if $port && $port.port_name}
