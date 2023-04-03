@@ -43,7 +43,7 @@
 					);
 				}
 			})
-			.catch((e) => {
+			.catch((e: { toString: () => string }) => {
 				error(e.toString());
 				$session.loading = false;
 			})
@@ -56,13 +56,15 @@
 			return;
 		}
 
-		let res = await invoke('plugin:serial|dtr', { level: true }).catch((err) => {
-			error('Failed to write DTR signal to true: ' + err.message);
-		});
+		let res = await invoke('plugin:serial|dtr', { level: true }).catch(
+			(err: { message: string }) => {
+				error('Failed to write DTR signal to true: ' + err.message);
+			}
+		);
 		// Wait for the ShiftLight to reboot
 		await new Promise((r) => setTimeout(r, 200));
 
-		res = await invoke('plugin:serial|dtr', { level: false }).catch((err) => {
+		res = await invoke('plugin:serial|dtr', { level: false }).catch((err: { message: string }) => {
 			error('Failed to write DTR signal to false: ' + err.message);
 		});
 
@@ -73,7 +75,7 @@
 			.then((res: any) => {
 				return res.replace('hi;', '');
 			})
-			.catch((err) => {
+			.catch((err: { message: string }) => {
 				error('Failed to write hi: ' + err.message);
 			});
 
@@ -83,7 +85,7 @@
 
 		flashing = true;
 		await invoke('write_hex', { window: appWindow, hex: hex })
-			.catch((err) => {
+			.catch((err: { message: string }) => {
 				error(err.message);
 				flashing = false;
 				return;
@@ -116,7 +118,7 @@
 					extensions: ['hex']
 				}
 			]
-		}).then(async (fileObj) => {
+		}).then(async (fileObj: any) => {
 			if (fileObj == undefined) {
 				return;
 			}
