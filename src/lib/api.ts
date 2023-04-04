@@ -9,9 +9,22 @@ export type Port = {
 	port_info: string;
 };
 
+/*
+Create new conection
+
+Calls drop_connection and then connectToSerialPort requires the port
+store to be set.
+
+Returns nothing.
+*/
 export async function newConnection() {
 	let sessionObj = get(session);
 	let portObj = get(port);
+
+	if (!portObj || !portObj.port_name) {
+		error("Could not create new connection as port is not selected");
+		return;
+	}
 
 	session.set({
 		...sessionObj,
@@ -20,14 +33,15 @@ export async function newConnection() {
 
 	await invoke('plugin:serial|drop_connection', {}).then(async () => {
 		if (portObj && portObj.port_name) {
-			await connectToSerialPort(portObj.port_name).catch((err) => {
-				error(err.message);
+			await connectToSerialPort(portObj.port_name)
+				.catch((err) => {
+					error(err.message);
 
-				session.set({
-					...sessionObj,
-					loading: false,
+					session.set({
+						...sessionObj,
+						loading: false,
+					});
 				});
-			});
 		}
 	}).catch((err: SerialError) => {
 		error(err.message);
