@@ -45,7 +45,7 @@
 							{:else}
 								<div class="form-check">
 									<input
-										class="ke-checkbox ke-input"
+										class="ke-checkbox border-gray-200"
 										type="checkbox"
 										bind:value={config[inputOption.code]}
 										id={inputOption.code}
@@ -54,7 +54,7 @@
 							{/if}
 						{:else}
 							<select
-								class="input w-1/2 ke-input"
+								class="ke-input ke-select"
 								id={inputOption.code}
 								bind:value={config[inputOption.code]}
 								required

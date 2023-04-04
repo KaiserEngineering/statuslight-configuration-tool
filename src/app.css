@@ -116,7 +116,11 @@
 	}
 
 	.ke-input {
-		@apply dark:text-gray-900 dark:bg-nord6;
+		@apply block appearance-none border border-gray-400 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500;
+	}
+
+	.ke-select {
+		@apply block appearance-none py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-1/2;
 	}
 }
 
