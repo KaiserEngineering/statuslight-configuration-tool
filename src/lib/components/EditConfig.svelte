@@ -106,28 +106,27 @@
 	delete ShiftLightConfigsModes.All;
 </script>
 
-<div class="m-2">
-	<label for="CONFIG">
-		<span>Config Type:</span>
-	</label>
-
-	<select
-		class="input ke-input select select-sm"
-		id="configType"
-		bind:value={configCopy.CONFIG}
-		required
-	>
-		{#each Object.keys(ShiftLightConfigsModes) as type}
-			<option>{type}</option>
-		{/each}
-	</select>
-</div>
-
-<hr class="mb-2" />
-
 <!-- Only show port selection until a port is chosen -->
 <!-- Our form for out version the shiftlight is configured for -->
 {#if configCopy && configCopy.ACT}
+	<div class="m-2">
+		<label for="CONFIG">
+			<span>Config Type:</span>
+		</label>
+
+		<select
+			class="input ke-input select select-sm"
+			id="configType"
+			bind:value={configCopy.CONFIG}
+			required
+		>
+			{#each Object.keys(ShiftLightConfigsModes) as type}
+				<option>{type}</option>
+			{/each}
+		</select>
+	</div>
+
+	<hr class="mb-2" />
 	<form on:submit|preventDefault={update} class="w-3/4">
 		<EditParameters config={configCopy} groupings={groupings[configCopy.CONFIG]} />
 

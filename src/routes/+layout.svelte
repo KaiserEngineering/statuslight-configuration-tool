@@ -24,7 +24,7 @@
 				});
 				$connected = false;
 			} else {
-				newConnection();
+				await newConnection();
 			}
 		}
 	}
@@ -34,14 +34,14 @@
 			connected.set(false);
 		});
 
-		const unlistenConnectedEvent = await appWindow.listen('CONNECTED', ({}) => {
+		const unlistenConnectedEvent = await appWindow.listen('CONNECTED', async ({}) => {
 			if (!$port || !$port.port_name) {
 				return;
 			}
 			$session.loading = true;
 			connected.set(true);
 
-			getCurrentConfig()
+			await getCurrentConfig()
 				.then((res) => {
 					$config = res;
 				})
@@ -53,7 +53,7 @@
 
 		const DEVICE_LIST_UPDATED = await appWindow.listen(
 			'DEVICE_LIST_UPDATED',
-			(event: { payload: { devices: [Port] } }) => {
+			async (event: { payload: { devices: [Port] } }) => {
 				$ports = event.payload.devices;
 
 				let port_still_here = [];
@@ -64,7 +64,7 @@
 				}
 
 				if (port_still_here.length > 0 && !$connected) {
-					newConnection();
+					await newConnection();
 				} else if (port_still_here.length == 0 && $connected) {
 					$connected = false;
 				}

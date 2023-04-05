@@ -36,20 +36,10 @@ export async function newConnection() {
 			await connectToSerialPort(portObj.port_name)
 				.catch((err) => {
 					error(err.message);
-
-					session.set({
-						...sessionObj,
-						loading: false,
-					});
 				});
 		}
 	}).catch((err: SerialError) => {
 		error(err.message);
-
-		session.set({
-			...sessionObj,
-			loading: false,
-		});
 	});
 
 	session.set({
