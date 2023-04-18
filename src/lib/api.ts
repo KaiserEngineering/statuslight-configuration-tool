@@ -148,5 +148,6 @@ export async function submitConfig(
 				results['error'].push(err.message);
 			});
 	}
+
 	return results;
 }
