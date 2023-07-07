@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { connected } from '$lib/stores';
-	import { getVersion } from '@tauri-apps/api/app';
-	import { type } from '@tauri-apps/api/os';
+	import { getVersion } from "@tauri-apps/plugin-app";
+	import { type } from "@tauri-apps/plugin-os";
 	let versionPromise = getVersion();
 	let osTypePromise = type();
 </script>

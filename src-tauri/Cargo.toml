@@ -10,20 +10,23 @@ edition = "2021"
 rust-version = "1.68"
     
 [build-dependencies]
-tauri-build = { version = "2.0.0-alpha.2", features = [] }
+tauri-build = { git  = "https://github.com/tauri-apps/tauri.git", branch="dev", features = [] }
 cc = "1.0"
 
 [dependencies]
 anyhow = "1.0.65"
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "2.0.0-alpha.4", features = ["dialog-open", "fs-all", "os-all", "updater"] }
+tauri = { version = "^2.0.0-alpha.10", features = [] }
 serialport = { version = "4.2.0", features = [] }
 mockall = "0.11.2"
 tokio = { version = "1", features = ["full"] }
 reqwest = "0.11.12"
 ts-rs = "6.2"
 tauri-plugin-serial = { git  = "https://github.com/kaiserengineering/tauri-plugin-serial.git", branch="main"}
+tauri-plugin-window = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-app = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-os = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 
 [features]
 # by default Tauri runs in production mode

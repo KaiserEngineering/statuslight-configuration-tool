@@ -1,5 +1,5 @@
 import { writable, type Writable, derived } from 'svelte/store';
-import { appWindow } from '@tauri-apps/api/window';
+import { appWindow } from "@tauri-apps/plugin-window";
 import type { ShiftLightConfigs } from './config';
 import type { Port } from './api';
 
