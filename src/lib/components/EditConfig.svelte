@@ -135,5 +135,5 @@
 		</div>
 	</form>
 {:else}
-	<div class="flex grid h-full content-center">No configuration loaded from ShiftLight</div>
+	No configuration loaded from ShiftLight
 {/if}

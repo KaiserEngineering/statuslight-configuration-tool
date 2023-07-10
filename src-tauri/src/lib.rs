@@ -35,6 +35,9 @@ impl AppBuilder {
 
     pub fn run(self) {
         tauri::Builder::default()
+            .plugin(tauri_plugin_window::init())
+            .plugin(tauri_plugin_os::init())
+            .plugin(tauri_plugin_app::init())
             .plugin(tauri_plugin_serial::init())
             .invoke_handler(tauri::generate_handler![get_latest_firmware, write_hex,])
             .run(tauri::generate_context!())

@@ -7,7 +7,7 @@
 	import Modal from '$lib/components/Modal.svelte';
 	import { cog, fileArchiveO } from 'svelte-awesome/icons';
 	import Icon from 'svelte-awesome';
-	import { appWindow } from '@tauri-apps/api/window';
+	import { appWindow } from "@tauri-apps/plugin-window";
 	import ProgressBar from '@okrad/svelte-progressbar';
 	import semver from 'semver';
 	import { newConnection } from '$lib/api';

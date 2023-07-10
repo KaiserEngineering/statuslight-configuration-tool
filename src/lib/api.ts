@@ -1,4 +1,4 @@
-import { invoke } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/tauri';
 import { get } from 'svelte/store';
 import { session, port } from '$lib/stores';
 import { ShiftLightConfigs } from './config';
@@ -148,6 +148,5 @@ export async function submitConfig(
 				results['error'].push(err.message);
 			});
 	}
-
 	return results;
 }
