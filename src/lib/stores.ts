@@ -1,9 +1,6 @@
 import { writable, type Writable } from 'svelte/store';
-import { getCurrent } from "@tauri-apps/plugin-window";
 import type { ShiftLightConfigs } from './config';
 import type { Port } from './api';
-
-// const appWindow = getCurrent();
 
 export class Session {
 	public ui_data = {
@@ -12,18 +9,13 @@ export class Session {
 	};
 
 	async setDarkThemeFromSystem() {
-		return true
-		this.ui_data.darkTheme = await appWindow.theme().then((value) => {
-			if (value == 'dark') {
-				return true;
-			}
-			return false;
-		});
+		// Currently the getting system theme hook is broken :/
+		return true;
 	}
 }
 
 const sessionObj = new Session();
-sessionObj.setDarkThemeFromSystem();
+sessionObj.ui_data.darkTheme = sessionObj.setDarkThemeFromSystem();
 
 export const session = writable<Session['ui_data']>(sessionObj.ui_data);
 export const config = writable<
