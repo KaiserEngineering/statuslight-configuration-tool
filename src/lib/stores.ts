@@ -22,7 +22,7 @@ export const config = writable<
 	(typeof ShiftLightConfigs)['RPM'] | (typeof ShiftLightConfigs)['Boost']
 >({});
 export const port: Writable<Port> = writable({
-	port_info: '',
+	product_name: '',
 	port_name: ''
 });
 export const ports: Writable<[Port] | []> = writable([]);

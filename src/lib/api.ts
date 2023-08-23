@@ -4,11 +4,6 @@ import { session, port } from '$lib/stores';
 import { ShiftLightConfigs } from './config';
 import { error } from '$lib/toasts';
 
-export type Port = {
-	port_name: string;
-	port_info: string;
-};
-
 /*
 Create new conection
 
@@ -22,8 +17,7 @@ export async function newConnection() {
 	let portObj = get(port);
 
 	if (!portObj || !portObj.port_name) {
-		error("Could not create new connection as port is not selected");
-		return;
+		throw ("Could not create new connection as port is not selected");
 	}
 
 	session.set({
@@ -31,16 +25,17 @@ export async function newConnection() {
 		loading: true,
 	});
 
-	await invoke('plugin:serial|drop_connection', {}).then(async () => {
-		if (portObj && portObj.port_name) {
-			await connectToSerialPort(portObj.port_name)
-				.catch((err) => {
-					error(err.message);
-				});
-		}
-	}).catch((err: SerialError) => {
-		error(err.message);
-	});
+	const existingConnection = await invoke('plugin:serial|get_connection', {})
+		.catch((_err) => {
+			return undefined;
+		});
+
+	if (existingConnection) {
+		await invoke('plugin:serial|drop_connection', {});
+	}
+	if (portObj && portObj.port_name) {
+		await connectToSerialPort(portObj.port_name);
+	}
 
 	session.set({
 		...sessionObj,
@@ -51,7 +46,10 @@ export async function newConnection() {
 export async function getCurrentConnection() {
 	return await invoke('plugin:serial|get_connection', {}).catch((_) => {
 		invoke('plugin:serial|drop_connection', {}).catch((err) => {
-			throw err;
+			if (typeof (err) === 'string') {
+				err = JSON.parse(err);
+			}
+			throw `Could not get current connection ${err.message}`;
 		});
 	});
 }
@@ -59,6 +57,11 @@ export async function getCurrentConnection() {
 export async function connectToSerialPort(portName: string) {
 	return await invoke('plugin:serial|connect', {
 		portName
+	}).catch((err) => {
+		if (typeof (err) === 'string') {
+			err = JSON.parse(err);
+		}
+		throw `Could not connect to port ${err.message}`;
 	});
 }
 
@@ -98,19 +101,21 @@ export async function getCurrentConfig() {
 						new_config[keys[key]['code']] = res;
 					})
 					// Errors get pushed into the resulting config?
-					.catch((error: SerialError) => {
+					.catch((err: SerialError) => {
+						if (typeof (err) === 'string') {
+							err = JSON.parse(err);
+						}
 						new_config[keys[key]['code']] = error.message;
 					});
 			}
 			new_config.CONFIG = configType;
 			return new_config;
 		})
-		.catch((error) => {
-			if (error.message) {
-				throw error;
-			} else {
-				throw error;
+		.catch((err) => {
+			if (typeof (err) === 'string') {
+				err = JSON.parse(err);
 			}
+			throw err.message;
 		});
 }
 
@@ -145,6 +150,10 @@ export async function submitConfig(
 				results['success'].push(res);
 			})
 			.catch((err: SerialError) => {
+				if (typeof (err) === 'string') {
+					err = JSON.parse(err);
+				}
+
 				results['error'].push(err.message);
 			});
 	}

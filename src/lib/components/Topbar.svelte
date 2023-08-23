@@ -15,7 +15,7 @@
 				$ports = ports_found;
 			})
 			.catch((err: SerialError) => {
-				error(err.message);
+				error('HERE' + err);
 			})
 			.finally(() => {
 				$session.loading = false;
@@ -56,7 +56,7 @@
 		>
 			<option value=""> Select UART Port</option>
 			{#each $ports as port}
-				<option value={port.port_name}>{port.port_name} - {port.port_info}</option>
+				<option value={port.port_name}>{port.port_name} - {port.product_name}</option>
 			{/each}
 		</select>
 

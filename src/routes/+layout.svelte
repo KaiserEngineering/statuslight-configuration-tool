@@ -32,11 +32,11 @@
 	}
 
 	async function ListenForConnectionEvents() {
-		const unlistenDisconnectEvent = await appWindow.listen('DISCONNECTED', ({}) => {
+		const _unlistenDisconnectEvent = await appWindow.listen('DISCONNECTED', ({}) => {
 			connected.set(false);
 		});
 
-		const unlistenConnectedEvent = await appWindow.listen('CONNECTED', async ({}) => {
+		const _unlistenConnectedEvent = await appWindow.listen('CONNECTED', async ({}) => {
 			if (!$port || !$port.port_name) {
 				return;
 			}
@@ -48,12 +48,12 @@
 					$config = res;
 				})
 				.catch((err) => {
-					error(err.message);
+					error(err);
 				});
 			$session.loading = false;
 		});
 
-		const DEVICE_LIST_UPDATED = await appWindow.listen(
+		const _DEVICE_LIST_UPDATED = await appWindow.listen(
 			'DEVICE_LIST_UPDATED',
 			async (event: { payload: { devices: [Port] } }) => {
 				$ports = event.payload.devices;
