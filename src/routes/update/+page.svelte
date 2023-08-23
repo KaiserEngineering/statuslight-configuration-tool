@@ -1,17 +1,18 @@
 <script lang="ts">
 	import { invoke } from '@tauri-apps/api/tauri';
-	import { open } from '@tauri-apps/api/dialog';
-	import { readTextFile } from '@tauri-apps/api/fs';
+	import { open } from '@tauri-apps/plugin-dialog';
+	import { readTextFile } from '@tauri-apps/plugin-fs';
 	import { success, error, info } from '$lib/toasts';
 	import { session, config } from '$lib/stores';
 	import Modal from '$lib/components/Modal.svelte';
 	import { cog, fileArchiveO } from 'svelte-awesome/icons';
 	import Icon from 'svelte-awesome';
-	import { appWindow } from "@tauri-apps/plugin-window";
+	import { getCurrent } from '@tauri-apps/plugin-window';
 	import ProgressBar from '@okrad/svelte-progressbar';
 	import semver from 'semver';
 	import { newConnection } from '$lib/api';
 
+	const appWindow = getCurrent();
 	export let series = [0];
 
 	async function setUpProgressListener() {

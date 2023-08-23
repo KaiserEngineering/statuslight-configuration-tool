@@ -10,7 +10,9 @@
 	import { newConnection, getCurrentConfig, type Port } from '$lib/api';
 	import { error } from '$lib/toasts';
 	import { invoke } from '@tauri-apps/api/tauri';
-	import { appWindow } from "@tauri-apps/plugin-window";
+	import { getCurrent } from '@tauri-apps/plugin-window';
+
+	const appWindow = getCurrent();
 
 	async function handleConnectToggle(event: { code: string }) {
 		// Mac is 'Key' and Windows is 'Control'
