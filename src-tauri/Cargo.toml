@@ -17,13 +17,14 @@ cc = "1.0"
 anyhow = "1.0.65"
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "^2.0.0-alpha.10", features = [] }
+tauri = { version = "2.0.0-alpha", features = [] }
 serialport = { version = "4.2.0", features = [] }
 mockall = "0.11.2"
 tokio = { version = "1", features = ["full"] }
 reqwest = "0.11.12"
 ts-rs = "6.2"
-tauri-plugin-serial = { git  = "https://github.com/kaiserengineering/tauri-plugin-serial.git", branch="main"}
+# tauri-plugin-serial = { git  = "https://github.com/kaiserengineering/tauri-plugin-serial.git", branch="main"}
+tauri-plugin-serial = { path  = "/Users/craigkaiser/kaiserengineering/tauri-plugin-serial"}
 tauri-plugin-window = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-app = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 tauri-plugin-os = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
