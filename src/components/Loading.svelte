@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { session } from '$lib/stores';
+	import { session } from '$stores/session';
 </script>
 
 {#if $session.loading}

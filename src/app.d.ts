@@ -19,9 +19,6 @@ declare global {
 		port_name: string;
 		product_name: string;
 	}
-	export type SLConfig = {
-		[key: string]: any;
-	};
 }
 
-export { };
+export {};

@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { invoke } from '@tauri-apps/api/tauri';
+	import { invoke } from '@tauri-apps/api/core';
 	import { open } from '@tauri-apps/plugin-dialog';
 	import { readTextFile } from '@tauri-apps/plugin-fs';
 	import { success, error, info } from '$lib/toasts';
-	import { session, config } from '$lib/stores';
-	import Modal from '$lib/components/Modal.svelte';
+	import { session, config } from '$stores/session';
+	import Modal from '$components/Modal.svelte';
 	import { cog, fileArchiveO } from 'svelte-awesome/icons';
 	import Icon from 'svelte-awesome';
 	import { getCurrent } from '@tauri-apps/plugin-window';
@@ -58,22 +58,20 @@
 			return;
 		}
 
-		let res = await invoke('plugin:serial|dtr', { level: true }).catch(
-			(err: { message: string }) => {
-				error('Failed to write DTR signal to true: ' + err.message);
-			}
-		);
+		let res = await invoke('dtr', { level: true }).catch((err: { message: string }) => {
+			error('Failed to write DTR signal to true: ' + err.message);
+		});
 		// Wait for the ShiftLight to reboot
 		await new Promise((r) => setTimeout(r, 200));
 
-		res = await invoke('plugin:serial|dtr', { level: false }).catch((err: { message: string }) => {
+		res = await invoke('dtr', { level: false }).catch((err: { message: string }) => {
 			error('Failed to write DTR signal to false: ' + err.message);
 		});
 
 		// Waiting some more
 		await new Promise((r) => setTimeout(r, 200));
 
-		let helloResponse: string = await invoke('plugin:serial|write', { content: 'hi\n' })
+		let helloResponse: string = await invoke('write', { content: 'hi\n' })
 			.then((res: any) => {
 				return res.replace('hi;', '');
 			})

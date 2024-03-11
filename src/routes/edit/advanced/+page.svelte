@@ -1,5 +1,5 @@
 <script lang="ts">
-	import EditConfig from '$lib/components/EditConfig.svelte';
+	import EditConfig from '$components/EditConfig.svelte';
 </script>
 
 <EditConfig fieldType="advanced" />

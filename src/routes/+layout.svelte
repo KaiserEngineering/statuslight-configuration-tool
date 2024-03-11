@@ -1,15 +1,15 @@
 <script lang="ts">
-	import Stylesheet from '$lib/components/Stylesheet.svelte';
+	import Stylesheet from '$components/Stylesheet.svelte';
 	import '../app.css';
-	import Sidebar from '$lib/components/Sidebar.svelte';
-	import Topbar from '$lib/components/Topbar.svelte';
-	import Loading from '$lib/components/Loading.svelte';
+	import Sidebar from '$components/Sidebar.svelte';
+	import Topbar from '$components/Topbar.svelte';
+	import Loading from '$components/Loading.svelte';
 	import { SvelteToast } from '@zerodevx/svelte-toast';
-	import Footer from '$lib/components/Footer.svelte';
-	import { port, ports, session, config, connected } from '$lib/stores';
+	import Footer from '$components/Footer.svelte';
+	import { port, ports, session, config, connected } from '$stores/session';
 	import { newConnection, getCurrentConfig, type Port } from '$lib/api';
 	import { error } from '$lib/toasts';
-	import { invoke } from '@tauri-apps/api/tauri';
+	import { invoke } from '@tauri-apps/api/core';
 	import { getCurrent } from '@tauri-apps/plugin-window';
 
 	const appWindow = getCurrent();
@@ -20,7 +20,7 @@
 			if (!$port || !$port.port_name) {
 				error('Select a port to connect!');
 			} else if ($connected) {
-				await invoke('plugin:serial|drop_connection', {}).catch((err: string) => {
+				await invoke('drop_connection', {}).catch((err: string) => {
 					error(err);
 					return;
 				});

@@ -1,8 +1,13 @@
-import { invoke } from '@tauri-apps/api/tauri';
+import { invoke } from '@tauri-apps/api/core';
 import { get } from 'svelte/store';
-import { session, port } from '$lib/stores';
-import { ShiftLightConfigs } from './config';
+import { session, port } from '$stores/session';
+import { BoostConfigs, RPMConfigs, type SLCconfigEntry } from './config';
 import { error } from '$lib/toasts';
+
+export type Port = {
+	port_name: string;
+	product_name: string;
+};
 
 /*
 Create new conection
@@ -17,21 +22,20 @@ export async function newConnection() {
 	let portObj = get(port);
 
 	if (!portObj || !portObj.port_name) {
-		throw ("Could not create new connection as port is not selected");
+		throw 'Could not create new connection as port is not selected';
 	}
 
 	session.set({
 		...sessionObj,
-		loading: true,
+		loading: true
 	});
 
-	const existingConnection = await invoke('plugin:serial|get_connection', {})
-		.catch((_err) => {
-			return undefined;
-		});
+	const existingConnection = await invoke('get_connection', {}).catch((_err) => {
+		return undefined;
+	});
 
 	if (existingConnection) {
-		await invoke('plugin:serial|drop_connection', {});
+		await invoke('drop_connection', {});
 	}
 	if (portObj && portObj.port_name) {
 		await connectToSerialPort(portObj.port_name);
@@ -39,14 +43,14 @@ export async function newConnection() {
 
 	session.set({
 		...sessionObj,
-		loading: false,
+		loading: false
 	});
 }
 
 export async function getCurrentConnection() {
-	return await invoke('plugin:serial|get_connection', {}).catch((_) => {
-		invoke('plugin:serial|drop_connection', {}).catch((err) => {
-			if (typeof (err) === 'string') {
+	return await invoke('get_connection', {}).catch((_) => {
+		invoke('drop_connection', {}).catch((err) => {
+			if (typeof err === 'string') {
 				err = JSON.parse(err);
 			}
 			throw `Could not get current connection ${err.message}`;
@@ -55,10 +59,10 @@ export async function getCurrentConnection() {
 }
 
 export async function connectToSerialPort(portName: string) {
-	return await invoke('plugin:serial|connect', {
+	return await invoke('connect', {
 		portName
 	}).catch((err) => {
-		if (typeof (err) === 'string') {
+		if (typeof err === 'string') {
 			err = JSON.parse(err);
 		}
 		throw `Could not connect to port ${err.message}`;
@@ -71,30 +75,25 @@ Load the config for the provided config type.
 Return the new config object.
 */
 export async function getCurrentConfig() {
-	return await invoke('plugin:serial|write', {
+	return await invoke('write', {
 		content: 'CONFIG\n'
 	})
 		.then(async (configType: any) => {
 			configType = configType == 0 ? 'RPM' : 'Boost';
-			const keys = JSON.parse(
-				JSON.stringify({
-					...ShiftLightConfigs['All'],
-					...ShiftLightConfigs[configType]
-				})
-			);
+			const keys = Object.keys(configType == 'RPM' ? RPMConfigs : BoostConfigs);
 
 			// Stash current firmware version
 			keys.VERSION = {
 				code: 'VER'
 			};
 
-			const new_config: SLConfig = {};
+			const new_config: { [key: string]: SLCconfigEntry } = {};
 			for (const key in keys) {
 				if (key == 'CONFIG') {
 					continue;
 				}
 
-				await invoke('plugin:serial|write', {
+				await invoke('write', {
 					content: keys[key]['code'] + '\n'
 				})
 					.then((res: any) => {
@@ -102,7 +101,7 @@ export async function getCurrentConfig() {
 					})
 					// Errors get pushed into the resulting config?
 					.catch((err: SerialError) => {
-						if (typeof (err) === 'string') {
+						if (typeof err === 'string') {
 							err = JSON.parse(err);
 						}
 						new_config[keys[key]['code']] = error.message;
@@ -112,7 +111,7 @@ export async function getCurrentConfig() {
 			return new_config;
 		})
 		.catch((err) => {
-			if (typeof (err) === 'string') {
+			if (typeof err === 'string') {
 				err = JSON.parse(err);
 			}
 			throw err.message;
@@ -126,7 +125,7 @@ port currently connected.
 Returns an object{ error: [], success: [] }
 */
 export async function submitConfig(
-	config: (typeof ShiftLightConfigs)['RPM'] | (typeof ShiftLightConfigs)['Boost'],
+	config: typeof RPMConfigs | typeof BoostConfigs,
 	port_name: string
 ) {
 	const results = {
@@ -142,7 +141,7 @@ export async function submitConfig(
 			config[key] = config[key] == 'RPM' ? 0 : 1;
 		}
 
-		await invoke('plugin:serial|write', {
+		await invoke('write', {
 			portName: port_name,
 			content: key + ' ' + config[key] + '\n'
 		})
@@ -150,7 +149,7 @@ export async function submitConfig(
 				results['success'].push(res);
 			})
 			.catch((err: SerialError) => {
-				if (typeof (err) === 'string') {
+				if (typeof err === 'string') {
 					err = JSON.parse(err);
 				}
 

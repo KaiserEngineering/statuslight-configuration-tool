@@ -16,7 +16,11 @@
 		body {
 			margin: 0;
 			padding: 0;
-			font-family: system-ui, -apple-system, 'Segoe UI', Roboto;
+			font-family:
+				system-ui,
+				-apple-system,
+				'Segoe UI',
+				Roboto;
 		}
 		.min-h-screen {
 			min-height: 100vh;

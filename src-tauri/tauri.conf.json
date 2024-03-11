@@ -3,12 +3,42 @@
   "build": {
     "beforeBuildCommand": "npm run build",
     "beforeDevCommand": "npm run dev",
-    "devPath": "http://localhost:5173",
-    "distDir": "../build"
+    "frontendDist": "../build",
+    "devUrl": "http://localhost:5173"
   },
-  "package": {
-    "productName": "KE ShiftLight",
-    "version": "0.2.1"
+  "bundle": {
+    "active": true,
+    "category": "DeveloperTool",
+    "copyright": "",
+    "externalBin": [],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "certificateThumbprint": null,
+      "digestAlgorithm": "sha256",
+      "timestampUrl": ""
+    },
+    "longDescription": "",
+    "macOS": {
+      "entitlements": null,
+      "exceptionDomain": "",
+      "frameworks": [],
+      "providerShortName": null,
+      "signingIdentity": null
+    },
+    "resources": [],
+    "shortDescription": "",
+    "targets": "all",
+    "linux": {
+      "deb": {
+        "depends": []
+      }
+    }
   },
   "plugins": {
     "allowlist": {
@@ -49,54 +79,12 @@
     },
     "plugin_serial": {
       "baud_rate": 57600
-    },
-    "updater": {
-      "endpoints": [
-        "https://raw.githubusercontent.com/KaiserEngineering/shiftlight-configuration-tool/main/version.json"
-      ]
     }
   },
-  "tauri": {
-    "bundle": {
-      "active": true,
-      "category": "DeveloperTool",
-      "copyright": "",
-      "deb": {
-        "depends": []
-      },
-      "externalBin": [],
-      "icon": [
-        "icons/32x32.png",
-        "icons/128x128.png",
-        "icons/128x128@2x.png",
-        "icons/icon.icns",
-        "icons/icon.ico"
-      ],
-      "identifier": "kaiserengineering.io",
-      "longDescription": "",
-      "macOS": {
-        "entitlements": null,
-        "exceptionDomain": "",
-        "frameworks": [],
-        "providerShortName": null,
-        "signingIdentity": null
-      },
-      "resources": [],
-      "shortDescription": "",
-      "targets": "all",
-      "updater": {
-        "active": true,
-        "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IERCQTdCRTkyNDAwQzgwOUYKUldTZmdBeEFrcjZuMithK1BwQ3Zud2VEYlR3U2VBeFNpemRDNk9NRHIyRXVOTnJ5ZDVNaFFKSU4K"
-      },
-      "windows": {
-        "certificateThumbprint": null,
-        "digestAlgorithm": "sha256",
-        "timestampUrl": ""
-      }
-    },
-    "security": {
-      "csp": null
-    },
+  "productName": "KE ShiftLight",
+  "version": "0.2.1",
+  "identifier": "kaiserengineering.io",
+  "app": {
     "windows": [
       {
         "fullscreen": false,
@@ -105,6 +93,9 @@
         "title": "KE ShiftLight",
         "width": 800
       }
-    ]
+    ],
+    "security": {
+      "csp": null
+    }
   }
 }

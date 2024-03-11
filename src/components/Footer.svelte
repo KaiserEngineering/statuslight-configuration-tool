@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { connected } from '$lib/stores';
+	import { connected } from '$stores/session';
 	import { getVersion } from '@tauri-apps/plugin-app';
 	import { type } from '@tauri-apps/plugin-os';
 </script>

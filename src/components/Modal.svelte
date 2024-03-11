@@ -13,7 +13,7 @@
 	>
 		<div class="modal-overlay fixed w-full h-full bg-gray-900 opacity-50" />
 		<div
-			class="bg-white w-full lg:h-max lg:w-1/2  mx-auto rounded-lg shadow-xl z-50 overflow-y-auto"
+			class="bg-white w-full lg:h-max lg:w-1/2 mx-auto rounded-lg shadow-xl z-50 overflow-y-auto"
 		>
 			<div
 				class="flex text-black justify-between items-center head dark:bg-gray-600 py-5 bg-gray-200 px-8 text-2xl font-extrabold"

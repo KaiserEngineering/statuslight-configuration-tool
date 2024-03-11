@@ -1,6 +1,6 @@
 import { writable, type Writable } from 'svelte/store';
-import type { ShiftLightConfigs } from './config';
-import type { Port } from './api';
+import type { RPMConfigs, BoostConfigs } from '$lib/config';
+import type { Port } from '$lib/api';
 
 export class Session {
 	public ui_data = {
@@ -15,12 +15,10 @@ export class Session {
 }
 
 const sessionObj = new Session();
-sessionObj.ui_data.darkTheme = sessionObj.setDarkThemeFromSystem();
+sessionObj.ui_data.darkTheme = await sessionObj.setDarkThemeFromSystem();
 
 export const session = writable<Session['ui_data']>(sessionObj.ui_data);
-export const config = writable<
-	(typeof ShiftLightConfigs)['RPM'] | (typeof ShiftLightConfigs)['Boost']
->({});
+export const config = writable<typeof RPMConfigs | typeof BoostConfigs>({});
 export const port: Writable<Port> = writable({
 	product_name: '',
 	port_name: ''
