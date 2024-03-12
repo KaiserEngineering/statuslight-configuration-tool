@@ -1,5 +1,7 @@
-import type { CommandSchema } from '$schemas/config';
+import { z } from 'zod';
 import type { Infer } from 'sveltekit-superforms';
+
+import { type CommandSchema } from '$schemas/config';
 
 export const ECHO: Infer<CommandSchema> = {
 	cmd: 'ECHO',
@@ -339,3 +341,20 @@ export const AllCommands = [
 	RESET,
 	DEFAULT
 ];
+
+const config = {};
+AllCommands.forEach((command) => {
+	if (command.appConfig === 'Yes') {
+		if (command.dataType.startsWith('uint')) {
+			config[command.cmd] = z.coerce.number();
+		} else if (command.dataType.indexOf('Bool') > -1) {
+			config[command.cmd] = z.boolean();
+		} else {
+			config[command.cmd] = z.string();
+		}
+	}
+});
+
+export const sessionConfig = config;
+
+export type SessionConfig = typeof sessionConfig;

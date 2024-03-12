@@ -1,7 +1,7 @@
 import { invoke } from '@tauri-apps/api/core';
 import { get } from 'svelte/store';
 import { session, port } from '$stores/session';
-import { type CommandSchema } from '$schemas/config';
+import { AllCommands, sessionConfig, type SessionConfig } from '$types/config';
 import { error } from '$lib/toasts';
 
 export type Port = {
@@ -70,49 +70,38 @@ export async function connectToSerialPort(portName: string) {
 }
 
 /*
-Load the config for the provided config type.
-	
-Return the new config object.
-*/
+Load the config, returns a `SessionConfig` instance.
+	*/
 export async function getCurrentConfig() {
-	// return await invoke('write', {
-	// 	content: 'CONFIG\n'
-	// })
-	// 	.then(async (configType: any) => {
-	// 		configType = configType == 0 ? 'RPM' : 'Boost';
-	// 		const keys: CommandSchema = Object.keys(configType == 'RPM' ? RPMConfigs : BoostConfigs);
-	// 		// Stash current firmware version
-	// 		keys.VERSION = {
-	// 			code: 'VER'
-	// 		};
-	// 		const new_config: { [key: string]: CommandSchema } = {};
-	// 		for (const key in keys) {
-	// 			if (key == 'CONFIG') {
-	// 				continue;
-	// 			}
-	// 			await invoke('write', {
-	// 				content: keys[key]['code'] + '\n'
-	// 			})
-	// 				.then((res: any) => {
-	// 					new_config[keys[key]['code']] = res;
-	// 				})
-	// 				// Errors get pushed into the resulting config?
-	// 				.catch((err: SerialError) => {
-	// 					if (typeof err === 'string') {
-	// 						err = JSON.parse(err);
-	// 					}
-	// 					new_config[keys[key]['code']] = error.message;
-	// 				});
-	// 		}
-	// 		new_config.CONFIG = configType;
-	// 		return new_config;
-	// 	})
-	// 	.catch((err) => {
-	// 		if (typeof err === 'string') {
-	// 			err = JSON.parse(err);
-	// 		}
-	// 		throw err.message;
-	// 	});
+	const keys = { cmd: 'VER' };
+
+	Object.keys(sessionConfig).forEach((key) => {
+		keys[key] = AllCommands.find((command) => command.cmd === key);
+	});
+
+	const new_config: { [key: string]: string | boolean | number } = {};
+
+	for (const key in keys) {
+		const command = keys[key];
+
+		const res = await invoke('write', {
+			content: command.cmd + '\n'
+		})
+			// Errors get pushed into the resulting config?
+			.catch((err: SerialError) => {
+				if (typeof err === 'string') {
+					err = JSON.parse(err);
+				}
+				error(err.message);
+			});
+
+		if (typeof res === 'string' || typeof res === 'number' || typeof res === 'boolean') {
+			new_config[command.cmd] = res;
+		} else {
+			error("Invalid response from 'write' command");
+		}
+	}
+	return new_config;
 }
 
 /*
@@ -121,23 +110,13 @@ port currently connected.
 	
 Returns an object{ error: [], success: [] }
 */
-export async function submitConfig(
-	config: typeof RPMConfigs | typeof BoostConfigs,
-	port_name: string
-) {
+export async function submitConfig(config: SessionConfig, port_name: string) {
 	const results = {
 		success: [],
 		error: []
 	};
 
 	for (const key in config) {
-		if (key === 'VER') {
-			continue;
-		}
-		if (key === 'CONFIG') {
-			config[key] = config[key] == 'RPM' ? 0 : 1;
-		}
-
 		await invoke('write', {
 			portName: port_name,
 			content: key + ' ' + config[key] + '\n'

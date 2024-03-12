@@ -11,11 +11,9 @@
 
 	import { formSchema, type FormSchema } from '$schemas/editSchema';
 
-	// import { getCurrentConfig, submitConfig } from '$lib/api';
-	// import { session, config, port, connected } from '$stores/session';
-	// import { success, error, info } from '$lib/toasts';
-
-	// $: $connected, $connected ? (configCopy = Object.assign({}, $config)) : '';
+	import { submitConfig } from '$lib/api';
+	import { session, config, port, connected } from '$stores/session';
+	import { success, error, info } from '$lib/toasts';
 
 	export let data: SuperValidated<Infer<FormSchema>>;
 	const form = superForm(data, {
@@ -23,76 +21,52 @@
 		SPA: true,
 		validators: zodClient(formSchema),
 		onUpdate({ form }) {
-			console.log(form);
+			// 	if (!$connected) {
+			// 		error("You're not connected to your ShiftLight!");
+			// 		return;
+			// 	}
+			// 	$session.loading = true;
+			// 	// Only grab the fields that were changed from the current value
+			// 	let updatedFields: { [key: string]: any } = {};
+			// 	Object.keys(form.data).forEach((key) => {
+			// 		if ($config[key] !== form[key]) {
+			// 			updatedFields[key] = form[key];
+			// 		}
+			// 	});
+			// 	if (Object.keys(updatedFields).length == 0) {
+			// 		info('Nothing to update');
+			// 		$session.loading = false;
+			// 	} else if ($port !== null) {
+			// 		submitConfig(updatedFields, $port.port_name)
+			// 			.then((results) => {
+			// 				if (results.error.length > 0) {
+			// 					let error_message: string = '';
+			// 					results.error.forEach((error) => {
+			// 						error_message += `${error}\n`;
+			// 					});
+			// 					error(error_message);
+			// 				} else {
+			// 					$config = Object.assign({}, form.data);
+			// 					success('Config updated');
+			// 				}
+			// 			})
+			// 			.catch((err) => {
+			// 				error(err);
+			// 			})
+			// 			.finally(() => {
+			// 				$session.loading = false;
+			// 			});
+			// 	}
 		}
 	});
 	const { form: formData, enhance } = form;
-
-	// let configCopy = Object.assign({}, $config);
-
-	// const inputOptions = {
-	// 	basics: RPMConfigs,
-	// 	advanced: BoostConfigs
-	// }[configCopy.configType];
-
-	// async function update(): Promise<void> {
-	// 	if (!$connected) {
-	// 		error("You're not connected to your ShiftLight!");
-	// 		return;
-	// 	}
-
-	// 	$session.loading = true;
-
-	// 	// Only grab the fields that were changed from the current value
-	// 	let updatedFields: { [key: string]: any } = {};
-	// 	Object.keys(configCopy).forEach((key) => {
-	// 		if ($config[key] !== configCopy[key]) {
-	// 			updatedFields[key] = configCopy[key];
-	// 		}
-	// 	});
-
-	// 	if ($config.CONFIG !== configCopy.CONFIG) {
-	// 		updatedFields.CONFIG = configCopy.CONFIG;
-	// 	}
-
-	// 	if (Object.keys(updatedFields).length == 0) {
-	// 		info('Nothing to update');
-	// 		$session.loading = false;
-	// 	} else if ($port !== null) {
-	// 		submitConfig(updatedFields, $port.port_name)
-	// 			.then((results) => {
-	// 				if (results.error.length > 0) {
-	// 					let error_message: string = '';
-	// 					results.error.forEach((error) => {
-	// 						error_message += `${error}\n`;
-	// 					});
-	// 					error(error_message);
-	// 				} else {
-	// 					$config = Object.assign({}, configCopy);
-	// 					success('Config updated');
-	// 				}
-	// 			})
-	// 			.catch((err) => {
-	// 				error(err);
-	// 			})
-	// 			.finally(() => {
-	// 				$session.loading = false;
-	// 			});
-	// 		await getCurrentConfig()
-	// 			.then((res) => {
-	// 				$config = res;
-	// 			})
-	// 			.catch((err) => {
-	// 				error(err.message);
-	// 			});
-	// 	}
-	// }
 </script>
 
 <form method="POST" use:enhance>
 	{#each AllCommands as command}
-		{#if command.appConfig == 'Yes'}
-			<Form.Field {form} name={command.cmd}>
+		{@const name = command.cmd}
+		{#if name && command.appConfig == 'Yes'}
+			<Form.Field {form} {name}>
 				<Form.Control let:attrs>
 					{#if command.type === 'list'}
 						<Select.Root {...attrs}>
@@ -107,7 +81,12 @@
 						</Select.Root>
 					{:else}
 						<Label>{command.name}</Label>
-						<Input {...attrs} name={command.cmd} type={command.type} />
+						<Input
+							{...attrs}
+							name={command.cmd}
+							type={command.type}
+							bind:value={formData[command.cmd]}
+						/>
 					{/if}
 				</Form.Control>
 				<Form.Description>{command.desc}</Form.Description>
