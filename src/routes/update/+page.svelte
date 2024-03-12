@@ -7,12 +7,12 @@
 	import Modal from '$components/Modal.svelte';
 	import { cog, fileArchiveO } from 'svelte-awesome/icons';
 	import Icon from 'svelte-awesome';
-	import { getCurrent } from '@tauri-apps/plugin-window';
+	import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
 	import ProgressBar from '@okrad/svelte-progressbar';
 	import semver from 'semver';
 	import { newConnection } from '$lib/api';
 
-	const appWindow = getCurrent();
+	const appWindow = WebviewWindow.getCurrent();
 	export let series = [0];
 
 	async function setUpProgressListener() {

@@ -2,10 +2,7 @@ use serialport::SerialPortInfo;
 use std::sync::Arc;
 use std::thread;
 use std::time::Duration;
-use tauri::{
-    plugin::{Builder, TauriPlugin},
-    Manager, Runtime, State, WebviewWindow,
-};
+use tauri::{Manager, Runtime, State, WebviewWindow};
 use tokio::sync::Mutex;
 
 use serde::Serialize;
@@ -319,51 +316,4 @@ pub fn massage_devices_list(devices: &Vec<SerialPortInfo>) -> Vec<SerialPort> {
             }
         })
         .collect()
-}
-
-pub fn init<R: Runtime>() -> TauriPlugin<R> {
-    Builder::new("serial")
-        .invoke_handler(tauri::generate_handler![
-            get_connection,
-            connect,
-            write,
-            dtr,
-            drop_connection,
-            find_available_ports,
-            watch_devices
-        ])
-        .setup(move |app_handle, _api| {
-            let baud_rate = app_handle
-                .config()
-                .plugins
-                .0
-                .get("plugin_serial")
-                .unwrap()
-                .get("baud_rate")
-                .unwrap()
-                .as_u64()
-                .unwrap() as u32;
-
-            let state = match serialport::available_ports() {
-                Ok(ports_found) => SerialState {
-                    port: Default::default(),
-                    connection: Default::default(),
-                    baud_rate,
-                    ports: Arc::new(Mutex::new(massage_devices_list(&ports_found))),
-                },
-                Err(err) => {
-                    eprint!("Could not get initial available_ports {err:?}");
-                    SerialState {
-                        port: Default::default(),
-                        connection: Default::default(),
-                        baud_rate: 57600,
-                        ports: Default::default(),
-                    }
-                }
-            };
-
-            app_handle.manage(state);
-            Ok(())
-        })
-        .build()
 }

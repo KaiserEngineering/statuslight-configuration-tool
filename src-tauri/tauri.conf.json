@@ -1,101 +1,98 @@
 {
-  "$schema": "../node_modules/@tauri-apps/cli/schema.json",
-  "build": {
-    "beforeBuildCommand": "npm run build",
-    "beforeDevCommand": "npm run dev",
-    "frontendDist": "../build",
-    "devUrl": "http://localhost:5173"
-  },
-  "bundle": {
-    "active": true,
-    "category": "DeveloperTool",
-    "copyright": "",
-    "externalBin": [],
-    "icon": [
-      "icons/32x32.png",
-      "icons/128x128.png",
-      "icons/128x128@2x.png",
-      "icons/icon.icns",
-      "icons/icon.ico"
-    ],
-    "windows": {
-      "certificateThumbprint": null,
-      "digestAlgorithm": "sha256",
-      "timestampUrl": ""
-    },
-    "longDescription": "",
-    "macOS": {
-      "entitlements": null,
-      "exceptionDomain": "",
-      "frameworks": [],
-      "providerShortName": null,
-      "signingIdentity": null
-    },
-    "resources": [],
-    "shortDescription": "",
-    "targets": "all",
-    "linux": {
-      "deb": {
-        "depends": []
-      }
-    }
-  },
-  "plugins": {
-    "allowlist": {
-      "window": {
-        "all": true,
-        "center": true,
-        "close": true,
-        "create": true,
-        "hide": true,
-        "maximize": true,
-        "minimize": true,
-        "print": true,
-        "requestUserAttention": true,
-        "setAlwaysOnTop": true,
-        "setContentProtected": true,
-        "setCursorGrab": true,
-        "setCursorIcon": true,
-        "setCursorPosition": true,
-        "setCursorVisible": true,
-        "setDecorations": true,
-        "setFocus": true,
-        "setFullscreen": true,
-        "setIcon": true,
-        "setIgnoreCursorEvents": true,
-        "setMaxSize": true,
-        "setMinSize": true,
-        "setPosition": true,
-        "setResizable": true,
-        "setShadow": true,
-        "setSize": true,
-        "setSkipTaskbar": true,
-        "setTitle": true,
-        "show": true,
-        "startDragging": true,
-        "unmaximize": true,
-        "unminimize": true
-      }
-    },
-    "plugin_serial": {
-      "baud_rate": 57600
-    }
-  },
-  "productName": "KE ShiftLight",
-  "version": "0.2.1",
-  "identifier": "kaiserengineering.io",
-  "app": {
-    "windows": [
-      {
-        "fullscreen": false,
-        "height": 600,
-        "resizable": true,
-        "title": "KE ShiftLight",
-        "width": 800
-      }
-    ],
-    "security": {
-      "csp": null
-    }
-  }
+	"$schema": "../node_modules/@tauri-apps/cli/schema.json",
+	"build": {
+		"beforeBuildCommand": "npm run build",
+		"beforeDevCommand": "npm run dev",
+		"frontendDist": "../build",
+		"devUrl": "http://localhost:5173"
+	},
+	"bundle": {
+		"active": true,
+		"category": "DeveloperTool",
+		"copyright": "",
+		"externalBin": [],
+		"icon": [
+			"icons/32x32.png",
+			"icons/128x128.png",
+			"icons/128x128@2x.png",
+			"icons/icon.icns",
+			"icons/icon.ico"
+		],
+		"windows": {
+			"certificateThumbprint": null,
+			"digestAlgorithm": "sha256",
+			"timestampUrl": ""
+		},
+		"longDescription": "",
+		"macOS": {
+			"entitlements": null,
+			"exceptionDomain": "",
+			"frameworks": [],
+			"providerShortName": null,
+			"signingIdentity": null
+		},
+		"resources": [],
+		"shortDescription": "",
+		"targets": "all",
+		"linux": {
+			"deb": {
+				"depends": []
+			}
+		}
+	},
+	"plugins": {
+		"allowlist": {
+			"window": {
+				"all": true,
+				"center": true,
+				"close": true,
+				"create": true,
+				"hide": true,
+				"maximize": true,
+				"minimize": true,
+				"print": true,
+				"requestUserAttention": true,
+				"setAlwaysOnTop": true,
+				"setContentProtected": true,
+				"setCursorGrab": true,
+				"setCursorIcon": true,
+				"setCursorPosition": true,
+				"setCursorVisible": true,
+				"setDecorations": true,
+				"setFocus": true,
+				"setFullscreen": true,
+				"setIcon": true,
+				"setIgnoreCursorEvents": true,
+				"setMaxSize": true,
+				"setMinSize": true,
+				"setPosition": true,
+				"setResizable": true,
+				"setShadow": true,
+				"setSize": true,
+				"setSkipTaskbar": true,
+				"setTitle": true,
+				"show": true,
+				"startDragging": true,
+				"unmaximize": true,
+				"unminimize": true
+			}
+		}
+	},
+	"productName": "KE ShiftLight",
+	"version": "0.2.1",
+	"identifier": "kaiserengineering.io",
+	"app": {
+		"windows": [
+			{
+				"fullscreen": false,
+				"height": 600,
+				"resizable": true,
+				"title": "KE ShiftLight",
+				"width": 800
+			}
+		],
+		"security": {
+			"csp": null
+		}
+	}
 }

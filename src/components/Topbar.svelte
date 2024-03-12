@@ -22,7 +22,10 @@
 			});
 	}
 	// Always grab ports on mount
-	getPorts();
+	getPorts().catch((err) => {
+		$session.loading = false;
+		error(err);
+	});
 
 	let darkModeIcon = $session.darkTheme ? moonO : sunO;
 	const toggleDark = () => {

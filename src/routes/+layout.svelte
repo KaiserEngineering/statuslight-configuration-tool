@@ -10,9 +10,9 @@
 	import { newConnection, getCurrentConfig, type Port } from '$lib/api';
 	import { error } from '$lib/toasts';
 	import { invoke } from '@tauri-apps/api/core';
-	import { getCurrent } from '@tauri-apps/plugin-window';
+	import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
 
-	const appWindow = getCurrent();
+	const appWindow = WebviewWindow.getCurrent();
 
 	async function handleConnectToggle(event: { code: string }) {
 		// Mac is 'Key' and Windows is 'Control'
@@ -73,10 +73,12 @@
 			}
 		);
 	}
-	ListenForConnectionEvents();
+	ListenForConnectionEvents().catch((err) => {
+		$session.loading = false;
+		error(err);
+	});
 
-	$: $port, newConnection;
-
+	// $: $port, newConnection;
 	$: dark = $session.darkTheme;
 </script>
 

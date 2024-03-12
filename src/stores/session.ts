@@ -15,7 +15,7 @@ export class Session {
 }
 
 const sessionObj = new Session();
-sessionObj.ui_data.darkTheme = await sessionObj.setDarkThemeFromSystem();
+sessionObj.setDarkThemeFromSystem().then((darkTheme) => (sessionObj.ui_data.darkTheme = darkTheme));
 
 export const session = writable<Session['ui_data']>(sessionObj.ui_data);
 export const config = writable<typeof RPMConfigs | typeof BoostConfigs>({});

@@ -91,8 +91,6 @@ Only show port selection until a port is chosen
 
 	<hr class="mb-2" />
 	<form on:submit|preventDefault={update} class="w-3/4">
-		<div class="columns-1"></div>
-
 		<div class="col-span-full flex place-content-end">
 			<button class="ke-button ke-input input">Update</button>
 		</div>
