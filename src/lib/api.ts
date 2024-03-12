@@ -1,7 +1,7 @@
 import { invoke } from '@tauri-apps/api/core';
 import { get } from 'svelte/store';
 import { session, port } from '$stores/session';
-import { BoostConfigs, RPMConfigs, type SLCconfigEntry } from './config';
+import { type CommandSchema } from '$schemas/config';
 import { error } from '$lib/toasts';
 
 export type Port = {
@@ -75,47 +75,44 @@ Load the config for the provided config type.
 Return the new config object.
 */
 export async function getCurrentConfig() {
-	return await invoke('write', {
-		content: 'CONFIG\n'
-	})
-		.then(async (configType: any) => {
-			configType = configType == 0 ? 'RPM' : 'Boost';
-			const keys = Object.keys(configType == 'RPM' ? RPMConfigs : BoostConfigs);
-
-			// Stash current firmware version
-			keys.VERSION = {
-				code: 'VER'
-			};
-
-			const new_config: { [key: string]: SLCconfigEntry } = {};
-			for (const key in keys) {
-				if (key == 'CONFIG') {
-					continue;
-				}
-
-				await invoke('write', {
-					content: keys[key]['code'] + '\n'
-				})
-					.then((res: any) => {
-						new_config[keys[key]['code']] = res;
-					})
-					// Errors get pushed into the resulting config?
-					.catch((err: SerialError) => {
-						if (typeof err === 'string') {
-							err = JSON.parse(err);
-						}
-						new_config[keys[key]['code']] = error.message;
-					});
-			}
-			new_config.CONFIG = configType;
-			return new_config;
-		})
-		.catch((err) => {
-			if (typeof err === 'string') {
-				err = JSON.parse(err);
-			}
-			throw err.message;
-		});
+	// return await invoke('write', {
+	// 	content: 'CONFIG\n'
+	// })
+	// 	.then(async (configType: any) => {
+	// 		configType = configType == 0 ? 'RPM' : 'Boost';
+	// 		const keys: CommandSchema = Object.keys(configType == 'RPM' ? RPMConfigs : BoostConfigs);
+	// 		// Stash current firmware version
+	// 		keys.VERSION = {
+	// 			code: 'VER'
+	// 		};
+	// 		const new_config: { [key: string]: CommandSchema } = {};
+	// 		for (const key in keys) {
+	// 			if (key == 'CONFIG') {
+	// 				continue;
+	// 			}
+	// 			await invoke('write', {
+	// 				content: keys[key]['code'] + '\n'
+	// 			})
+	// 				.then((res: any) => {
+	// 					new_config[keys[key]['code']] = res;
+	// 				})
+	// 				// Errors get pushed into the resulting config?
+	// 				.catch((err: SerialError) => {
+	// 					if (typeof err === 'string') {
+	// 						err = JSON.parse(err);
+	// 					}
+	// 					new_config[keys[key]['code']] = error.message;
+	// 				});
+	// 		}
+	// 		new_config.CONFIG = configType;
+	// 		return new_config;
+	// 	})
+	// 	.catch((err) => {
+	// 		if (typeof err === 'string') {
+	// 			err = JSON.parse(err);
+	// 		}
+	// 		throw err.message;
+	// 	});
 }
 
 /*

@@ -1,21 +1,13 @@
 <script lang="ts">
-	import { home, gear, microchip, exclamation } from 'svelte-awesome/icons';
+	import { gear, microchip } from 'svelte-awesome/icons';
 	import Icon from 'svelte-awesome';
 </script>
 
 <div class="sidebar">
-	<a href="/edit/basics" class="sidebar-icon group">
+	<a href="/edit" class="sidebar-icon group">
 		<Icon data={gear} style="color:white" />
 
-		<span class="sidebar-tooltip group-hover:scale-100">Basic Config</span>
-	</a>
-
-	<hr class="sidebar-hr" />
-
-	<a href="/edit/advanced" class="sidebar-icon group">
-		<Icon data={exclamation} style="color:white" />
-
-		<span class="sidebar-tooltip group-hover:scale-100">Advanced Config</span>
+		<span class="sidebar-tooltip group-hover:scale-100">Edit Config</span>
 	</a>
 
 	<hr class="sidebar-hr" />
