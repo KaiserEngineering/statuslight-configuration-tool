@@ -69,7 +69,7 @@
 	}
 </script>
 
-Only show port selection until a port is chosen
+<!-- Only show port selection until a port is chosen -->
 <!-- Our form for out version the shiftlight is configured for -->
 {#if configCopy && configCopy.ACT}
 	<div class="m-2">
