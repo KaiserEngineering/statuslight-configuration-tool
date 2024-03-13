@@ -1,13 +1,6 @@
 import { z } from 'zod';
-import { AllCommands } from '$types/config';
+import { sessionConfig } from '$types/config';
 
-const schemaObj = {};
-AllCommands.forEach((command) => {
-	if (command.appConfig === 'Yes') {
-		schemaObj[command.cmd] = z.string();
-	}
-});
-
-export const formSchema = z.object(schemaObj);
+export const formSchema = z.object(sessionConfig);
 
 export type FormSchema = typeof formSchema;

@@ -33,16 +33,24 @@ export async function newConnection() {
 
 	try {
 		// Attempt to retrieve information about the existing connection
-		const existingConnection = await invoke('get_connection', {});
+		const existingConnection = await invoke('get_connection', {}).catch((err) => {
+			console.info('get_connection no connection found');
+		});
 
 		// If an existing connection is found, drop it
 		if (existingConnection) {
-			await invoke('drop_connection', {});
+			await invoke('drop_connection', {}).catch((err) => {
+				// If the connection drop fails, throw an error
+				throw err;
+			});
 		}
 
 		// If the port is selected, establish a new connection to the serial port
 		if (portObj && portObj.port_name) {
-			await connectToSerialPort(portObj.port_name);
+			await connectToSerialPort(portObj.port_name).catch((err) => {
+				// If the connection fails, throw an error
+				throw err;
+			});
 		}
 	} finally {
 		// Reset the session loading status after the connection attempt

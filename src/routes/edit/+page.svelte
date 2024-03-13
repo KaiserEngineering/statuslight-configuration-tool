@@ -2,7 +2,7 @@
 	import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 
-	import { AllCommands } from '$types/config';
+	import { AllCommands, sessionConfig } from '$types/config';
 
 	import * as Form from '$components/ui/form';
 	import { Input } from '$components/ui/input';
@@ -16,6 +16,7 @@
 	import { success, error, info } from '$lib/toasts';
 
 	export let data: SuperValidated<Infer<FormSchema>>;
+
 	const form = superForm(data, {
 		dataType: 'json',
 		SPA: true,
@@ -60,39 +61,52 @@
 		}
 	});
 	const { form: formData, enhance } = form;
+
+	const keys = Object.keys(sessionConfig).map((key) => ({
+		[key]: AllCommands.find((command) => command.cmd === key)
+	}));
+
+	function setFormBasedOnConfig() {
+		for (const keyObject of keys) {
+			const key = Object.keys(keyObject)[0];
+			const command = keyObject[key];
+
+			$formData[command.cmd] = $config[command.cmd];
+		}
+	}
+	$: $config, setFormBasedOnConfig;
 </script>
 
 <form method="POST" use:enhance>
-	{#each AllCommands as command}
+	{#each Object.keys(sessionConfig) as key}
+		{@const command = AllCommands.find((command) => command.cmd === key)}
 		{@const name = command.cmd}
-		{#if name && command.appConfig == 'Yes'}
-			<Form.Field {form} {name}>
-				<Form.Control let:attrs>
-					{#if command.type === 'list'}
-						<Select.Root {...attrs}>
-							<Select.Trigger>
-								<Select.Value placeholder={command.name} />
-							</Select.Trigger>
-							<Select.Content>
-								{#each command.options as option}
-									<Select.Item value={option}>{option}</Select.Item>
-								{/each}
-							</Select.Content>
-						</Select.Root>
-					{:else}
-						<Label>{command.name}</Label>
-						<Input
-							{...attrs}
-							name={command.cmd}
-							type={command.type}
-							bind:value={formData[command.cmd]}
-						/>
-					{/if}
-				</Form.Control>
-				<Form.Description>{command.desc}</Form.Description>
-				<Form.FieldErrors />
-			</Form.Field>
-		{/if}
+		<Form.Field {form} {name}>
+			<Form.Control let:attrs>
+				{#if command.type === 'list'}
+					<Select.Root {...attrs}>
+						<Select.Trigger>
+							<Select.Value placeholder={command.name} />
+						</Select.Trigger>
+						<Select.Content>
+							{#each command.options as option}
+								<Select.Item value={option}>{option}</Select.Item>
+							{/each}
+						</Select.Content>
+					</Select.Root>
+				{:else}
+					<Label>{command.name}</Label>
+					<Input
+						{...attrs}
+						name={command.cmd}
+						type={command.type}
+						bind:value={$formData[command.cmd]}
+					/>
+				{/if}
+			</Form.Control>
+			<Form.Description>{command.desc}</Form.Description>
+			<Form.FieldErrors />
+		</Form.Field>
 	{/each}
 
 	<Form.Button>Update Config</Form.Button>

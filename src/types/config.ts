@@ -344,7 +344,7 @@ export const AllCommands = [
 
 const config = {};
 AllCommands.forEach((command) => {
-	if (command.appConfig === 'Yes') {
+	if (command.appConfig === 'Yes' && command.readWrite === 'Read-Write') {
 		if (command.dataType.startsWith('uint')) {
 			config[command.cmd] = z.coerce.number();
 		} else if (command.dataType.indexOf('Bool') > -1) {

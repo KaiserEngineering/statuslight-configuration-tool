@@ -78,7 +78,7 @@
 		error(err);
 	});
 
-	// $: $port, newConnection;
+	$: $port, newConnection;
 	$: dark = $session.darkTheme;
 </script>
 
