@@ -15,8 +15,8 @@
 	const appWindow = WebviewWindow.getCurrent();
 
 	async function handleConnectToggle(event: { code: string }) {
-		// Mac is 'Key' and Windows is 'Control'
-		if (event.code == 'KeyD' || event.code == 'ControlD') {
+		console.log(event);
+		if (event.code == 'KeyD' && event.ctrlKey) {
 			if (!$port || !$port.port_name) {
 				error('Select a port to connect!');
 			} else if ($connected) {

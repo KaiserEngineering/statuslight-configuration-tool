@@ -10,7 +10,7 @@
 <div
 	data-bs-toggle="tooltip"
 	data-bs-placement="top"
-	title={'cmd+d (mac) or ctrl+d (windows) to toggle connection'}
+	title={'ctrl+d to toggle connection'}
 	class="ml-1 content-center"
 >
 	{#if $connected}
