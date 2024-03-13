@@ -63,6 +63,7 @@
 			{/each}
 		</select>
 
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<div class="sidebar-icon group" on:click={getPorts} on:keydown={getPorts}>
 			<Icon data={refresh} style="color:white" />
 
@@ -71,6 +72,7 @@
 	</div>
 
 	<div class="fixed right-2">
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<div class="sidebar-icon group" on:click={toggleDark} on:keydown={toggleDark}>
 			<Icon data={darkModeIcon} style="color:white" />
 
