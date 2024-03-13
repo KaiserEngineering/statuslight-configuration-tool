@@ -29,29 +29,6 @@
 	let showModal = false;
 	let flashing = false;
 
-	async function checkForNewVersion() {
-		$session.loading = true;
-		await invoke('get_latest_firmware')
-			.then((res: any) => {
-				if (semver.cmp(res.version, '>', $config.VER)) {
-					changelog = res.changelog;
-					hex = res.hex;
-					version = res.version;
-
-					showModal = true;
-				} else {
-					info(
-						'Current version ' + $config.VER + ' is newer than ' + res.version + ", you're all set!"
-					);
-				}
-			})
-			.catch((e: { toString: () => string }) => {
-				error(e.toString());
-				$session.loading = false;
-			})
-			.finally(() => ($session.loading = false));
-	}
-
 	async function writeFirmware() {
 		if (hex == '') {
 			error('No firmware HEX content found, not doing anything');
@@ -132,18 +109,14 @@
 	}
 </script>
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="text-center text-xl inline-grid grid-cols-2 gap-4">
 	<div class="text-left">Current version:</div>
 	<div>#{$config.VER}</div>
 
-	<span class="text-left">Check for Updates:</span>
-
-	<div class="cursor-pointer" on:click={checkForNewVersion} on:keydown={checkForNewVersion}>
-		<Icon data={cog} scale={2} />
-	</div>
-
 	<label for="newReleaseIcon">Select custom firmware hex file:</label>
 
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div class="cursor-pointer" on:click={getFile} on:keydown={getFile}>
 		<Icon data={fileArchiveO} scale={2} />
 	</div>

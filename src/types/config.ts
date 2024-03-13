@@ -33,7 +33,7 @@ export const VER: Infer<CommandSchema> = {
 	min: 0,
 	max: 0,
 	EEBytes: 2,
-	appConfig: 'No',
+	appConfig: 'Yes',
 	fieldType: 'Device Info',
 	UserConfig: 'No',
 	AdvConfig: 'No',
