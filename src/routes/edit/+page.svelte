@@ -80,7 +80,7 @@
 	$: $config, setFormBasedOnConfig();
 </script>
 
-<form method="POST" use:enhance>
+<form method="POST" use:enhance class="text-center w-1/4 text-xl inline-grid grid-cols-1 gap-4">
 	<!-- <SuperDebug data={$formData} /> -->
 
 	{#each Object.keys(sessionConfig) as key}
