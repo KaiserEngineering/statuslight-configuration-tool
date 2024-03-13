@@ -15,7 +15,6 @@
 	const appWindow = WebviewWindow.getCurrent();
 
 	async function handleConnectToggle(event: { code: string }) {
-		console.log(event);
 		if (event.code == 'KeyD' && event.ctrlKey) {
 			if (!$port || !$port.port_name) {
 				error('Select a port to connect!');
