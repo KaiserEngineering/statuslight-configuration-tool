@@ -2,13 +2,13 @@ import type { PageLoad } from './$types';
 
 import { zod } from 'sveltekit-superforms/adapters';
 import { superValidate, type Infer, type SuperValidated } from 'sveltekit-superforms';
-import { commandSchema, type CommandSchema } from '$schemas/config';
 import { sessionConfig, AllCommands } from '$types/config';
 import { get } from 'svelte/store';
 import { config } from '$stores/session';
+import { formSchema, type FormSchema } from '$schemas/editSchema';
 
 export const load: PageLoad = async () => {
-	const form: SuperValidated<Infer<CommandSchema>> = await superValidate(zod(commandSchema));
+	const form: SuperValidated<Infer<FormSchema>> = await superValidate(zod(formSchema));
 
 	const configValue = get(config);
 
@@ -20,7 +20,12 @@ export const load: PageLoad = async () => {
 		const key = Object.keys(keyObject)[0];
 		const command = keyObject[key];
 
-		form[command.cmd] = configValue[command.cmd];
+		// If not value, use default set in schema
+		if (configValue[command.cmd]) {
+			form.data[command.cmd] = configValue[command.cmd];
+		} else {
+			form.data[command.cmd] = command.default;
+		}
 	}
 
 	return { form };

@@ -346,11 +346,11 @@ const config = {};
 AllCommands.forEach((command) => {
 	if (command.appConfig === 'Yes' && command.readWrite === 'Read-Write') {
 		if (command.dataType.startsWith('uint')) {
-			config[command.cmd] = z.coerce.number();
-		} else if (command.dataType.indexOf('Bool') > -1) {
-			config[command.cmd] = z.boolean();
+			config[command.cmd] = z.coerce.number().default(command.default as unknown as number);
+		} else if (command.dataType.indexOf('number') > -1) {
+			config[command.cmd] = z.coerce.number().default(command.default as unknown as number);
 		} else {
-			config[command.cmd] = z.string();
+			config[command.cmd] = z.string().default(command.default as unknown as string);
 		}
 	}
 });

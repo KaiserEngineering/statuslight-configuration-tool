@@ -7,13 +7,13 @@
 	import * as Form from '$components/ui/form';
 	import { Input } from '$components/ui/input';
 	import Label from '$components/ui/label/label.svelte';
-	import * as Select from '$components/ui/select';
-
+	import SuperDebug from 'sveltekit-superforms';
 	import { formSchema, type FormSchema } from '$schemas/editSchema';
 
 	import { submitConfig } from '$lib/api';
 	import { session, config, port, connected } from '$stores/session';
 	import { success, error, info } from '$lib/toasts';
+	import SelectField from '$components/form/SelectField.svelte';
 
 	export let data: SuperValidated<Infer<FormSchema>>;
 
@@ -21,45 +21,48 @@
 		dataType: 'json',
 		SPA: true,
 		validators: zodClient(formSchema),
-		onUpdate({ form }) {
-			if (!$connected) {
-				error("You're not connected to your ShiftLight!");
-				return;
-			}
-			$session.loading = true;
-			// Only grab the fields that were changed from the current value
-			let updatedFields: { [key: string]: string } = {};
-			Object.keys(form.data).forEach((key) => {
-				if ($config[key] !== form[key]) {
-					updatedFields[key] = form[key];
+		async onUpdate({ form }) {
+			if (form.valid) {
+				if (!$connected) {
+					error("You're not connected to your ShiftLight!");
+					return;
 				}
-			});
-			if (Object.keys(updatedFields).length == 0) {
-				info('Nothing to update');
-				$session.loading = false;
-			} else if ($port !== null) {
-				submitConfig(updatedFields, $port.port_name)
-					.then((results) => {
-						if (results.error.length > 0) {
-							let error_message: string = '';
-							results.error.forEach((error) => {
-								error_message += `${error}\n`;
-							});
-							error(error_message);
-						} else {
-							$config = Object.assign({}, form.data);
-							success('Config updated');
-						}
-					})
-					.catch((err) => {
-						error(err);
-					})
-					.finally(() => {
-						$session.loading = false;
-					});
+				$session.loading = true;
+				// Only grab the fields that were changed from the current value
+				let updatedFields: { [key: string]: string } = {};
+				Object.keys(form.data).forEach((key) => {
+					if ($config[key] !== form[key]) {
+						updatedFields[key] = form[key];
+					}
+				});
+				if (Object.keys(updatedFields).length == 0) {
+					info('Nothing to update');
+					$session.loading = false;
+				} else if ($port !== null) {
+					await submitConfig(updatedFields, $port.port_name)
+						.then((results) => {
+							if (results.error.length > 0) {
+								let error_message: string = '';
+								results.error.forEach((error) => {
+									error_message += `${error}\n`;
+								});
+								error(error_message);
+							} else {
+								$config = Object.assign({}, form.data);
+								success('Config updated');
+							}
+						})
+						.catch((err) => {
+							error(err);
+						})
+						.finally(() => {
+							$session.loading = false;
+						});
+				}
 			}
 		}
 	});
+
 	const { form: formData, enhance } = form;
 
 	const keys = Object.keys(sessionConfig).map((key) => ({
@@ -74,26 +77,19 @@
 			$formData[command.cmd] = $config[command.cmd];
 		}
 	}
-	$: $config, setFormBasedOnConfig;
+	$: $config, setFormBasedOnConfig();
 </script>
 
 <form method="POST" use:enhance>
+	<!-- <SuperDebug data={$formData} /> -->
+
 	{#each Object.keys(sessionConfig) as key}
 		{@const command = AllCommands.find((command) => command.cmd === key)}
 		{@const name = command.cmd}
 		<Form.Field {form} {name}>
 			<Form.Control let:attrs>
 				{#if command.type === 'list'}
-					<Select.Root {...attrs}>
-						<Select.Trigger>
-							<Select.Value placeholder={command.name} />
-						</Select.Trigger>
-						<Select.Content>
-							{#each command.options as option}
-								<Select.Item value={option}>{option}</Select.Item>
-							{/each}
-						</Select.Content>
-					</Select.Root>
+					<SelectField {command} data={formData} {attrs} />
 				{:else}
 					<Label>{command.name}</Label>
 					<Input
