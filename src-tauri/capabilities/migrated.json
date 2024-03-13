@@ -12,6 +12,9 @@
 		"menu:default",
 		"tray:default",
 		"resources:default",
-		"dialog:allow-open"
+		"dialog:allow-open",
+		"fs:allow-read-dir",
+		"fs:allow-app-read",
+		"fs:allow-app-read-recursive"
 	]
 }

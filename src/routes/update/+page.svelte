@@ -102,7 +102,10 @@
 			}
 			file.path = fileObj;
 
-			hex = await readTextFile(file.path);
+			hex = await readTextFile(file.path.path).catch((err: { message: string }) => {
+				error('Failed to read file: ' + err.message);
+				return '';
+			});
 			changelog = 'Custom firmware';
 			showModal = true;
 		});
@@ -125,8 +128,6 @@
 <Modal title="Version: #{version}" open={showModal} on:close={() => handleToggleModal()}>
 	<svelte:fragment slot="body">
 		<div class="flex items-center justify-center">
-			{semver.diff($config.VER, version)} change
-
 			{#if series[0] !== 0}
 				{series[0]}% <ProgressBar {series} />
 			{/if}
