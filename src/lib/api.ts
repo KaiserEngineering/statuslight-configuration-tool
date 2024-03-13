@@ -16,8 +16,8 @@ export type Port = {
  */
 export async function newConnection() {
 	// Retrieve the current session and port objects from Svelte stores
-	let sessionObj = get(session);
-	let portObj = get(port);
+	const sessionObj = get(session);
+	const portObj = get(port);
 
 	// Check if the port is selected
 	if (!portObj || !portObj.port_name) {
@@ -69,13 +69,14 @@ export async function getCurrentConnection(): Promise<void> {
 			// If the retrieval fails, attempt to drop the connection
 			await invoke('drop_connection', {});
 		} catch (err) {
+			let errorRes = err;
 			// If an error occurs during the connection drop
 			if (typeof err === 'string') {
 				// Parse the error if it's a JSON-formatted string
-				err = JSON.parse(err);
+				errorRes = JSON.parse(err);
 			}
 			// Throw an error with a descriptive message
-			throw `Could not get current connection ${err.message}`;
+			throw `Could not get current connection ${errorRes.message}`;
 		}
 	}
 }
@@ -95,14 +96,15 @@ export async function connectToSerialPort(portName: string): Promise<void> {
 			portName
 		});
 	} catch (err) {
+		let errorRes = err;
 		// If an error occurs during the connection attempt
 		if (typeof err === 'string') {
 			// Parse the error if it's a JSON-formatted string
-			err = JSON.parse(err);
+			errorRes = JSON.parse(err);
 		}
 
 		// Throw an error with a descriptive message
-		throw `Could not connect to port ${err.message}`;
+		throw `Could not connect to port ${errorRes.message}`;
 	}
 }
 

@@ -11,6 +11,7 @@
 		"resources:default",
 		"menu:default",
 		"tray:default",
-		"resources:default"
+		"resources:default",
+		"dialog:allow-open"
 	]
 }

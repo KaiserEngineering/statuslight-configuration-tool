@@ -3,9 +3,9 @@
 	import { open } from '@tauri-apps/plugin-dialog';
 	import { readTextFile } from '@tauri-apps/plugin-fs';
 	import { success, error, info } from '$lib/toasts';
-	import { session, config } from '$stores/session';
+	import { config } from '$stores/session';
 	import Modal from '$components/Modal.svelte';
-	import { cog, fileArchiveO } from 'svelte-awesome/icons';
+	import { fileArchiveO } from 'svelte-awesome/icons';
 	import Icon from 'svelte-awesome';
 	import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
 	import ProgressBar from '@okrad/svelte-progressbar';
@@ -16,7 +16,7 @@
 	export let series = [0];
 
 	async function setUpProgressListener() {
-		const unlistenProgress = await appWindow.listen('PROGRESS', ({ payload }) => {
+		await appWindow.listen('PROGRESS', ({ payload }) => {
 			series = [payload.percentage];
 			flashing = true;
 		});

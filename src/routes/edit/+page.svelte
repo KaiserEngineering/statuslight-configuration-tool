@@ -27,7 +27,7 @@
 			}
 			$session.loading = true;
 			// Only grab the fields that were changed from the current value
-			let updatedFields: { [key: string]: any } = {};
+			let updatedFields: { [key: string]: string } = {};
 			Object.keys(form.data).forEach((key) => {
 				if ($config[key] !== form[key]) {
 					updatedFields[key] = form[key];
