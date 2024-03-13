@@ -32,25 +32,27 @@ export async function newConnection() {
 	});
 
 	try {
-		// Attempt to retrieve information about the existing connection
-		const existingConnection = await invoke('get_connection', {}).catch((err) => {
-			console.info('get_connection no connection found');
-		});
-
-		// If an existing connection is found, drop it
-		if (existingConnection) {
-			await invoke('drop_connection', {}).catch((err) => {
-				// If the connection drop fails, throw an error
-				throw err;
+		if (portObj && portObj.port_name !== 'TEST') {
+			// Attempt to retrieve information about the existing connection
+			const existingConnection = await invoke('get_connection', {}).catch((err) => {
+				console.info('get_connection no connection found');
 			});
-		}
 
-		// If the port is selected, establish a new connection to the serial port
-		if (portObj && portObj.port_name) {
-			await connectToSerialPort(portObj.port_name).catch((err) => {
-				// If the connection fails, throw an error
-				throw err;
-			});
+			// If an existing connection is found, drop it
+			if (existingConnection) {
+				await invoke('drop_connection', {}).catch((err) => {
+					// If the connection drop fails, throw an error
+					throw err;
+				});
+			}
+
+			// If the port is selected, establish a new connection to the serial port
+			if (portObj && portObj.port_name) {
+				await connectToSerialPort(portObj.port_name).catch((err) => {
+					// If the connection fails, throw an error
+					throw err;
+				});
+			}
 		}
 	} finally {
 		// Reset the session loading status after the connection attempt
@@ -69,22 +71,26 @@ export async function newConnection() {
  * @throws {string} If the retrieval or connection drop fails, an error message is thrown.
  */
 export async function getCurrentConnection(): Promise<void> {
-	try {
-		// Attempt to retrieve information about the current connection
-		await invoke('get_connection', {});
-	} catch (_) {
+	const portObj = get(port);
+
+	if (portObj && portObj.port_name !== 'TEST') {
 		try {
-			// If the retrieval fails, attempt to drop the connection
-			await invoke('drop_connection', {});
-		} catch (err) {
-			let errorRes = err;
-			// If an error occurs during the connection drop
-			if (typeof err === 'string') {
-				// Parse the error if it's a JSON-formatted string
-				errorRes = JSON.parse(err);
+			// Attempt to retrieve information about the current connection
+			await invoke('get_connection', {});
+		} catch (_) {
+			try {
+				// If the retrieval fails, attempt to drop the connection
+				await invoke('drop_connection', {});
+			} catch (err) {
+				let errorRes = err;
+				// If an error occurs during the connection drop
+				if (typeof err === 'string') {
+					// Parse the error if it's a JSON-formatted string
+					errorRes = JSON.parse(err);
+				}
+				// Throw an error with a descriptive message
+				throw `Could not get current connection ${errorRes.message}`;
 			}
-			// Throw an error with a descriptive message
-			throw `Could not get current connection ${errorRes.message}`;
 		}
 	}
 }

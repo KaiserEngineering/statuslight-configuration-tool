@@ -1,24 +1,30 @@
 <script lang="ts">
 	import * as Select from '$components/ui/select';
-
 	import type { Infer } from 'sveltekit-superforms';
-
 	import type { CommandSchema } from '$schemas/config';
 
 	export let command: Infer<CommandSchema>;
 	export let data;
-	export let attrs;
+	export let attrs: {
+		name: string;
+		id: string;
+		'data-fs-error': string;
+		'aria-describedby': string;
+		'aria-invalid': 'true';
+		'aria-required': 'true';
+		'data-fs-control': string;
+	};
 
-	$: selectedValue = $data.form.data[command.cmd]
+	$: selectedValue = data.form.data[command.cmd]
 		? {
-				label: $data.form.data[command.cmd],
-				value: $data.form.data[command.cmd]
+				label: data.form.data[command.cmd],
+				value: data.form.data[command.cmd]
 			}
 		: undefined;
 </script>
 
 <Select.Root {...attrs} selected={selectedValue}>
-	<Select.Trigger>
+	<Select.Trigger class="border-2 border-solid border-gray-500">
 		<Select.Value placeholder={command.name} />
 	</Select.Trigger>
 	<Select.Content>

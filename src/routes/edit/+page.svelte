@@ -7,7 +7,6 @@
 	import * as Form from '$components/ui/form';
 	import { Input } from '$components/ui/input';
 	import Label from '$components/ui/label/label.svelte';
-	import SuperDebug from 'sveltekit-superforms';
 	import { formSchema, type FormSchema } from '$schemas/editSchema';
 
 	import { submitConfig } from '$lib/api';
@@ -30,10 +29,8 @@
 				$session.loading = true;
 				// Only grab the fields that were changed from the current value
 				let updatedFields: { [key: string]: string } = {};
-				Object.keys(form.data).forEach((key) => {
-					if ($config[key] !== form[key]) {
-						updatedFields[key] = form[key];
-					}
+				Object.keys($tainted).forEach((key) => {
+					updatedFields[key] = form.data[key];
 				});
 				if (Object.keys(updatedFields).length == 0) {
 					info('Nothing to update');
@@ -59,51 +56,63 @@
 							$session.loading = false;
 						});
 				}
+			} else {
+				error('Invalid data!');
 			}
 		}
 	});
 
-	const { form: formData, enhance } = form;
+	const { form: formData, enhance, isTainted, tainted } = form;
 
 	const keys = Object.keys(sessionConfig).map((key) => ({
 		[key]: AllCommands.find((command) => command.cmd === key)
 	}));
 
 	function setFormBasedOnConfig() {
-		for (const keyObject of keys) {
-			const key = Object.keys(keyObject)[0];
-			const command = keyObject[key];
+		if (!isTainted()) {
+			for (const keyObject of keys) {
+				const key = Object.keys(keyObject)[0];
+				const command = keyObject[key];
 
-			$formData[command.cmd] = $config[command.cmd];
+				// If not value, use default set in schema
+				if ($config[command.cmd] !== undefined) {
+					$formData[command.cmd] = $config[command.cmd];
+				}
+			}
 		}
 	}
+	$: console.log($config);
+
 	$: $config, setFormBasedOnConfig();
 </script>
 
-<form method="POST" use:enhance class="text-center w-1/4 text-xl inline-grid grid-cols-1 gap-4">
-	<!-- <SuperDebug data={$formData} /> -->
+{#if !$session.loading}
+	<form method="POST" use:enhance class="text-center w-1/4 text-xl inline-grid grid-cols-1 gap-4">
+		{#each Object.keys(sessionConfig) as key}
+			{@const command = AllCommands.find((command) => command.cmd === key)}
+			{@const name = command.cmd}
+			<Form.Field {form} {name}>
+				<Form.Control let:attrs>
+					{#if command.type === 'list'}
+						<SelectField {command} bind:data={$formData} {attrs} />
+					{:else}
+						<Label>{command.name}</Label>
+						<Input
+							{...attrs}
+							name={command.cmd}
+							type={command.type}
+							bind:value={$formData[command.cmd]}
+							class="border-2 border-solid border-gray-500"
+						/>
+					{/if}
+				</Form.Control>
+				<Form.Description>{command.desc}</Form.Description>
+				<Form.FieldErrors />
+			</Form.Field>
+		{/each}
 
-	{#each Object.keys(sessionConfig) as key}
-		{@const command = AllCommands.find((command) => command.cmd === key)}
-		{@const name = command.cmd}
-		<Form.Field {form} {name}>
-			<Form.Control let:attrs>
-				{#if command.type === 'list'}
-					<SelectField {command} data={formData} {attrs} />
-				{:else}
-					<Label>{command.name}</Label>
-					<Input
-						{...attrs}
-						name={command.cmd}
-						type={command.type}
-						bind:value={$formData[command.cmd]}
-					/>
-				{/if}
-			</Form.Control>
-			<Form.Description>{command.desc}</Form.Description>
-			<Form.FieldErrors />
-		</Form.Field>
-	{/each}
-
-	<Form.Button>Update Config</Form.Button>
-</form>
+		<Form.Button variant="secondary" class="bg-gray-500">Update Config</Form.Button>
+	</form>
+{:else}
+	Loading in progress...
+{/if}

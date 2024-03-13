@@ -5,6 +5,7 @@
 	import { session, port, ports } from '$stores/session';
 	import { invoke } from '@tauri-apps/api/core';
 	import { newConnection, type Port } from '$lib/api';
+	import { dev } from '$app/environment';
 
 	// Grab a list of our available ports
 	async function getPorts() {
@@ -12,6 +13,12 @@
 
 		invoke('find_available_ports', {})
 			.then((ports_found: [Port]) => {
+				if (dev) {
+					ports_found.push({
+						port_name: 'TEST',
+						product_name: 'Test Port'
+					});
+				}
 				$ports = ports_found;
 			})
 			.catch((err: SerialError) => {

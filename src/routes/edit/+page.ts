@@ -21,7 +21,7 @@ export const load: PageLoad = async () => {
 		const command = keyObject[key];
 
 		// If not value, use default set in schema
-		if (configValue[command.cmd]) {
+		if (configValue[command.cmd] !== undefined) {
 			form.data[command.cmd] = configValue[command.cmd];
 		} else {
 			form.data[command.cmd] = command.default;

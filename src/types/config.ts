@@ -70,7 +70,7 @@ export const POWER: Infer<CommandSchema> = {
 	type: 'list',
 	dataType: 'POWER_BOOLEAN',
 	default: 'Enabled',
-	options: ['Disabled', 'Enabled'],
+	options: ['0', '1'],
 	limit: 'Reserved',
 	EEBytes: 1,
 	appConfig: 'Yes',
@@ -346,11 +346,11 @@ const config = {};
 AllCommands.forEach((command) => {
 	if (command.appConfig === 'Yes' && command.readWrite === 'Read-Write') {
 		if (command.dataType.startsWith('uint')) {
-			config[command.cmd] = z.coerce.number().default(command.default as unknown as number);
+			config[command.cmd] = z.coerce.number();
 		} else if (command.dataType.indexOf('number') > -1) {
-			config[command.cmd] = z.coerce.number().default(command.default as unknown as number);
+			config[command.cmd] = z.coerce.number();
 		} else {
-			config[command.cmd] = z.string().default(command.default as unknown as string);
+			config[command.cmd] = z.string();
 		}
 	}
 });
