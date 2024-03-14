@@ -4,7 +4,7 @@
 	import type { CommandSchema } from '$schemas/config';
 
 	export let command: Infer<CommandSchema>;
-	export let data;
+	export let value;
 	export let attrs: {
 		name: string;
 		id: string;
@@ -15,10 +15,10 @@
 		'data-fs-control': string;
 	};
 
-	$: selectedValue = data.form.data[command.cmd]
+	$: selectedValue = value
 		? {
-				label: command.options[data.form.data[command.cmd]],
-				value: data.form.data[command.cmd]
+				label: command.options[value],
+				value: value
 			}
 		: undefined;
 </script>

@@ -29,11 +29,15 @@
 				$session.loading = true;
 				// Only grab the fields that were changed from the current value
 				let updatedFields: { [key: string]: string } = {};
-				Object.keys(keys).forEach((key) => {
-					if (isTainted($tainted[key])) {
+
+				for (const keyObject of keys) {
+					const key = Object.keys(keyObject)[0];
+
+					// Always convert form to number for select string values
+					if (Number($config[key]) !== Number(form.data[key])) {
 						updatedFields[key] = form.data[key];
 					}
-				});
+				}
 
 				if (Object.keys(updatedFields).length == 0) {
 					info('Nothing to update');
@@ -48,7 +52,9 @@
 								});
 								error(error_message);
 							} else {
-								// $config = Object.assign({}, form.data);
+								// We do not need to update $config as it should only
+								// be used to populate our form when it is updated (ie a connection event).
+								$config = { ...$config, ...updatedFields };
 								success('Config updated');
 							}
 						})
@@ -100,7 +106,7 @@
 		<Form.Field {form} {name}>
 			<Form.Control let:attrs>
 				{#if command.type === 'list'}
-					<SelectField {command} bind:data={$formData} {attrs} />
+					<SelectField {command} bind:value={$formData[command.cmd]} {attrs} />
 				{:else}
 					<Label>{command.name}</Label>
 					<Input
