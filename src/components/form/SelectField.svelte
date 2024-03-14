@@ -17,7 +17,7 @@
 
 	$: selectedValue = data.form.data[command.cmd]
 		? {
-				label: data.form.data[command.cmd],
+				label: command.options[data.form.data[command.cmd]],
 				value: data.form.data[command.cmd]
 			}
 		: undefined;

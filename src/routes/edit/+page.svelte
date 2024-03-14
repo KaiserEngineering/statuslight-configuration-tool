@@ -32,6 +32,7 @@
 				Object.keys($tainted).forEach((key) => {
 					updatedFields[key] = form.data[key];
 				});
+
 				if (Object.keys(updatedFields).length == 0) {
 					info('Nothing to update');
 					$session.loading = false;
