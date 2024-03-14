@@ -28,8 +28,8 @@
 		<Select.Value placeholder={command.name} />
 	</Select.Trigger>
 	<Select.Content>
-		{#each command.options as option}
-			<Select.Item value={option}>{option}</Select.Item>
+		{#each command.options as option, i}
+			<Select.Item value={i}>{option}</Select.Item>
 		{/each}
 	</Select.Content>
 </Select.Root>

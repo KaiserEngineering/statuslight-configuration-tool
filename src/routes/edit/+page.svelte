@@ -81,7 +81,6 @@
 			}
 		}
 	}
-	$: console.log($config);
 
 	$: $config, setFormBasedOnConfig();
 </script>

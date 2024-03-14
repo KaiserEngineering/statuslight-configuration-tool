@@ -70,7 +70,7 @@ export const POWER: Infer<CommandSchema> = {
 	type: 'list',
 	dataType: 'POWER_BOOLEAN',
 	default: 'Enabled',
-	options: ['0', '1'],
+	options: ['Enabled', 'Disabled'],
 	limit: 'Reserved',
 	EEBytes: 1,
 	appConfig: 'Yes',
