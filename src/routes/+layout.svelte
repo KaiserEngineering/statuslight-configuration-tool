@@ -3,7 +3,6 @@
 	import '../app.css';
 	import Sidebar from '$components/Sidebar.svelte';
 	import Topbar from '$components/Topbar.svelte';
-	import Loading from '$components/Loading.svelte';
 	import { SvelteToast } from '@zerodevx/svelte-toast';
 	import Footer from '$components/Footer.svelte';
 	import { port, ports, session, config, connected } from '$stores/session';
@@ -92,8 +91,6 @@
 
 <div class:dark>
 	<div class="h-screen flex">
-		<Loading />
-
 		<SvelteToast />
 
 		<Sidebar />

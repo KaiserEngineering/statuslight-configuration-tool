@@ -3,8 +3,8 @@
 </script>
 
 {#if $session.loading}
-	<div class="fixed w-full flex justify-center">
-		<div role="status" class="top-40 absolute">
+	<div class="m-2">
+		<div role="status" class="">
 			<svg
 				aria-hidden="true"
 				class="mr-2 w-8 h-8 text-gray-200 animate-spin fill-blue-600"
