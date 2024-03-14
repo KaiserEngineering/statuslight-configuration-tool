@@ -29,8 +29,10 @@
 				$session.loading = true;
 				// Only grab the fields that were changed from the current value
 				let updatedFields: { [key: string]: string } = {};
-				Object.keys($tainted).forEach((key) => {
-					updatedFields[key] = form.data[key];
+				Object.keys(keys).forEach((key) => {
+					if (isTainted($tainted[key])) {
+						updatedFields[key] = form.data[key];
+					}
 				});
 
 				if (Object.keys(updatedFields).length == 0) {
@@ -46,7 +48,7 @@
 								});
 								error(error_message);
 							} else {
-								$config = Object.assign({}, form.data);
+								// $config = Object.assign({}, form.data);
 								success('Config updated');
 							}
 						})
@@ -71,15 +73,20 @@
 
 	function setFormBasedOnConfig() {
 		if (!isTainted()) {
-			for (const keyObject of keys) {
-				const key = Object.keys(keyObject)[0];
-				const command = keyObject[key];
+			formData.update(
+				($form) => {
+					for (const keyObject of keys) {
+						const key = Object.keys(keyObject)[0];
+						const command = keyObject[key];
 
-				// If not value, use default set in schema
-				if ($config[command.cmd] !== undefined) {
-					$formData[command.cmd] = $config[command.cmd];
-				}
-			}
+						if ($config[command.cmd] !== undefined) {
+							$form[command.cmd] = $config[command.cmd];
+						}
+					}
+					return $form;
+				},
+				{ taint: false }
+			);
 		}
 	}
 

@@ -7,7 +7,7 @@ use tauri::{Manager, WebviewWindow};
 
 use super::get;
 
-use crate::serial::serial::{write_serial, SerialError, SerialErrors};
+use crate::serial::controller::{write_serial, SerialError, SerialErrors};
 use crate::serial::state::SerialState;
 
 #[tauri::command]

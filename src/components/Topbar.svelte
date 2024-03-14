@@ -48,6 +48,12 @@
 
 	function portSelected() {
 		$port = $ports.filter((p: Port) => p.port_name == selectedPort).pop();
+
+		invoke('drop_connection', {}).catch((err) => {
+			$session.loading = false;
+			error(err);
+		});
+
 		newConnection().catch((err) => {
 			$session.loading = false;
 			error(err);

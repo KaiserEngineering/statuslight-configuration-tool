@@ -155,7 +155,7 @@ pub async fn connect<R: Runtime>(
     window: WebviewWindow<R>,
 ) -> Result<String, SerialError> {
     //! Connect to selected serial port based on port name
-    println!("Model::Controller::connect called for {port_name}");
+    println!("serial::Controller::connect called for {port_name}");
     let serial_port = serialport::new(&port_name, serial_state.baud_rate)
         .timeout(time::Duration::from_millis(500))
         .open();

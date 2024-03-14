@@ -8,7 +8,7 @@ use tauri::{App, Manager};
 mod model;
 mod serial;
 
-use serial::serial::{
+use serial::controller::{
     connect, drop_connection, dtr, find_available_ports, get_connection, massage_devices_list,
     watch_devices, write,
 };

@@ -1,2 +1,2 @@
-pub mod serial;
+pub mod controller;
 pub mod state;

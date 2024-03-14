@@ -1,4 +1,4 @@
-use crate::serial::serial::SerialPort;
+use crate::serial::controller::SerialPort;
 
 use serde::Serialize;
 use std::sync::Arc;

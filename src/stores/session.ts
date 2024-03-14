@@ -27,6 +27,6 @@ export const port: Writable<Port> = writable({
 	port_name: ''
 });
 
-export const ports: Writable<[Port] | []> = writable([]);
+export const ports: Writable<Port[] | []> = writable([]);
 
 export const connected: Writable<boolean> = writable(false);

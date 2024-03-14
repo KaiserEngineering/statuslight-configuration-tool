@@ -1,6 +1,6 @@
 import { invoke } from '@tauri-apps/api/core';
 import { get } from 'svelte/store';
-import { session, port } from '$stores/session';
+import { session, port, connected } from '$stores/session';
 import { AllCommands, sessionConfig, type SessionConfig } from '$types/config';
 
 export type Port = {
@@ -17,6 +17,7 @@ export type Port = {
 export async function newConnection() {
 	// Retrieve the current session and port objects from Svelte stores
 	const sessionObj = get(session);
+	const connectedValue = get(connected);
 	const portObj = get(port);
 
 	// Check if the port is selected
@@ -33,27 +34,24 @@ export async function newConnection() {
 
 	try {
 		if (portObj && portObj.port_name !== 'TEST') {
-			// Attempt to retrieve information about the existing connection
-			const existingConnection = await invoke('get_connection', {}).catch((err) => {
-				console.info('get_connection no connection found');
-			});
+			if (connectedValue) {
+				// Attempt to retrieve information about the existing connection
+				const existingConnection = await invoke('get_connection', {});
 
-			// If an existing connection is found, drop it
-			if (existingConnection) {
-				await invoke('drop_connection', {}).catch((err) => {
-					// If the connection drop fails, throw an error
-					throw err;
-				});
+				// If an existing connection is found, drop it
+				if (existingConnection !== undefined) {
+					await invoke('drop_connection', {});
+				}
 			}
 
 			// If the port is selected, establish a new connection to the serial port
 			if (portObj && portObj.port_name) {
-				await connectToSerialPort(portObj.port_name).catch((err) => {
-					// If the connection fails, throw an error
-					throw err;
-				});
+				await connectToSerialPort(portObj.port_name);
 			}
 		}
+	} catch (error) {
+		// Handle any errors that occur during the connection attempt
+		throw error; // Rethrow the error to be caught by the calling code
 	} finally {
 		// Reset the session loading status after the connection attempt
 		session.set({

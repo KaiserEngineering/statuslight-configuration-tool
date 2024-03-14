@@ -14,70 +14,77 @@
 
 	const appWindow = WebviewWindow.getCurrent();
 
-	async function handleConnectToggle(event: { code: string }) {
-		if (event.code == 'KeyD' && event.ctrlKey) {
-			if (!$port || !$port.port_name) {
-				error('Select a port to connect!');
-			} else if ($connected) {
-				await invoke('drop_connection', {}).catch((err: string) => {
-					error(err);
-					return;
-				});
-				$connected = false;
-			} else {
-				await newConnection();
+	async function handleConnectToggle(event: KeyboardEvent) {
+		try {
+			if (event.code == 'KeyD' && event.ctrlKey) {
+				if (!$port || !$port.port_name) {
+					throw new Error('Select a port to connect!');
+				} else if ($connected) {
+					invoke('drop_connection', {}).catch((err) => {
+						$session.loading = false;
+						error(err);
+					});
+				} else {
+					newConnection().catch((err) => {
+						$session.loading = false;
+						error(err);
+					});
+				}
 			}
+		} catch (err) {
+			error(err.toString());
 		}
 	}
 
-	async function ListenForConnectionEvents() {
-		const _unlistenDisconnectEvent = await appWindow.listen('DISCONNECTED', ({}) => {
+	function ListenForConnectionEvents() {
+		appWindow.listen('DISCONNECTED', ({}) => {
 			connected.set(false);
 		});
 
-		const _unlistenConnectedEvent = await appWindow.listen('CONNECTED', async ({}) => {
-			if (!$port || !$port.port_name) {
-				return;
-			}
-			$session.loading = true;
-			connected.set(true);
+		appWindow.listen('CONNECTED', async ({}) => {
+			try {
+				if (!$port || !$port.port_name) {
+					return;
+				}
+				$session.loading = true;
+				connected.set(true);
 
-			await getCurrentConfig()
-				.then((res) => {
-					$config = res;
-				})
-				.catch((err) => {
-					error(err);
-				});
-			$session.loading = false;
+				const res = await getCurrentConfig();
+				$config = res;
+			} catch (err) {
+				$session.loading = false;
+				error(err);
+			} finally {
+				$session.loading = false;
+			}
 		});
 
-		const _DEVICE_LIST_UPDATED = await appWindow.listen(
-			'DEVICE_LIST_UPDATED',
-			async (event: { payload: { devices: [Port] } }) => {
+		appWindow.listen('DEVICE_LIST_UPDATED', async (event: { payload: { devices: Port[] } }) => {
+			try {
 				$ports = event.payload.devices;
 
-				let port_still_here = [];
 				if ($port && $port.port_name) {
-					port_still_here = event.payload.devices.filter(
-						(p: Port) => p.port_name == $port.port_name
+					const portStillHere = event.payload.devices.find(
+						(p: Port) => p.port_name === $port.port_name
 					);
-				}
+					if (!portStillHere && $connected) {
+						connected.set(false);
+					}
 
-				if (port_still_here.length > 0 && !$connected) {
-					await newConnection();
-				} else if (port_still_here.length == 0 && $connected) {
-					$connected = false;
+					if (portStillHere && !$connected) {
+						await newConnection();
+					}
 				}
+			} catch (err) {
+				error(err);
+				$session.loading = false;
 			}
-		);
+		});
 	}
-	ListenForConnectionEvents().catch((err) => {
-		$session.loading = false;
-		error(err);
-	});
 
-	$: $port, newConnection;
+	ListenForConnectionEvents();
+
+	// $: $port, newConnection;
 	$: dark = $session.darkTheme;
 </script>
 
@@ -95,13 +102,7 @@
 			<Topbar />
 
 			<div class="content-list">
-				{#if $port && $port.port_name}
-					<slot />
-				{:else}
-					<div class="flex grid h-full content-center">
-						<div>Waiting on a connection...!</div>
-					</div>
-				{/if}
+				<slot />
 			</div>
 
 			<div class="footer">
