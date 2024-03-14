@@ -93,33 +93,31 @@
 	$: $config, setFormBasedOnConfig();
 </script>
 
-{#if !$session.loading}
-	<form method="POST" use:enhance class="text-center w-1/4 text-xl inline-grid grid-cols-1 gap-4">
-		{#each Object.keys(sessionConfig) as key}
-			{@const command = AllCommands.find((command) => command.cmd === key)}
-			{@const name = command.cmd}
-			<Form.Field {form} {name}>
-				<Form.Control let:attrs>
-					{#if command.type === 'list'}
-						<SelectField {command} bind:data={$formData} {attrs} />
-					{:else}
-						<Label>{command.name}</Label>
-						<Input
-							{...attrs}
-							name={command.cmd}
-							type={command.type}
-							bind:value={$formData[command.cmd]}
-							class="border-2 border-solid border-gray-500"
-						/>
-					{/if}
-				</Form.Control>
-				<Form.Description>{command.desc}</Form.Description>
-				<Form.FieldErrors />
-			</Form.Field>
-		{/each}
+<form method="POST" use:enhance class="text-center w-1/4 text-xl inline-grid grid-cols-1 gap-4">
+	{#each Object.keys(sessionConfig) as key}
+		{@const command = AllCommands.find((command) => command.cmd === key)}
+		{@const name = command.cmd}
+		<Form.Field {form} {name}>
+			<Form.Control let:attrs>
+				{#if command.type === 'list'}
+					<SelectField {command} bind:data={$formData} {attrs} />
+				{:else}
+					<Label>{command.name}</Label>
+					<Input
+						{...attrs}
+						name={command.cmd}
+						type={command.type}
+						bind:value={$formData[command.cmd]}
+						class="border-2 border-solid border-gray-500"
+					/>
+				{/if}
+			</Form.Control>
+			<Form.Description>{command.desc}</Form.Description>
+			<Form.FieldErrors />
+		</Form.Field>
+	{/each}
 
-		<Form.Button variant="secondary" class="bg-gray-500">Update Config</Form.Button>
-	</form>
-{:else}
-	Loading in progress...
-{/if}
+	<Form.Button disabled={$session.loading} variant="secondary" class="bg-gray-500"
+		>Update Config</Form.Button
+	>
+</form>
