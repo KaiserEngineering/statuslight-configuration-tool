@@ -345,11 +345,15 @@ export const AllCommands = [
 const config = {};
 AllCommands.forEach((command) => {
 	if (command.appConfig === 'Yes' && command.readWrite === 'Read-Write') {
-		config[command.cmd] = z
-			.string()
-			// .min(command.min)
-			// .max(command.max)
-			.regex(new RegExp(`^[A-Fa-f0-9]+$`));
+		if (command.type === 'list') {
+			config[command.cmd] = z.coerce.number();
+		} else {
+			config[command.cmd] = z
+				.string()
+				.min(command.min)
+				.max(command.max)
+				.regex(new RegExp(`^[A-Fa-f0-9]+$`));
+		}
 	}
 });
 
