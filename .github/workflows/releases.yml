@@ -22,8 +22,8 @@ jobs:
         with:
           node-version: 20
 
-      - name: install Rust stable
-        uses: dtolnay/rust-toolchain@stable
+      - name: install Rust nightly
+        uses: dtolnay/rust-toolchain@nightly
 
       - name: install frontend dependencies
         run: npm install --include=dev  --legacy-peer-deps
