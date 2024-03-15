@@ -12,7 +12,8 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --check src && eslint src",
-		"format": "prettier --write src"
+		"format": "prettier --write src",
+		"tauri": "tauri"
 	},
 	"devDependencies": {
 		"@okrad/svelte-progressbar": "^2.2.0",
