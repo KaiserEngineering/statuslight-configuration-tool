@@ -20,7 +20,9 @@ sessionObj.setDarkThemeFromSystem().then((darkTheme) => (sessionObj.ui_data.dark
 
 export const session = writable<Session['ui_data']>(sessionObj.ui_data);
 
-export const config = writable<SessionConfig>({});
+type SessionConfigWithVer = SessionConfig & { VER: string };
+
+export const config = writable<SessionConfigWithVer>({ VER: '' });
 
 export const port: Writable<Port> = writable({
 	product_name: '',

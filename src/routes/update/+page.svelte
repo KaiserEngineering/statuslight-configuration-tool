@@ -11,12 +11,16 @@
 	import ProgressBar from '@okrad/svelte-progressbar';
 	import { newConnection } from '$lib/api';
 
+	interface ProgressPayload {
+		percentage: number;
+	}
+
 	const appWindow = WebviewWindow.getCurrent();
 	export let series = [0];
 
 	async function setUpProgressListener() {
 		await appWindow.listen('PROGRESS', ({ payload }) => {
-			series = [payload.percentage];
+			series = [(payload as ProgressPayload).percentage];
 			flashing = true;
 		});
 	}

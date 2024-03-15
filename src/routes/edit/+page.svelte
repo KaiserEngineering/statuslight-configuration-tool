@@ -54,8 +54,6 @@
 								});
 								error(error_message);
 							} else {
-								// We do not need to update $config as it should only
-								// be used to populate our form when it is updated (ie a connection event).
 								$config = { ...$config, ...updatedFields };
 								success('Config updated');
 							}
@@ -80,29 +78,25 @@
 	}));
 
 	function setFormBasedOnConfig() {
-		if (!isTainted()) {
-			formData.update(
-				($form) => {
-					for (const keyObject of keys) {
-						const key = Object.keys(keyObject)[0];
-						const command = keyObject[key];
+		formData.update(
+			($form) => {
+				for (const keyObject of keys) {
+					const key = Object.keys(keyObject)[0];
+					const command = keyObject[key];
 
-						if ($config[command.cmd] !== undefined) {
-							if (command.type === 'list') {
-								$form[command.cmd] = $config[command.cmd];
-							} else {
-								$form[command.cmd] = Number($config[command.cmd]).toString(16);
-							}
+					if ($config[command.cmd] !== undefined) {
+						if (command.type === 'list') {
+							$form[command.cmd] = $config[command.cmd];
+						} else {
+							$form[command.cmd] = Number($config[command.cmd]).toString(16);
 						}
 					}
-					return $form;
-				},
-				{ taint: false }
-			);
-		}
+				}
+				return $form;
+			},
+			{ taint: false }
+		);
 	}
-
-	$: $config, setFormBasedOnConfig();
 </script>
 
 <form method="POST" use:enhance class="text-center w-1/4 text-xl inline-grid grid-cols-1 gap-4">
@@ -136,3 +130,10 @@
 		>Update Config</Form.Button
 	>
 </form>
+
+<Form.Button
+	on:click={setFormBasedOnConfig}
+	disabled={$session.loading}
+	variant="secondary"
+	class="bg-gray-500">Load Config Values</Form.Button
+>
