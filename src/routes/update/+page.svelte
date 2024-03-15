@@ -9,7 +9,6 @@
 	import Icon from 'svelte-awesome';
 	import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
 	import ProgressBar from '@okrad/svelte-progressbar';
-	import semver from 'semver';
 	import { newConnection } from '$lib/api';
 
 	const appWindow = WebviewWindow.getCurrent();
@@ -53,7 +52,7 @@
 				return res.replace('hi;', '');
 			})
 			.catch((err: { message: string }) => {
-				error('Failed to write hi: ' + err.message);
+				error('Failed to write hi: ' + err);
 			});
 
 		if (helloResponse == undefined) {

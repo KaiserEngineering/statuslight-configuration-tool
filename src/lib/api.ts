@@ -132,6 +132,7 @@ export async function getCurrentConfig(): Promise<{ [key: string]: string | bool
 	const keys = Object.keys(sessionConfig).map((key) => ({
 		[key]: AllCommands.find((command) => command.cmd === key)
 	}));
+	keys.push({ VER: AllCommands.find((command) => command.cmd === 'VER') });
 
 	// Initialize an object to store the new configuration
 	const new_config: { [key: string]: string | boolean | number } = {};
