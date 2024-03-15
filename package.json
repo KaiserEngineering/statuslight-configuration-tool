@@ -3,7 +3,7 @@
 	"version": "0.2.1",
 	"private": true,
 	"engines": {
-		"node": "19.x"
+		"node": "20.x"
 	},
 	"scripts": {
 		"dev": "vite dev",
@@ -54,6 +54,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@tauri-apps/cli": "^2.0.0-beta",
 		"bits-ui": "^0.19.6",
 		"formsnap": "^0.5.1",
 		"zod": "^3.22.4"
