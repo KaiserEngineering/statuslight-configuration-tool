@@ -24,9 +24,11 @@ export const load: PageLoad = async () => {
 		if (configValue[command.cmd] !== undefined) {
 			// Convert default value to index
 			if (command.type === 'list') {
-				form[command.cmd] = command.options.findIndex((option) => option === command.default);
+				form[command.cmd] = command.options.findIndex(
+					(option) => option === configValue[command.cmd]
+				);
 			} else {
-				form[command.cmd] = command.default;
+				form[command.cmd] = Number(configValue[command.cmd]).toString(16);
 			}
 		}
 	}

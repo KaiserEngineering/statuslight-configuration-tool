@@ -8,12 +8,10 @@
 	import { Input } from '$components/ui/input';
 	import Label from '$components/ui/label/label.svelte';
 	import { formSchema, type FormSchema } from '$schemas/editSchema';
-	import SuperDebug from 'sveltekit-superforms';
 	import { submitConfig } from '$lib/api';
 	import { session, config, port, connected } from '$stores/session';
 	import { success, error, info } from '$lib/toasts';
 	import SelectField from '$components/form/SelectField.svelte';
-	import { dev } from '$app/environment';
 
 	export let data: SuperValidated<Infer<FormSchema>>;
 
@@ -29,15 +27,17 @@
 				}
 				$session.loading = true;
 				// Only grab the fields that were changed from the current value
-				let updatedFields: { [key: string]: string } = {};
+				let updatedFields: { [key: string]: number } = {};
 
 				for (const keyObject of keys) {
 					const key = Object.keys(keyObject)[0];
-					console.log(`${key}: ${$config[key]}: ${form.data[key]}`);
+
+					// Convert form value from hex to number
+					const formValue: number = parseInt(form.data[key], 16);
 
 					// Always convert form to number for select string values
-					if (Number($config[key]) !== Number(form.data[key])) {
-						updatedFields[key] = form.data[key];
+					if ($config[key] !== formValue) {
+						updatedFields[key] = formValue;
 					}
 				}
 
@@ -81,7 +81,6 @@
 
 	function setFormBasedOnConfig() {
 		if (!isTainted()) {
-			console.info('Setting form based on config');
 			formData.update(
 				($form) => {
 					for (const keyObject of keys) {
@@ -89,7 +88,11 @@
 						const command = keyObject[key];
 
 						if ($config[command.cmd] !== undefined) {
-							$form[command.cmd] = $config[command.cmd];
+							if (command.type === 'list') {
+								$form[command.cmd] = $config[command.cmd];
+							} else {
+								$form[command.cmd] = Number($config[command.cmd]).toString(16);
+							}
 						}
 					}
 					return $form;
@@ -118,7 +121,7 @@
 					<Input
 						{...attrs}
 						name={command.cmd}
-						type={command.type}
+						type="text"
 						bind:value={$formData[command.cmd]}
 						class="border-2 border-solid border-gray-500"
 					/>
