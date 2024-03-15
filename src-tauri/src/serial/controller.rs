@@ -137,7 +137,7 @@ pub async fn drop_connection<R: Runtime>(
     window: WebviewWindow<R>,
 ) -> Result<String, SerialError> {
     let mut guard = serial_state.connection.lock().await;
-    std::mem::drop(guard.take());
+    *guard = None;
 
     if let Err(e) = window.emit("DISCONNECTED", ()) {
         return Err(SerialError {

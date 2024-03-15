@@ -22,13 +22,11 @@ export const load: PageLoad = async () => {
 
 		// If not value, use default set in schema
 		if (configValue[command.cmd] !== undefined) {
-			form.data[command.cmd] = configValue[command.cmd];
-		} else {
 			// Convert default value to index
 			if (command.type === 'list') {
-				form.data[command.cmd] = command.options.findIndex((option) => option === command.default);
+				form[command.cmd] = command.options.findIndex((option) => option === command.default);
 			} else {
-				form.data[command.cmd] = command.default;
+				form[command.cmd] = command.default;
 			}
 		}
 	}

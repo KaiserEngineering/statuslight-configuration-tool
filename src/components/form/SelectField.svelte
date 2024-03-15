@@ -23,7 +23,13 @@
 		: undefined;
 </script>
 
-<Select.Root {...attrs} selected={selectedValue}>
+<Select.Root
+	{...attrs}
+	selected={selectedValue}
+	onSelectedChange={(v) => {
+		v && (value = v.value);
+	}}
+>
 	<Select.Trigger class="border-2 border-solid border-gray-500">
 		<Select.Value placeholder={command.name} />
 	</Select.Trigger>

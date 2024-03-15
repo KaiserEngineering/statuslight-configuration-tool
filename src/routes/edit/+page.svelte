@@ -8,11 +8,12 @@
 	import { Input } from '$components/ui/input';
 	import Label from '$components/ui/label/label.svelte';
 	import { formSchema, type FormSchema } from '$schemas/editSchema';
-
+	import SuperDebug from 'sveltekit-superforms';
 	import { submitConfig } from '$lib/api';
 	import { session, config, port, connected } from '$stores/session';
 	import { success, error, info } from '$lib/toasts';
 	import SelectField from '$components/form/SelectField.svelte';
+	import { dev } from '$app/environment';
 
 	export let data: SuperValidated<Infer<FormSchema>>;
 
@@ -32,6 +33,7 @@
 
 				for (const keyObject of keys) {
 					const key = Object.keys(keyObject)[0];
+					console.log(`${key}: ${$config[key]}: ${form.data[key]}`);
 
 					// Always convert form to number for select string values
 					if (Number($config[key]) !== Number(form.data[key])) {
@@ -79,6 +81,7 @@
 
 	function setFormBasedOnConfig() {
 		if (!isTainted()) {
+			console.info('Setting form based on config');
 			formData.update(
 				($form) => {
 					for (const keyObject of keys) {
@@ -100,6 +103,8 @@
 </script>
 
 <form method="POST" use:enhance class="text-center w-1/4 text-xl inline-grid grid-cols-1 gap-4">
+	<!-- <SuperDebug data={{ $formData, $tainted }} display={dev} /> -->
+
 	{#each Object.keys(sessionConfig) as key}
 		{@const command = AllCommands.find((command) => command.cmd === key)}
 		{@const name = command.cmd}
@@ -107,6 +112,7 @@
 			<Form.Control let:attrs>
 				{#if command.type === 'list'}
 					<SelectField {command} bind:value={$formData[command.cmd]} {attrs} />
+					<input hidden bind:value={$formData[command.cmd]} name={attrs.name} />
 				{:else}
 					<Label>{command.name}</Label>
 					<Input
