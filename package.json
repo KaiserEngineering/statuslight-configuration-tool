@@ -2,6 +2,9 @@
 	"name": "keshift-light-configuration",
 	"version": "0.2.1",
 	"private": true,
+	"engines": {
+		"node": "19.x"
+	},
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
