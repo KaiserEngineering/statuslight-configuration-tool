@@ -78,7 +78,7 @@
 			}
 		}
 	},
-	"productName": "KE ShiftLight",
+	"productName": "KE Status Light",
 	"version": "0.2.3",
 	"identifier": "kaiserengineering.io",
 	"app": {
@@ -87,7 +87,7 @@
 				"fullscreen": false,
 				"height": 600,
 				"resizable": true,
-				"title": "KE ShiftLight",
+				"title": "KE Status Light",
 				"width": 800
 			}
 		],

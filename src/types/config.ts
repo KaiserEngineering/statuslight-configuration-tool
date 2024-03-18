@@ -33,14 +33,14 @@ export const VER: Infer<CommandSchema> = {
 	min: 0,
 	max: 0,
 	EEBytes: 2,
-	appConfig: 'Yes',
+	appConfig: 'No',
 	fieldType: 'Device Info',
 	UserConfig: 'No',
 	AdvConfig: 'No',
 	ParamType: 'Status',
 	readWrite: 'Read-Only',
 	write_func: '',
-	read_func: 'respLen = snprintf(resp, sizeof(resp), "%s", StatusLIGHT_FW_VERSION)'
+	read_func: 'respLen = snprintf(resp, sizeof(resp), "%s", STATUSLIGHT_FW_VERSION)'
 };
 
 export const EEVER: Infer<CommandSchema> = {
@@ -70,10 +70,10 @@ export const POWER: Infer<CommandSchema> = {
 	type: 'list',
 	dataType: 'POWER_BOOLEAN',
 	default: 'Enabled',
-	options: ['Enabled', 'Disabled'],
+	options: ['Disabled', 'Enabled'],
 	limit: 'Reserved',
 	EEBytes: 1,
-	appConfig: 'Yes',
+	appConfig: 'No',
 	fieldType: 'Power',
 	UserConfig: 'No',
 	AdvConfig: 'Yes',
@@ -89,8 +89,8 @@ export const CANBAUD: Infer<CommandSchema> = {
 	desc: 'Configure the baud rate of the Status Light',
 	type: 'list',
 	dataType: 'CAN_BAUD_RATE',
-	default: '500KB',
-	options: ['125KB', '250KB', '500KB'],
+	default: '500 kbit/s',
+	options: ['125 kbit/s', '250 kbit/s', '500 kbit/s'],
 	limit: 'Reserved',
 	EEBytes: 1,
 	appConfig: 'Yes',
@@ -109,8 +109,8 @@ export const CANIDE: Infer<CommandSchema> = {
 	desc: 'Configure the CAN bus identifier length for either 11-bit or 29-bit',
 	type: 'list',
 	dataType: 'CAN_IDE',
-	default: '11BIT',
-	options: ['11BIT', '29BIT'],
+	default: '11-Bit',
+	options: ['11-Bit', '29-Bit'],
 	limit: 'Reserved',
 	EEBytes: 1,
 	appConfig: 'Yes',
@@ -125,8 +125,8 @@ export const CANIDE: Infer<CommandSchema> = {
 
 export const LEDID01: Infer<CommandSchema> = {
 	cmd: 'LEDID01',
-	name: 'LED0-LED1 Register CAN ID',
-	desc: 'LED0-LED1 Register CAN ID',
+	name: 'LED0-LED1 CAN ID',
+	desc: 'CAN ID for the LED0-LED1 RGB Register expressed in hexadecimal',
 	type: 'number',
 	dataType: 'uint32_t',
 	default: 419418202,
@@ -145,8 +145,8 @@ export const LEDID01: Infer<CommandSchema> = {
 
 export const LEDID23: Infer<CommandSchema> = {
 	cmd: 'LEDID23',
-	name: 'LED2-LED3 Register CAN ID',
-	desc: 'LED2-LED3 Register CAN ID',
+	name: 'LED2-LED3 CAN ID',
+	desc: 'CAN ID for the LED2-LED3 RGB Register expressed in hexadecimal',
 	type: 'number',
 	dataType: 'uint32_t',
 	default: 419418458,
@@ -165,8 +165,8 @@ export const LEDID23: Infer<CommandSchema> = {
 
 export const LEDID45: Infer<CommandSchema> = {
 	cmd: 'LEDID45',
-	name: 'LED4-LED5 Register CAN ID',
-	desc: 'LED4-LED5 Register CAN ID',
+	name: 'LED4-LED5 CAN ID',
+	desc: 'CAN ID for the LED4-LED5 RGB Register expressed in hexadecimal',
 	type: 'number',
 	dataType: 'uint32_t',
 	default: 419418714,
@@ -185,8 +185,8 @@ export const LEDID45: Infer<CommandSchema> = {
 
 export const LEDID67: Infer<CommandSchema> = {
 	cmd: 'LEDID67',
-	name: 'LED6-LED7 Register CAN ID',
-	desc: 'LED6-LED7 Register CAN ID',
+	name: 'LED6-LED7 CAN ID',
+	desc: 'CAN ID for the LED6-LED7 RGB Register expressed in hexadecimal',
 	type: 'number',
 	dataType: 'uint32_t',
 	default: 419418970,
@@ -205,8 +205,8 @@ export const LEDID67: Infer<CommandSchema> = {
 
 export const LEDID89: Infer<CommandSchema> = {
 	cmd: 'LEDID89',
-	name: 'LED8-LED9 Register CAN ID',
-	desc: 'LED8-LED9 Register CAN ID',
+	name: 'LED8-LED9 CAN ID',
+	desc: 'CAN ID for the LED8-LED9 RGB Register expressed in hexadecimal',
 	type: 'number',
 	dataType: 'uint32_t',
 	default: 419419226,
@@ -225,8 +225,8 @@ export const LEDID89: Infer<CommandSchema> = {
 
 export const LEDID1011: Infer<CommandSchema> = {
 	cmd: 'LEDID1011',
-	name: 'LED10-LED11 Register CAN ID',
-	desc: 'LED10-LED11 Register CAN ID',
+	name: 'LED10-LED11 CAN ID',
+	desc: 'CAN ID for the LED10-LED11 RGB Register expressed in hexadecimal',
 	type: 'number',
 	dataType: 'uint32_t',
 	default: 419419482,
@@ -245,8 +245,8 @@ export const LEDID1011: Infer<CommandSchema> = {
 
 export const LEDID1213: Infer<CommandSchema> = {
 	cmd: 'LEDID1213',
-	name: 'LED12-LED13 Register CAN ID',
-	desc: 'LED12-LED13 Register CAN ID',
+	name: 'LED12-LED13 CAN ID',
+	desc: 'CAN ID for the LED12-LED13 RGB Register expressed in hexadecimal',
 	type: 'number',
 	dataType: 'uint32_t',
 	default: 419419738,
@@ -265,8 +265,8 @@ export const LEDID1213: Infer<CommandSchema> = {
 
 export const LEDID1415: Infer<CommandSchema> = {
 	cmd: 'LEDID1415',
-	name: 'LED14-LED15 Register CAN ID',
-	desc: 'LED14-LED15 Register CAN ID',
+	name: 'LED14-LED15 CAN ID',
+	desc: 'CAN ID for the LED14-LED15 RGB Register expressed in hexadecimal',
 	type: 'number',
 	dataType: 'uint32_t',
 	default: 419419994,

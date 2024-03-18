@@ -1,24 +1,29 @@
 <script lang="ts">
-	import { connected } from '$stores/session';
+	import { config, connected } from '$stores/session';
 	import { getVersion } from '@tauri-apps/api/app';
 	import Loading from '$components/Loading.svelte';
 </script>
 
-{#await getVersion() then version}
-	v{version}
-{/await}
+<footer class="flex w-full justify-between items-center py-2">
+	<div class="flex mx-auto justify-center items-center flex-row">
+		{#if $config?.VER}
+			<p class="text-center">v.{$config.VER}</p>
+		{/if}
 
-<div
-	data-bs-toggle="tooltip"
-	data-bs-placement="top"
-	title={'ctrl+d to toggle connection'}
-	class="ml-1 content-center flex flex-row items-center justify-center flex-g"
->
-	{#if $connected}
-		<p class="m-2 bg-green-600 text-slate-900 rounded p-1">Connected</p>
-	{:else}
-		<p class="m-2 bg-red-600 text-slate-900 rounded p-1">Disconnected</p>
-	{/if}
+		<p
+			class:bg-green-600={$connected}
+			class:bg-red-600={!$connected}
+			class="m-2 text-slate-900 rounded p-1 text-center"
+		>
+			{$connected ? 'Connected' : 'Disconnected'}
+		</p>
 
-	<Loading />
-</div>
+		<Loading />
+	</div>
+
+	<div class="text-end mr-2">
+		{#await getVersion() then version}
+			App: v{version}
+		{/await}
+	</div>
+</footer>
