@@ -6,6 +6,7 @@
 	import { invoke } from '@tauri-apps/api/core';
 	import { newConnection, type Port } from '$lib/api';
 	import { dev } from '$app/environment';
+	import * as Select from '$components/ui/select';
 
 	// Grab a list of our available ports
 	async function getPorts() {
@@ -44,10 +45,10 @@
 		}
 	};
 
-	let selectedPort = $port.port_name;
+	let selectedPort = { value: $port.port_name };
 
 	function portSelected() {
-		$port = $ports.filter((p: Port) => p.port_name == selectedPort).pop();
+		$port = $ports.filter((p: Port) => p.port_name == selectedPort.value).pop();
 
 		invoke('drop_connection', {}).catch((err) => {
 			$session.loading = false;
@@ -59,22 +60,26 @@
 			error(err);
 		});
 	}
+	$: selectedPort, portSelected();
 </script>
 
 <div class="top-navigation">
 	<div class="flex">
-		<select
-			id="shiftlight-port"
-			class="rounded-lg input select
-				p-2 m-2"
-			bind:value={selectedPort}
-			on:change={portSelected}
-		>
-			<option value=""> Select UART Port</option>
-			{#each $ports as port}
-				<option value={port.port_name}>{port.port_name} - {port.product_name}</option>
-			{/each}
-		</select>
+		<Select.Root on:change={portSelected} bind:selected={selectedPort} name="shiftlight-port">
+			<Select.Trigger
+				id="shiftlight-port"
+				class="rounded-lg input select
+			p-2 m-2"
+			>
+				<Select.Value placeholder="Select UART Port" />
+			</Select.Trigger>
+			<Select.Content>
+				{#each $ports as port}
+					<Select.Item value={port.port_name}>{port.port_name} - {port.product_name}</Select.Item>
+				{/each}
+			</Select.Content>
+			<input hidden bind:value={selectedPort} name={'shiftlight-port'} />
+		</Select.Root>
 
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<div class="sidebar-icon group" on:click={getPorts} on:keydown={getPorts}>
