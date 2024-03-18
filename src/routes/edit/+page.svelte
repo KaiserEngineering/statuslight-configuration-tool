@@ -117,7 +117,7 @@
 						name={command.cmd}
 						type="text"
 						bind:value={$formData[command.cmd]}
-						class="border-2 border-solid border-gray-500"
+						class="border-2 border-solid border-gray-500 uppercase"
 					/>
 				{/if}
 			</Form.Control>
