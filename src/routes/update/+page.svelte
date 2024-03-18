@@ -116,15 +116,19 @@
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="text-center text-xl inline-grid grid-cols-2 gap-4">
-	<div class="text-left">Current version:</div>
-	<div>#{$config.VER}</div>
+<div
+	class="flex flex-col mx-auto text-black bg-white dark:bg-gray-400 shadow-md rounded px-8 pt-6 pb-8 mb-4"
+>
+	<div class="text-center text-xl inline-grid grid-cols-2 gap-4">
+		<div class="text-left">Current version:</div>
+		<div>#{$config.VER}</div>
 
-	<label for="newReleaseIcon">Select custom firmware hex file:</label>
+		<label for="newReleaseIcon">Select custom firmware hex file:</label>
 
-	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	<div class="cursor-pointer" on:click={getFile} on:keydown={getFile}>
-		<Icon data={fileArchiveO} scale={2} />
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
+		<div class="cursor-pointer" on:click={getFile} on:keydown={getFile}>
+			<Icon data={fileArchiveO} scale={2} />
+		</div>
 	</div>
 </div>
 

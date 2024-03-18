@@ -90,7 +90,7 @@
 <svelte:window on:keydown={handleConnectToggle} />
 
 <div class:dark>
-	<div class="h-screen flex">
+	<div class="h-screen flex dark:text-white text-black">
 		<SvelteToast />
 
 		<Sidebar />

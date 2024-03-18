@@ -48,29 +48,27 @@
 	let selectedPort = { value: $port.port_name };
 
 	function portSelected() {
-		$port = $ports.filter((p: Port) => p.port_name == selectedPort.value).pop();
+		if (selectedPort && selectedPort.value) {
+			$port = $ports.filter((p: Port) => p.port_name == selectedPort.value).pop();
 
-		invoke('drop_connection', {}).catch((err) => {
-			$session.loading = false;
-			error(err);
-		});
+			invoke('drop_connection', {}).catch((err) => {
+				$session.loading = false;
+				error(err);
+			});
 
-		newConnection().catch((err) => {
-			$session.loading = false;
-			error(err);
-		});
+			newConnection().catch((err) => {
+				$session.loading = false;
+				error(err);
+			});
+		}
 	}
 	$: selectedPort, portSelected();
 </script>
 
 <div class="top-navigation">
 	<div class="flex">
-		<Select.Root on:change={portSelected} bind:selected={selectedPort} name="shiftlight-port">
-			<Select.Trigger
-				id="shiftlight-port"
-				class="rounded-lg input select
-			p-2 m-2"
-			>
+		<Select.Root bind:selected={selectedPort} name="shiftlight-port">
+			<Select.Trigger id="shiftlight-port" class="rounded-lg select dark:text-white p-2 m-2">
 				<Select.Value placeholder="Select UART Port" />
 			</Select.Trigger>
 			<Select.Content>
@@ -82,7 +80,7 @@
 		</Select.Root>
 
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
-		<div class="sidebar-icon group" on:click={getPorts} on:keydown={getPorts}>
+		<div class="sidebar-icon group px-2" on:click={getPorts} on:keydown={getPorts}>
 			<Icon data={refresh} style="color:white" />
 
 			<span class="sidebar-tooltip group-hover:scale-100">Refresh available ports</span>

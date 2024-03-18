@@ -99,7 +99,11 @@
 	}
 </script>
 
-<form method="POST" use:enhance class="text-center w-1/4 text-xl inline-grid grid-cols-1 gap-4">
+<form
+	method="POST"
+	use:enhance
+	class="text-center m-4 inline-grid grid-cols-1 gap-4 bg-white dark:bg-gray-400 shadow-md rounded px-8 pt-6 pb-8 mb-4"
+>
 	<!-- <SuperDebug data={{ $formData, $tainted }} display={dev} /> -->
 
 	{#each Object.keys(sessionConfig) as key}
@@ -107,33 +111,28 @@
 		{@const name = command.cmd}
 		<Form.Field {form} {name}>
 			<Form.Control let:attrs>
+				<Label class="text-black">{command.name}</Label>
 				{#if command.type === 'list'}
 					<SelectField {command} bind:value={$formData[command.cmd]} {attrs} />
 					<input hidden bind:value={$formData[command.cmd]} name={attrs.name} />
 				{:else}
-					<Label>{command.name}</Label>
 					<Input
 						{...attrs}
 						name={command.cmd}
 						type="text"
 						bind:value={$formData[command.cmd]}
-						class="border-2 border-solid border-gray-500 uppercase"
+						class="border-2 border-solid border-gray-500 uppercase bg-transparent"
 					/>
 				{/if}
 			</Form.Control>
-			<Form.Description>{command.desc}</Form.Description>
+			<Form.Description class="text-black">{command.desc}</Form.Description>
 			<Form.FieldErrors />
 		</Form.Field>
 	{/each}
 
-	<Form.Button disabled={$session.loading} variant="secondary" class="bg-gray-500"
-		>Update Config</Form.Button
-	>
+	<Form.Button disabled={$session.loading} variant="default">Update Config</Form.Button>
 </form>
 
-<Form.Button
-	on:click={setFormBasedOnConfig}
-	disabled={$session.loading}
-	variant="secondary"
-	class="bg-gray-500">Load Config Values</Form.Button
+<Form.Button on:click={setFormBasedOnConfig} disabled={$session.loading} variant="secondary"
+	>Load Config Values</Form.Button
 >
