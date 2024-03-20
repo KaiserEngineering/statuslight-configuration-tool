@@ -71,7 +71,7 @@
 		}
 	});
 
-	const { form: formData, enhance, isTainted, tainted } = form;
+	const { form: formData, enhance } = form;
 
 	const keys = Object.keys(sessionConfig).map((key) => ({
 		[key]: AllCommands.find((command) => command.cmd === key)
@@ -82,8 +82,9 @@
 			($form) => {
 				if ($config === undefined || $connected === false) {
 					info('No device connection found');
-					return;
+					return $form;
 				}
+
 				for (const keyObject of keys) {
 					const key = Object.keys(keyObject)[0];
 					const command = keyObject[key];
@@ -108,8 +109,6 @@
 	use:enhance
 	class="text-center m-4 inline-grid grid-cols-1 gap-4 bg-white dark:bg-gray-400 shadow-md rounded px-8 pt-6 pb-8 mb-4"
 >
-	<!-- <SuperDebug data={{ $formData, $tainted }} display={dev} /> -->
-
 	{#each Object.keys(sessionConfig) as key}
 		{@const command = AllCommands.find((command) => command.cmd === key)}
 		{@const name = command.cmd}

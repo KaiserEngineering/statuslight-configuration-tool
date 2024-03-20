@@ -35,7 +35,7 @@
 		"eslint": "^8.57.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-svelte3": "^4.0.0",
-		"internal-ip": "8.0.0",
+		"internal-ip": "7.0.0",
 		"lucide-svelte": "^0.359.0",
 		"postcss": "^8.4.37",
 		"prettier": "^3.2.5",

@@ -134,6 +134,8 @@ export async function getCurrentConfig(): Promise<{ [key: string]: string | bool
 	}));
 	keys.push({ VER: AllCommands.find((command) => command.cmd === 'VER') });
 
+	console.log(keys.length);
+
 	// Initialize an object to store the new configuration
 	const new_config: { [key: string]: string | boolean | number } = {};
 
