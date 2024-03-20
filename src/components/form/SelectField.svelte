@@ -30,7 +30,10 @@
 		v && (value = v.value);
 	}}
 >
-	<Select.Trigger class="border-2 border-solid border-gray-500 text-black">
+	<Select.Trigger
+		class="text-black hover:!bg-nord7 dark:bg-nord6
+	border border-nord9 border-solid border-2 w-1/2"
+	>
 		<Select.Value placeholder={command.name} />
 	</Select.Trigger>
 	<Select.Content>

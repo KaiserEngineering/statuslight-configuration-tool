@@ -80,6 +80,10 @@
 	function setFormBasedOnConfig() {
 		formData.update(
 			($form) => {
+				if ($config === undefined || $connected === false) {
+					info('No device connection found');
+					return;
+				}
 				for (const keyObject of keys) {
 					const key = Object.keys(keyObject)[0];
 					const command = keyObject[key];
@@ -112,27 +116,36 @@
 		<Form.Field {form} {name}>
 			<Form.Control let:attrs>
 				<Label class="text-black">{command.name}</Label>
-				{#if command.type === 'list'}
-					<SelectField {command} bind:value={$formData[command.cmd]} {attrs} />
-					<input hidden bind:value={$formData[command.cmd]} name={attrs.name} />
-				{:else}
-					<Input
-						{...attrs}
-						name={command.cmd}
-						type="text"
-						bind:value={$formData[command.cmd]}
-						class="border-2 border-solid border-gray-500 uppercase bg-transparent"
-					/>
-				{/if}
+				<div class="flex justify-center">
+					{#if command.type === 'list'}
+						<SelectField {command} bind:value={$formData[command.cmd]} {attrs} />
+						<input hidden bind:value={$formData[command.cmd]} name={attrs.name} />
+					{:else}
+						<Input
+							{...attrs}
+							name={command.cmd}
+							type="text"
+							bind:value={$formData[command.cmd]}
+							class="ke-input w-1/2"
+						/>
+					{/if}
+				</div>
 			</Form.Control>
-			<Form.Description class="text-black">{command.desc}</Form.Description>
+			<div class="flex justify-center">
+				<Form.Description class="text-black text-xs italic w-1/2">{command.desc}</Form.Description>
+			</div>
 			<Form.FieldErrors />
 		</Form.Field>
 	{/each}
 
-	<Form.Button disabled={$session.loading} variant="default">Update Config</Form.Button>
+	<div class="flex justify-center">
+		<Form.Button class="ke-button" disabled={$session.loading}>Update Config</Form.Button>
+	</div>
 </form>
 
-<Form.Button on:click={setFormBasedOnConfig} disabled={$session.loading} variant="secondary"
-	>Load Config Values</Form.Button
+<Form.Button
+	class="ke-button"
+	on:click={setFormBasedOnConfig}
+	disabled={$session.loading}
+	variant="secondary">Load Config Values</Form.Button
 >

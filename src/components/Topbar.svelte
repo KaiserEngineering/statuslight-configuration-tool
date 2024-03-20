@@ -68,7 +68,10 @@
 <div class="top-navigation">
 	<div class="flex">
 		<Select.Root bind:selected={selectedPort} name="shiftlight-port">
-			<Select.Trigger id="shiftlight-port" class="rounded-lg select dark:text-white p-2 m-2">
+			<Select.Trigger
+				id="shiftlight-port"
+				class="rounded-lg select dark:text-white p-2 m-2 border border-2 border-nord10"
+			>
 				<Select.Value placeholder="Select UART Port" />
 			</Select.Trigger>
 			<Select.Content>

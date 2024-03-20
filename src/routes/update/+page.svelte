@@ -132,17 +132,16 @@
 	</div>
 </div>
 
-<Modal title="Version: #{version}" open={showModal} on:close={() => handleToggleModal()}>
+<Modal
+	title="Flash Firmware From File: #{file?.path?.path}"
+	open={showModal}
+	on:close={() => handleToggleModal()}
+>
 	<svelte:fragment slot="body">
 		<div class="flex items-center justify-center">
 			{#if series[0] !== 0}
 				{series[0]}% <ProgressBar {series} />
 			{/if}
-		</div>
-
-		<div class="row">
-			<h2>Change log:</h2>
-			<article class="ml-4 dark:text-black prose lg:prose-xl">{changelog}</article>
 		</div>
 
 		<button class="input ke-button" on:click={writeFirmware}>Write</button>

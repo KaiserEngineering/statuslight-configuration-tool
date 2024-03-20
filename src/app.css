@@ -94,19 +94,12 @@
 	}
 
 	.ke-button {
-		@apply dark:bg-nord6 p-2 rounded m-2
-		hover:bg-nord2 hover:text-white dark:hover:bg-nord11;
+		@apply hover:!bg-nord4 dark:!bg-nord4 bg-nord6 dark:text-black p-2 rounded m-2
+		 text-black border border-nord10 border-solid border-2;
 	}
 
-	.ke-checkbox {
-		@apply appearance-none h-4 w-4 border border-gray-300 rounded-sm
-			bg-white checked:bg-nord2 checked:border-white focus:outline-none
-			transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain
-			float-left mr-2 cursor-pointer;
-	}
-
-	.input {
-		@apply border-solid border rounded border-nord1;
+	.ke-input {
+		@apply text-black hover:!bg-nord7 p-2 rounded m-2 dark:bg-nord6 !border !border-nord9 !border-solid !border-2;
 	}
 
 	.sidebar-icon {
