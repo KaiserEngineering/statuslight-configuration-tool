@@ -1,22 +1,26 @@
 <script lang="ts">
-	import { invoke } from '@tauri-apps/api/tauri';
-	import { open } from '@tauri-apps/api/dialog';
-	import { readTextFile } from '@tauri-apps/api/fs';
+	import { invoke } from '@tauri-apps/api/core';
+	import { open } from '@tauri-apps/plugin-dialog';
+	import { readTextFile } from '@tauri-apps/plugin-fs';
 	import { success, error, info } from '$lib/toasts';
-	import { session, config } from '$lib/stores';
-	import Modal from '$lib/components/Modal.svelte';
-	import { cog, fileArchiveO } from 'svelte-awesome/icons';
+	import { config } from '$stores/session';
+	import Modal from '$components/Modal.svelte';
+	import { fileArchiveO } from 'svelte-awesome/icons';
 	import Icon from 'svelte-awesome';
-	import { appWindow } from "@tauri-apps/plugin-window";
+	import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
 	import ProgressBar from '@okrad/svelte-progressbar';
-	import semver from 'semver';
 	import { newConnection } from '$lib/api';
 
+	interface ProgressPayload {
+		percentage: number;
+	}
+
+	const appWindow = WebviewWindow.getCurrent();
 	export let series = [0];
 
 	async function setUpProgressListener() {
-		const unlistenProgress = await appWindow.listen('PROGRESS', ({ payload }) => {
-			series = [payload.percentage];
+		await appWindow.listen('PROGRESS', ({ payload }) => {
+			series = [(payload as ProgressPayload).percentage];
 			flashing = true;
 		});
 	}
@@ -28,56 +32,31 @@
 	let showModal = false;
 	let flashing = false;
 
-	async function checkForNewVersion() {
-		$session.loading = true;
-		await invoke('get_latest_firmware')
-			.then((res: any) => {
-				if (semver.cmp(res.version, '>', $config.VER)) {
-					changelog = res.changelog;
-					hex = res.hex;
-					version = res.version;
-
-					showModal = true;
-				} else {
-					info(
-						'Current version ' + $config.VER + ' is newer than ' + res.version + ", you're all set!"
-					);
-				}
-			})
-			.catch((e: { toString: () => string }) => {
-				error(e.toString());
-				$session.loading = false;
-			})
-			.finally(() => ($session.loading = false));
-	}
-
 	async function writeFirmware() {
 		if (hex == '') {
 			error('No firmware HEX content found, not doing anything');
 			return;
 		}
 
-		let res = await invoke('plugin:serial|dtr', { level: true }).catch(
-			(err: { message: string }) => {
-				error('Failed to write DTR signal to true: ' + err.message);
-			}
-		);
+		let res = await invoke('dtr', { level: true }).catch((err: { message: string }) => {
+			error('Failed to write DTR signal to true: ' + err.message);
+		});
 		// Wait for the ShiftLight to reboot
 		await new Promise((r) => setTimeout(r, 200));
 
-		res = await invoke('plugin:serial|dtr', { level: false }).catch((err: { message: string }) => {
+		res = await invoke('dtr', { level: false }).catch((err: { message: string }) => {
 			error('Failed to write DTR signal to false: ' + err.message);
 		});
 
 		// Waiting some more
 		await new Promise((r) => setTimeout(r, 200));
 
-		let helloResponse: string = await invoke('plugin:serial|write', { content: 'hi\n' })
+		let helloResponse: string = await invoke('write', { content: 'hi\n' })
 			.then((res: any) => {
 				return res.replace('hi;', '');
 			})
 			.catch((err: { message: string }) => {
-				error('Failed to write hi: ' + err.message);
+				error('Failed to write hi: ' + err);
 			});
 
 		if (helloResponse == undefined) {
@@ -126,43 +105,43 @@
 			}
 			file.path = fileObj;
 
-			hex = await readTextFile(file.path);
+			hex = await readTextFile(file.path.path).catch((err: { message: string }) => {
+				error('Failed to read file: ' + err.message);
+				return '';
+			});
 			changelog = 'Custom firmware';
 			showModal = true;
 		});
 	}
 </script>
 
-<div class="text-center text-xl inline-grid grid-cols-2 gap-4">
-	<div class="text-left">Current version:</div>
-	<div>#{$config.VER}</div>
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<div
+	class="flex flex-col mx-auto text-black bg-white dark:bg-gray-400 shadow-md rounded px-8 pt-6 pb-8 mb-4"
+>
+	<div class="text-center text-xl inline-grid grid-cols-2 gap-4">
+		<div class="text-left">Current version:</div>
+		<div>#{$config.VER}</div>
 
-	<span class="text-left">Check for Updates:</span>
+		<label for="newReleaseIcon">Select custom firmware hex file:</label>
 
-	<div class="cursor-pointer" on:click={checkForNewVersion} on:keydown={checkForNewVersion}>
-		<Icon data={cog} scale={2} />
-	</div>
-
-	<label for="newReleaseIcon">Select custom firmware hex file:</label>
-
-	<div class="cursor-pointer" on:click={getFile} on:keydown={getFile}>
-		<Icon data={fileArchiveO} scale={2} />
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
+		<div class="cursor-pointer" on:click={getFile} on:keydown={getFile}>
+			<Icon data={fileArchiveO} scale={2} />
+		</div>
 	</div>
 </div>
 
-<Modal title="Version: #{version}" open={showModal} on:close={() => handleToggleModal()}>
+<Modal
+	title="Flash Firmware From File: #{file?.path?.path}"
+	open={showModal}
+	on:close={() => handleToggleModal()}
+>
 	<svelte:fragment slot="body">
 		<div class="flex items-center justify-center">
-			{semver.diff($config.VER, version)} change
-
 			{#if series[0] !== 0}
 				{series[0]}% <ProgressBar {series} />
 			{/if}
-		</div>
-
-		<div class="row">
-			<h2>Change log:</h2>
-			<article class="ml-4 dark:text-black prose lg:prose-xl">{changelog}</article>
 		</div>
 
 		<button class="input ke-button" on:click={writeFirmware}>Write</button>

@@ -17,11 +17,8 @@ declare global {
 
 	export interface SerialPort {
 		port_name: string;
-		port_info: string;
+		product_name: string;
 	}
-	export type SLConfig = {
-		[key: string]: any;
-	};
 }
 
 export {};

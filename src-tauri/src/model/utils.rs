@@ -1,7 +1,5 @@
 // ! General utilities
 
-use reqwest;
-
 /*
 Get the content from our public Git repo that contains
 the latest firmware version's hex file and the change

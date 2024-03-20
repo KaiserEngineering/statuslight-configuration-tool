@@ -10,7 +10,13 @@ const config = {
 	}),
 
 	kit: {
-		adapter: adapter()
+		adapter: adapter(),
+		alias:{
+			$stores: './src/stores',
+			$components: './src/components',
+			$types: './src/types',
+			$schemas: './src/schemas',
+		}
 	}
 };
 

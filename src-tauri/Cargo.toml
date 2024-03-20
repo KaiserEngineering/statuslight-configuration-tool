@@ -1,32 +1,29 @@
 [package]
-name = "app"
-version = "0.2.1"
+name = "keshiftlight_configuration_tool"
+version = "0.2.3"
 description = "A Tauri App to configure the KE ShiftLight"
 authors = ["craig@kaiserengineering.io", "matt@kaiserengineering.io"]
 license = ""
 repository = "https://github.com/KaiserEngineering/shiftlight-configuration-tool"
-default-run = "app"
 edition = "2021"
 rust-version = "1.68"
-    
+
 [build-dependencies]
-tauri-build = { git  = "https://github.com/tauri-apps/tauri.git", branch="dev", features = [] }
+tauri-build = { version = "2.0.0-beta", features = [] }
 cc = "1.0"
 
 [dependencies]
 anyhow = "1.0.65"
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "^2.0.0-alpha.10", features = [] }
+tauri = { version = "2.0.0-beta", features = ["unstable"] }
 serialport = { version = "4.2.0", features = [] }
 mockall = "0.11.2"
 tokio = { version = "1", features = ["full"] }
 reqwest = "0.11.12"
 ts-rs = "6.2"
-tauri-plugin-serial = { git  = "https://github.com/kaiserengineering/tauri-plugin-serial.git", branch="main"}
-tauri-plugin-window = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-tauri-plugin-app = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-tauri-plugin-os = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-dialog = { version = "2.0.0-beta.2" }
+tauri-plugin-fs = { version = "2.0.0-beta.2" }
 
 [features]
 # by default Tauri runs in production mode
@@ -37,4 +34,5 @@ default = ["custom-protocol"]
 custom-protocol = ["tauri/custom-protocol"]
 
 [lib]
+name = "keshiftlight_configuration_tool_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]

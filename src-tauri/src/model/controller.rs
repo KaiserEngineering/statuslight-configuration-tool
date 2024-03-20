@@ -3,12 +3,12 @@
 
 use std::collections::HashMap;
 use tauri::State;
-use tauri::Window;
+use tauri::{Manager, WebviewWindow};
 
 use super::get;
 
-use tauri_plugin_serial::command::{write_serial, SerialError, SerialErrors};
-use tauri_plugin_serial::state::SerialState;
+use crate::serial::controller::{write_serial, SerialError, SerialErrors};
+use crate::serial::state::SerialState;
 
 #[tauri::command]
 pub async fn get_latest_firmware() -> Result<HashMap<String, String>, String> {
@@ -39,7 +39,7 @@ struct Payload {
 #[tauri::command]
 pub async fn write_hex(
     serial_state: State<'_, SerialState>,
-    window: Window,
+    window: WebviewWindow,
     hex: String,
 ) -> Result<String, SerialError> {
     let mut guard = serial_state.connection.lock().await;
