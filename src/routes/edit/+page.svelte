@@ -126,7 +126,7 @@
 							name={command.cmd}
 							type="text"
 							bind:value={$formData[command.cmd]}
-							class="ke-input w-1/2"
+							class="ke-input w-1/2 uppercase"
 						/>
 					{/if}
 				</div>
