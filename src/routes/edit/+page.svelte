@@ -18,6 +18,7 @@
 	const form = superForm(data, {
 		dataType: 'json',
 		SPA: true,
+		resetForm: false,
 		validators: zodClient(formSchema),
 		async onUpdate({ form }) {
 			if (form.valid) {
@@ -71,7 +72,7 @@
 		}
 	});
 
-	const { form: formData, enhance } = form;
+	const { form: formData, enhance, constraints } = form;
 
 	const keys = Object.keys(sessionConfig).map((key) => ({
 		[key]: AllCommands.find((command) => command.cmd === key)
@@ -126,6 +127,7 @@
 							type="text"
 							bind:value={$formData[command.cmd]}
 							class="ke-input w-1/2 uppercase"
+							{...constraints[command.cmd]}
 						/>
 					{/if}
 				</div>
