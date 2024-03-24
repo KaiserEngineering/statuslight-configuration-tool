@@ -72,8 +72,9 @@
 			})
 			.then(async () => {
 				await newConnection();
-				flashing = false;
 			});
+		series = [0];
+		flashing = false;
 
 		success('Firmware updated: ' + $config.VER);
 	}
