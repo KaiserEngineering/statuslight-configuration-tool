@@ -3,7 +3,7 @@
 	import { open } from '@tauri-apps/plugin-dialog';
 	import { readTextFile } from '@tauri-apps/plugin-fs';
 	import { success, error, info } from '$lib/toasts';
-	import { config } from '$stores/session';
+	import { config, connected } from '$stores/session';
 	import Modal from '$components/Modal.svelte';
 	import { fileArchiveO } from 'svelte-awesome/icons';
 	import Icon from 'svelte-awesome';
@@ -145,6 +145,6 @@
 			{/if}
 		</div>
 
-		<button class="input ke-button" on:click={writeFirmware}>Write</button>
+		<button disabled={!$connected} class="input ke-button" on:click={writeFirmware}>Write</button>
 	</svelte:fragment>
 </Modal>
