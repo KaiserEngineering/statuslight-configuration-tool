@@ -1,6 +1,6 @@
 [package]
 name = "keshiftlight_configuration_tool"
-version = "0.2.4"
+version = "0.2.5"
 description = "A Tauri App to configure the KE ShiftLight"
 authors = ["craig@kaiserengineering.io", "matt@kaiserengineering.io"]
 license = ""

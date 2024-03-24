@@ -1979,7 +1979,7 @@ dependencies = [
 
 [[package]]
 name = "keshiftlight_configuration_tool"
-version = "0.2.4"
+version = "0.2.5"
 dependencies = [
  "anyhow",
  "cc",
