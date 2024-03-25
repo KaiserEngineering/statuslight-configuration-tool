@@ -42,14 +42,14 @@
 			error('Failed to write DTR signal to true: ' + err.message);
 		});
 		// Wait for the ShiftLight to reboot
-		await new Promise((r) => setTimeout(r, 200));
+		await new Promise((r) => setTimeout(r, 100));
 
 		res = await invoke('dtr', { level: false }).catch((err: { message: string }) => {
 			error('Failed to write DTR signal to false: ' + err.message);
 		});
 
 		// Waiting some more
-		await new Promise((r) => setTimeout(r, 200));
+		await new Promise((r) => setTimeout(r, 100));
 
 		let helloResponse: string = await invoke('write', { content: 'hi\n' })
 			.then((res: any) => {
