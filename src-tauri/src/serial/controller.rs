@@ -177,14 +177,6 @@ pub async fn connect<R: Runtime>(
             *serial_state.port.lock().await = port_name.to_string();
             *guard = Some(active_connection);
 
-            if let Err(err) = guard.as_mut().unwrap().write_data_terminal_ready(true) {
-                return Err(SerialError {
-                    error_type: SerialErrors::Connection,
-                    message: format!("Couldn't write DTR: {:?}", err),
-                });
-            }
-            println!("DTR signal written");
-
             // Sleep while the device reboots
             thread::sleep(time::Duration::from_millis(500));
 
