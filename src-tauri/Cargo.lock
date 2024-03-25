@@ -2000,7 +2000,6 @@ dependencies = [
  "tauri-plugin-fs",
  "tokio",
  "ts-rs",
- "winapi",
 ]
 
 [[package]]
