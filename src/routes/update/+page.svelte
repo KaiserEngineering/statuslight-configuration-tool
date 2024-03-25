@@ -38,13 +38,21 @@
 			return;
 		}
 
-		let res = await invoke('dtr', { level: true }).catch((err: { message: string }) => {
-			error('Failed to write DTR signal to true: ' + err.message);
+		await invoke('dtr', { level: false }).catch((err: { message: string }) => {
+			error('Failed to write DTR signal to false: ' + err.message);
 		});
+
 		// Wait for the ShiftLight to reboot
 		await new Promise((r) => setTimeout(r, 100));
 
-		res = await invoke('dtr', { level: false }).catch((err: { message: string }) => {
+		await invoke('dtr', { level: true }).catch((err: { message: string }) => {
+			error('Failed to write DTR signal to true: ' + err.message);
+		});
+
+		// Wait for the ShiftLight to reboot
+		await new Promise((r) => setTimeout(r, 100));
+
+		await invoke('dtr', { level: false }).catch((err: { message: string }) => {
 			error('Failed to write DTR signal to false: ' + err.message);
 		});
 
