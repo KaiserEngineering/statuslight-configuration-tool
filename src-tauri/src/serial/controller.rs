@@ -186,7 +186,7 @@ pub async fn connect<R: Runtime>(
             println!("DTR signal written");
 
             // Sleep while the device reboots
-            thread::sleep(time::Duration::from_millis(3500));
+            thread::sleep(time::Duration::from_millis(500));
 
             if let Err(err) = window.emit("CONNECTED", ()) {
                 return Err(SerialError {
