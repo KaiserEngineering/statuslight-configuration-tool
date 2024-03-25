@@ -141,7 +141,7 @@
 	<svelte:fragment slot="body">
 		<div class="flex items-center justify-center">
 			{#if series[0] !== 0}
-				{series[0]}% <ProgressBar {series} />
+				<ProgressBar {series} />
 			{/if}
 		</div>
 
