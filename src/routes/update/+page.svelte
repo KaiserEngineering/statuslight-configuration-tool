@@ -153,6 +153,8 @@
 			{/if}
 		</div>
 
-		<button disabled={!$connected} class="input ke-button" on:click={writeFirmware}>Write</button>
+		<button disabled={!$connected || flashing} class="input ke-button" on:click={writeFirmware}
+			>Write</button
+		>
 	</svelte:fragment>
 </Modal>
