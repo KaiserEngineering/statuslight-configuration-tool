@@ -26,65 +26,51 @@
 	}
 	setUpProgressListener();
 
-	let changelog = '';
 	let hex = '';
-	let version = '';
 	let showModal = false;
 	let flashing = false;
 
+	async function writeDTR(level: boolean) {
+		try {
+			await invoke('dtr', { level });
+		} catch (err) {
+			error(`Failed to write DTR signal to ${level}: ${err.message}`);
+		}
+	}
+
 	async function writeFirmware() {
-		if (hex == '') {
+		if (hex === '') {
 			error('No firmware HEX content found, not doing anything');
 			return;
 		}
 
-		await invoke('dtr', { level: false }).catch((err: { message: string }) => {
-			error('Failed to write DTR signal to false: ' + err.message);
-		});
-
-		// Wait for the ShiftLight to reboot
+		await writeDTR(false);
 		await new Promise((r) => setTimeout(r, 100));
 
-		await invoke('dtr', { level: true }).catch((err: { message: string }) => {
-			error('Failed to write DTR signal to true: ' + err.message);
-		});
-
-		// Wait for the ShiftLight to reboot
+		await writeDTR(true);
 		await new Promise((r) => setTimeout(r, 100));
 
-		await invoke('dtr', { level: false }).catch((err: { message: string }) => {
-			error('Failed to write DTR signal to false: ' + err.message);
-		});
-
-		// Waiting some more
+		await writeDTR(false);
 		await new Promise((r) => setTimeout(r, 100));
 
-		let helloResponse: string = await invoke('write', { content: 'hi\n' })
-			.then((res: any) => {
-				return res.replace('hi;', '');
-			})
-			.catch((err: { message: string }) => {
-				error('Failed to write hi: ' + err);
-			});
+		try {
+			const helloResponse: string = await invoke('write', { content: 'hi\n' });
+			if (helloResponse === undefined) {
+				return;
+			}
 
-		if (helloResponse == undefined) {
+			flashing = true;
+			await invoke('write_hex', { window: appWindow, hex });
+			await newConnection();
+		} catch (err) {
+			error(err.message);
+			flashing = false;
 			return;
 		}
 
-		flashing = true;
-		await invoke('write_hex', { window: appWindow, hex: hex })
-			.catch((err: { message: string }) => {
-				error(err.message);
-				flashing = false;
-				return;
-			})
-			.then(async () => {
-				await newConnection();
-			});
 		series = [0];
 		flashing = false;
-
-		success('Firmware updated: ' + $config.VER);
+		success(`Firmware updated: ${config.VER}`);
 	}
 
 	const handleToggleModal = () => {
@@ -100,7 +86,7 @@
 	};
 
 	async function getFile() {
-		await open({
+		const fileObj: any = await open({
 			multiple: false,
 			filters: [
 				{
@@ -108,19 +94,18 @@
 					extensions: ['hex']
 				}
 			]
-		}).then(async (fileObj: any) => {
-			if (fileObj == undefined) {
-				return;
-			}
-			file.path = fileObj;
-
-			hex = await readTextFile(file.path.path).catch((err: { message: string }) => {
-				error('Failed to read file: ' + err.message);
-				return '';
-			});
-			changelog = 'Custom firmware';
-			showModal = true;
 		});
+
+		if (fileObj === undefined) {
+			return;
+		}
+		file.path = fileObj;
+
+		hex = await readTextFile(file.path.path).catch((err) => {
+			error(`Failed to read file: ${err.message}`);
+			return '';
+		});
+		showModal = true;
 	}
 </script>
 
@@ -142,9 +127,9 @@
 </div>
 
 <Modal
-	title="Flash Firmware From File: #{file?.path?.path}"
+	title={`Flash Firmware From File: ${file?.path?.path}`}
 	open={showModal}
-	on:close={() => handleToggleModal()}
+	on:close={handleToggleModal}
 >
 	<svelte:fragment slot="body">
 		<div class="flex items-center justify-center">
@@ -153,8 +138,8 @@
 			{/if}
 		</div>
 
-		<button disabled={!$connected || flashing} class="input ke-button" on:click={writeFirmware}
-			>Write</button
-		>
+		<button disabled={!$connected || flashing} class="input ke-button" on:click={writeFirmware}>
+			Write
+		</button>
 	</svelte:fragment>
 </Modal>
