@@ -3,9 +3,9 @@
 [![Audit](https://github.com/KaiserEngineering/shiftlight-configuration-tool/actions/workflows/audit.yml/badge.svg)](https://github.com/KaiserEngineering/shiftlight-configuration-tool/actions/workflows/audit.yml)
 [![publish](https://github.com/KaiserEngineering/shiftlight-configuration-tool/actions/workflows/releases.yml/badge.svg)](https://github.com/KaiserEngineering/shiftlight-configuration-tool/actions/workflows/releases.yml)
 
-# KE ShiftLight Configuration Tool
+# KE StatusLight Configuration Tool
 
-This is a desktop application that allows for the configuration of the KE ShiftLight. It can also be used to update the ShiftLight.
+This is a desktop application that allows for the configuration of the KE StatusLight. It can also be used to update the StatusLight.
 
 ## Development
 
