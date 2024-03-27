@@ -1,6 +1,6 @@
 {
-	"name": "keshift-light-configuration",
-	"version": "0.2.8",
+	"name": "kestatus-light-configuration",
+	"version": "0.2.9",
 	"private": true,
 	"engines": {
 		"node": "20.x"

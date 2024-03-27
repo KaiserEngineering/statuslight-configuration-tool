@@ -23,7 +23,7 @@
 		async onUpdate({ form }) {
 			if (form.valid) {
 				if (!$connected) {
-					error("You're not connected to your ShiftLight!");
+					error("You're not connected to your Status Light!");
 					return;
 				}
 				$session.loading = true;

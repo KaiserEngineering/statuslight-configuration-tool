@@ -1984,25 +1984,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "keshiftlight_configuration_tool"
-version = "0.2.8"
-dependencies = [
- "anyhow",
- "cc",
- "mockall",
- "reqwest",
- "serde",
- "serde_json",
- "serialport",
- "tauri",
- "tauri-build",
- "tauri-plugin-dialog",
- "tauri-plugin-fs",
- "tokio",
- "ts-rs",
-]
-
-[[package]]
 name = "keyboard-types"
 version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3657,6 +3638,25 @@ name = "static_assertions"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a2eb9349b6444b326872e140eb1cf5e7c522154d69e7a0ffb0fb81c06b37543f"
+
+[[package]]
+name = "statuslight_configuration_tool"
+version = "0.2.9"
+dependencies = [
+ "anyhow",
+ "cc",
+ "mockall",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "serialport",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-dialog",
+ "tauri-plugin-fs",
+ "tokio",
+ "ts-rs",
+]
 
 [[package]]
 name = "string_cache"

@@ -79,7 +79,7 @@
 		}
 	},
 	"productName": "KE Status Light",
-	"version": "0.2.8",
+	"version": "0.2.9",
 	"identifier": "kaiserengineering.io",
 	"app": {
 		"windows": [
