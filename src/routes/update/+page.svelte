@@ -70,7 +70,7 @@
 
 		series = [0];
 		flashing = false;
-		success(`Firmware updated: ${config.VER}`);
+		success('Firmware updated successfully!');
 	}
 
 	const handleToggleModal = () => {
